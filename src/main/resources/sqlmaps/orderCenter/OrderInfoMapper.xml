@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ehaoyao.logistics.common.mapper.ordercenter.OrderInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.ehaoyao.logistics.common.model.ordercenter.OrderInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="original_id" property="originalId" jdbcType="VARCHAR" />
+    <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="VARCHAR" />
+    <result column="expire_time" property="expireTime" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="receiver" property="receiver" jdbcType="VARCHAR" />
+    <result column="address_detail" property="addressDetail" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="delivery_date" property="deliveryDate" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="country" property="country" jdbcType="VARCHAR" />
+    <result column="order_price" property="orderPrice" jdbcType="DOUBLE" />
+    <result column="discount_amount" property="discountAmount" jdbcType="DOUBLE" />
+    <result column="express_price" property="expressPrice" jdbcType="DOUBLE" />
+    <result column="order_flag" property="orderFlag" jdbcType="VARCHAR" />
+    <result column="over_return_free" property="overReturnFree" jdbcType="VARCHAR" />
+    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+    <result column="address_alias" property="addressAlias" jdbcType="VARCHAR" />
+    <result column="app_signature" property="appSignature" jdbcType="VARCHAR" />
+    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+    <result column="fee_type" property="feeType" jdbcType="VARCHAR" />
+    <result column="to_erp" property="toErp" jdbcType="VARCHAR" />
+    <result column="payment_time" property="paymentTime" jdbcType="VARCHAR" />
+    <result column="to_ordercenter_time" property="toOrdercenterTime" jdbcType="TIMESTAMP" />
+    <result column="to_erp_time" property="toErpTime" jdbcType="VARCHAR" />
+    <result column="last_time" property="lastTime" jdbcType="TIMESTAMP" />
+    <result column="kf_account" property="kfAccount" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, original_id, order_number, start_time, expire_time, remark, pay_type, price, 
+    receiver, address_detail, mobile, telephone, delivery_date, province, city, country, 
+    order_price, discount_amount, express_price, order_flag, over_return_free, nick_name, 
+    address_alias, app_signature, order_status, fee_type, to_erp, payment_time, to_ordercenter_time, 
+    to_erp_time, last_time, kf_account
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from order_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ehaoyao.logistics.common.model.ordercenter.OrderInfo" >
+    insert into order_info (id, original_id, order_number, 
+      start_time, expire_time, remark, 
+      pay_type, price, receiver, 
+      address_detail, mobile, telephone, 
+      delivery_date, province, city, 
+      country, order_price, discount_amount, 
+      express_price, order_flag, over_return_free, 
+      nick_name, address_alias, app_signature, 
+      order_status, fee_type, to_erp, 
+      payment_time, to_ordercenter_time, to_erp_time, 
+      last_time, kf_account)
+    values (#{id,jdbcType=BIGINT}, #{originalId,jdbcType=VARCHAR}, #{orderNumber,jdbcType=VARCHAR}, 
+      #{startTime,jdbcType=VARCHAR}, #{expireTime,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{payType,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, #{receiver,jdbcType=VARCHAR}, 
+      #{addressDetail,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, 
+      #{deliveryDate,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{country,jdbcType=VARCHAR}, #{orderPrice,jdbcType=DOUBLE}, #{discountAmount,jdbcType=DOUBLE}, 
+      #{expressPrice,jdbcType=DOUBLE}, #{orderFlag,jdbcType=VARCHAR}, #{overReturnFree,jdbcType=VARCHAR}, 
+      #{nickName,jdbcType=VARCHAR}, #{addressAlias,jdbcType=VARCHAR}, #{appSignature,jdbcType=VARCHAR}, 
+      #{orderStatus,jdbcType=VARCHAR}, #{feeType,jdbcType=VARCHAR}, #{toErp,jdbcType=VARCHAR}, 
+      #{paymentTime,jdbcType=VARCHAR}, #{toOrdercenterTime,jdbcType=TIMESTAMP}, #{toErpTime,jdbcType=VARCHAR}, 
+      #{lastTime,jdbcType=TIMESTAMP}, #{kfAccount,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ehaoyao.logistics.common.model.ordercenter.OrderInfo" >
+    insert into order_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="originalId != null" >
+        original_id,
+      </if>
+      <if test="orderNumber != null" >
+        order_number,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="expireTime != null" >
+        expire_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="receiver != null" >
+        receiver,
+      </if>
+      <if test="addressDetail != null" >
+        address_detail,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="telephone != null" >
+        telephone,
+      </if>
+      <if test="deliveryDate != null" >
+        delivery_date,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="country != null" >
+        country,
+      </if>
+      <if test="orderPrice != null" >
+        order_price,
+      </if>
+      <if test="discountAmount != null" >
+        discount_amount,
+      </if>
+      <if test="expressPrice != null" >
+        express_price,
+      </if>
+      <if test="orderFlag != null" >
+        order_flag,
+      </if>
+      <if test="overReturnFree != null" >
+        over_return_free,
+      </if>
+      <if test="nickName != null" >
+        nick_name,
+      </if>
+      <if test="addressAlias != null" >
+        address_alias,
+      </if>
+      <if test="appSignature != null" >
+        app_signature,
+      </if>
+      <if test="orderStatus != null" >
+        order_status,
+      </if>
+      <if test="feeType != null" >
+        fee_type,
+      </if>
+      <if test="toErp != null" >
+        to_erp,
+      </if>
+      <if test="paymentTime != null" >
+        payment_time,
+      </if>
+      <if test="toOrdercenterTime != null" >
+        to_ordercenter_time,
+      </if>
+      <if test="toErpTime != null" >
+        to_erp_time,
+      </if>
+      <if test="lastTime != null" >
+        last_time,
+      </if>
+      <if test="kfAccount != null" >
+        kf_account,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="originalId != null" >
+        #{originalId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null" >
+        #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="expireTime != null" >
+        #{expireTime,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="receiver != null" >
+        #{receiver,jdbcType=VARCHAR},
+      </if>
+      <if test="addressDetail != null" >
+        #{addressDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryDate != null" >
+        #{deliveryDate,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="orderPrice != null" >
+        #{orderPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="discountAmount != null" >
+        #{discountAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="expressPrice != null" >
+        #{expressPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="orderFlag != null" >
+        #{orderFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="overReturnFree != null" >
+        #{overReturnFree,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="addressAlias != null" >
+        #{addressAlias,jdbcType=VARCHAR},
+      </if>
+      <if test="appSignature != null" >
+        #{appSignature,jdbcType=VARCHAR},
+      </if>
+      <if test="orderStatus != null" >
+        #{orderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="feeType != null" >
+        #{feeType,jdbcType=VARCHAR},
+      </if>
+      <if test="toErp != null" >
+        #{toErp,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentTime != null" >
+        #{paymentTime,jdbcType=VARCHAR},
+      </if>
+      <if test="toOrdercenterTime != null" >
+        #{toOrdercenterTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="toErpTime != null" >
+        #{toErpTime,jdbcType=VARCHAR},
+      </if>
+      <if test="lastTime != null" >
+        #{lastTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="kfAccount != null" >
+        #{kfAccount,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ehaoyao.logistics.common.model.ordercenter.OrderInfo" >
+    update order_info
+    <set >
+      <if test="originalId != null" >
+        original_id = #{originalId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null" >
+        order_number = #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="expireTime != null" >
+        expire_time = #{expireTime,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="receiver != null" >
+        receiver = #{receiver,jdbcType=VARCHAR},
+      </if>
+      <if test="addressDetail != null" >
+        address_detail = #{addressDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryDate != null" >
+        delivery_date = #{deliveryDate,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="orderPrice != null" >
+        order_price = #{orderPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="discountAmount != null" >
+        discount_amount = #{discountAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="expressPrice != null" >
+        express_price = #{expressPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="orderFlag != null" >
+        order_flag = #{orderFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="overReturnFree != null" >
+        over_return_free = #{overReturnFree,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="addressAlias != null" >
+        address_alias = #{addressAlias,jdbcType=VARCHAR},
+      </if>
+      <if test="appSignature != null" >
+        app_signature = #{appSignature,jdbcType=VARCHAR},
+      </if>
+      <if test="orderStatus != null" >
+        order_status = #{orderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="feeType != null" >
+        fee_type = #{feeType,jdbcType=VARCHAR},
+      </if>
+      <if test="toErp != null" >
+        to_erp = #{toErp,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentTime != null" >
+        payment_time = #{paymentTime,jdbcType=VARCHAR},
+      </if>
+      <if test="toOrdercenterTime != null" >
+        to_ordercenter_time = #{toOrdercenterTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="toErpTime != null" >
+        to_erp_time = #{toErpTime,jdbcType=VARCHAR},
+      </if>
+      <if test="lastTime != null" >
+        last_time = #{lastTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="kfAccount != null" >
+        kf_account = #{kfAccount,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ehaoyao.logistics.common.model.ordercenter.OrderInfo" >
+    update order_info
+    set original_id = #{originalId,jdbcType=VARCHAR},
+      order_number = #{orderNumber,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=VARCHAR},
+      expire_time = #{expireTime,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      pay_type = #{payType,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      receiver = #{receiver,jdbcType=VARCHAR},
+      address_detail = #{addressDetail,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
+      delivery_date = #{deliveryDate,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      country = #{country,jdbcType=VARCHAR},
+      order_price = #{orderPrice,jdbcType=DOUBLE},
+      discount_amount = #{discountAmount,jdbcType=DOUBLE},
+      express_price = #{expressPrice,jdbcType=DOUBLE},
+      order_flag = #{orderFlag,jdbcType=VARCHAR},
+      over_return_free = #{overReturnFree,jdbcType=VARCHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR},
+      address_alias = #{addressAlias,jdbcType=VARCHAR},
+      app_signature = #{appSignature,jdbcType=VARCHAR},
+      order_status = #{orderStatus,jdbcType=VARCHAR},
+      fee_type = #{feeType,jdbcType=VARCHAR},
+      to_erp = #{toErp,jdbcType=VARCHAR},
+      payment_time = #{paymentTime,jdbcType=VARCHAR},
+      to_ordercenter_time = #{toOrdercenterTime,jdbcType=TIMESTAMP},
+      to_erp_time = #{toErpTime,jdbcType=VARCHAR},
+      last_time = #{lastTime,jdbcType=TIMESTAMP},
+      kf_account = #{kfAccount,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
