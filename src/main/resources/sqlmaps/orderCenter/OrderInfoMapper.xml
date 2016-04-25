@@ -409,4 +409,23 @@
       kf_account = #{kfAccount,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <!-- 批量回写妥投运单 -->
+  <update id="writeBackUpdateOrderInfo" parameterType="list">
+		update order_info 
+		<trim prefix="set" suffixOverrides=",">
+			order_status='s03',
+			<trim prefix="expire_time =case" suffix="end,">
+				<foreach collection="list" item="i" index="index">
+					<if test="i.lastTime!=null">
+						when order_number=#{i.orderNumber} then #{i.lastTime}
+					</if>
+				</foreach>
+			</trim>
+		</trim>
+		where
+		<foreach collection="list" separator="or" item="i" index="index" >
+             order_number = #{i.orderNumber}
+		</foreach>
+	</update>  
+
 </mapper>

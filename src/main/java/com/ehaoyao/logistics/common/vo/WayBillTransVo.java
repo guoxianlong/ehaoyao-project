@@ -1,6 +1,7 @@
 package com.ehaoyao.logistics.common.vo;
 
 public class WayBillTransVo {
+	private String wayBillSource;
 	private String wayBillSourceNum;
 	private String orderFlagNum;
 	private OrderExpressVo orderExpress;
@@ -9,11 +10,15 @@ public class WayBillTransVo {
 		super();
 	}
 
-	public WayBillTransVo(String wayBillSourceNum, String orderFlagNum, OrderExpressVo orderExpress) {
-		super();
-		this.wayBillSourceNum = wayBillSourceNum;
-		this.orderFlagNum = orderFlagNum;
-		this.orderExpress = orderExpress;
+
+
+
+	public String getWayBillSource() {
+		return wayBillSource;
+	}
+
+	public void setWayBillSource(String wayBillSource) {
+		this.wayBillSource = wayBillSource;
 	}
 
 	public String getWayBillSourceNum() {

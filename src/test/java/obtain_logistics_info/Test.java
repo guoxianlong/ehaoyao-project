@@ -24,6 +24,5 @@ public class Test {
 		System.out.println(vo1.hashCode());
 		System.out.println(vo2.hashCode());
 		System.out.println(vo1.equals(vo2));
-		System.out.println(hashMap.get(new WayBillTransVo("1a", "2b", null))+"--"+hashMap.get(vo2));
 	}
 }

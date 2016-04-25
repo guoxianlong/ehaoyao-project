@@ -121,7 +121,7 @@
 	</tx:advice>
     
      <aop:config>
-		<aop:pointcut id="daoPointOrderCenter" expression="execution(* com.ehaoyao.obtain_logistics_info..*.*(..))" />
+		<aop:pointcut id="daoPointOrderCenter" expression="execution(* com.ehaoyao.logistics..*.*(..))" />
 		<!-- 给指定的类的方法加上事务 advice-ref：事务传播建议  -->
 		<aop:advisor advice-ref="txAdviceOrderCenter" pointcut-ref="daoPointOrderCenter" />
 	</aop:config>  

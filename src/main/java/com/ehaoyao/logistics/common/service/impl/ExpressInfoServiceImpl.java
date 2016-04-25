@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ehaoyao.logistics.common.mapper.ordercenter.ExpressInfoMapper;
+import com.ehaoyao.logistics.common.model.ordercenter.OrderInfo;
 import com.ehaoyao.logistics.common.service.ExpressInfoService;
 import com.ehaoyao.logistics.common.utils.DateUtil;
 import com.ehaoyao.logistics.common.vo.OrderExpressVo;
@@ -45,7 +46,7 @@ public class ExpressInfoServiceImpl implements ExpressInfoService {
 		String endTime=DateUtil.getDate(new Date(), 2, null);
 		
 		Map<String,Object> map = new HashMap<String,Object>();
-		String[] orderStatusArr = {"s01","s02"};
+		String[] orderStatusArr = {OrderInfo.ORDER_INFO_ORDER_STATUS_POST,OrderInfo.ORDER_INFO_ORDER_STATUS_SEND};
 		map.put("orderStatusArr", orderStatusArr);
 		map.put("wayBillTimeStart", startTime);
 		map.put("wayBillTimeEnd", endTime);

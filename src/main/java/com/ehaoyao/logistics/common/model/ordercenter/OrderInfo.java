@@ -3,6 +3,29 @@ package com.ehaoyao.logistics.common.model.ordercenter;
 import java.util.Date;
 
 public class OrderInfo {
+	
+	/******************************订单中心-订单状态描述****************************************/
+	/**
+	 * s00	订单初始状态
+	 */
+	public static final String ORDER_INFO_ORDER_STATUS_INIT = "s00";
+	/**
+	 * s01	出货成功(已有运单号)
+	 */
+	public static final String ORDER_INFO_ORDER_STATUS_POST = "s01";
+	/**
+	 * s02	运单信息已推送
+	 */
+	public static final String ORDER_INFO_ORDER_STATUS_SEND = "s02";
+	/**
+	 * s03	交易完成
+	 */
+	public static final String ORDER_INFO_ORDER_STATUS_END = "s03";
+	/**
+	 * s04	订单取消
+	 */
+	public static final String ORDER_INFO_ORDER_STATUS_CANCEL = "s04";
+	
     private Long id;
 
     private String originalId;

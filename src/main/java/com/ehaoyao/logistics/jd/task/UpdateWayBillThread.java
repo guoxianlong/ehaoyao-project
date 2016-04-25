@@ -2,6 +2,7 @@
 package com.ehaoyao.logistics.jd.task;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -39,6 +40,7 @@ public class UpdateWayBillThread extends Thread {
 
 	public void run() {
 		logger.info("启动京东快递更新物流信息新线程！！！！！");
+		Date dateStart = new Date();
 		int updateCount = 0 ;//每次最终成功更新条数
 		int totalUpdateCount = 0;//累计最终成功更新条数
 		int updateSize = configs.getInteger("updateSize");//每次处理条数
@@ -63,6 +65,7 @@ public class UpdateWayBillThread extends Thread {
 				count++;//每次处理后加1
 			}
 		}
-		logger.info(Thread.currentThread().getName()+"本次京东快递更新物流跟踪信息线程结束！！！");
+		Date dateEnd = new Date();
+		logger.info(Thread.currentThread().getName()+"本次京东快递更新物流跟踪信息线程结束！！！耗时："+(dateEnd.getTime()-dateStart.getTime())+"s");
 	}
 }

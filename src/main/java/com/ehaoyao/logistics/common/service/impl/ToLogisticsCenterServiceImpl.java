@@ -75,30 +75,31 @@ public class ToLogisticsCenterServiceImpl implements ToLogisticsCenterService {
 		 */
 		//1,将运单。订单信息临时放入wayBillTransVoList
 		for(OrderExpressVo orderExpress : orderExpressList){
-			//1,获取快递来源
+			//1.1,获取快递来源
 			wayBillSource = getSource(orderExpress.getExpressComName(),orderExpress.getExpressComCode(), orderExpress.getExpressComId());
 			if(wayBillSource==null || wayBillSource.trim().length()==0){
 				wayBillSourceIsNull += (orderExpress.getOrderFlag()+orderExpress.getOrderNumber());
 				continue;
 			}
 			willTransVo = new WayBillTransVo();
+			willTransVo.setWayBillSource(wayBillSource);
 			willTransVo.setWayBillSourceNum(wayBillSource.trim()+orderExpress.getExpressId().trim());
 			willTransVo.setOrderFlagNum(orderExpress.getOrderFlag().trim()+orderExpress.getOrderNumber().trim());
 			willTransVo.setOrderExpress(orderExpress);
 			wayBillTransVoList.add(willTransVo);
 		}
+		
 		//2，根据运单号/运单来源将wayBillTransVoList去重
 		List<WayBillTransVo> wayBillTransVoNewList = this.removeWayBillTransVoDuplicate(wayBillTransVoList);
+		
 		//3,遍历去重后的wayBillTransVoList处理并初始运单信息
 		for(WayBillTransVo wayBillTransVo : wayBillTransVoNewList){
 			OrderExpressVo orderExpress = wayBillTransVo.getOrderExpress();
 			
-			//1,获取快递来源
-			wayBillSource = getSource(orderExpress.getExpressComName(),orderExpress.getExpressComCode(), orderExpress.getExpressComId());
+			//3.1,获取快递来源
+			wayBillSource = wayBillTransVo.getWayBillSource();
 			
-			//2,判断订单在物流中心库中是否重复订单
-//			map.put("orderFlag", orderExpress.getOrderFlag());
-//			map.put("orderNumber", orderExpress.getOrderNumber());
+			//3.2,判断订单在物流中心库中是否重复订单
 			map.put("waybillSource", wayBillSource);
 			map.put("waybillNumber", orderExpress.getExpressId());
 			wayBillInfoTempList = wayBillInfoMapper.selectWayBillInfoListByCondition(map);
@@ -106,7 +107,7 @@ public class ToLogisticsCenterServiceImpl implements ToLogisticsCenterService {
 				repeatOrderNums += (orderExpress.getOrderFlag()+"-"+orderExpress.getOrderNumber()+"-"+wayBillSource+"-"+orderExpress.getExpressId()+",");
 				continue;
 			}
-			//3,保存物流主表
+			//3.3,保存物流主表
 			wayBillInfo = new WayBillInfo();
 			wayBillInfo.setOrderFlag(orderExpress.getOrderFlag());
 			wayBillInfo.setOrderNumber(orderExpress.getOrderNumber());
@@ -115,10 +116,9 @@ public class ToLogisticsCenterServiceImpl implements ToLogisticsCenterService {
 			wayBillInfo.setIsWriteback(0);
 			wayBillInfo.setWaybillStatus(WayBillInfo.WAYBILL_INFO_STATUS_INIT);
 			wayBillInfo.setCreateTime(currDate);
-//			wayBillInfo.setLastTime(currDate);
 			wayBillInfoList.add(wayBillInfo);
 			
-			//4,保存物流明细表
+			//3.4,保存物流明细表
 			wayBillDetail = new WayBillDetail();
 			wayBillDetail.setWaybillSource(wayBillSource);
 			wayBillDetail.setWaybillNumber(orderExpress.getExpressId());
@@ -128,6 +128,7 @@ public class ToLogisticsCenterServiceImpl implements ToLogisticsCenterService {
 			
 		}
 		
+		//4,记录日志
 		if(wayBillSourceIsNull!=null && wayBillSourceIsNull.trim().length()>0){
 			logger.info("【从订单中心抓取初始订单至物流中心任务，运单来源为空或未配置的订单拼串信息："+repeatOrderNums+"】");
 		}
@@ -135,6 +136,7 @@ public class ToLogisticsCenterServiceImpl implements ToLogisticsCenterService {
 			logger.info("【从订单中心抓取初始订单至物流中心任务，重复未插入(数据库中已存在)的订单标识-订单号-运单标识-运单号："+repeatOrderNums+"】");
 		}
 		
+		//5,保存结果集
 		if(wayBillInfoList!=null && !wayBillInfoList.isEmpty()){
 			insWayBillInfoCount = wayBillInfoMapper.insertWayBillInfoBatch(wayBillInfoList);
 		}

@@ -14,8 +14,10 @@
     <!--  定时器开关  结束--> 
     <task:scheduled-tasks>  
     <!-- 正式订单调度 -->
-        <task:scheduled ref="expressInfoInitTask" method="insertWayBill" cron="0 0/2 * * * ?"/>
-        <task:scheduled ref="jDExpressTask" method="updateWayBillToLogisticsDB" cron="0 0/30 * * * ?"/>    
+        <!-- <task:scheduled ref="expressInfoInitTask" method="insertWayBill" cron="0/5 * * * * ?"/>
+        <task:scheduled ref="jDExpressTask" method="updateWayBillToLogisticsDB" cron="0 0/10 * * * ?"/>
+        <task:scheduled ref="writeBackOrderCenterTask" method="writeBackOrderCenter" cron="0 0/2 * * * ?"/> -->
+        <task:scheduled ref="ytoLogisticsTask" method="updateYTOWayBills" cron="0/5 * * * * ?"/>
     </task:scheduled-tasks> 
     
 </beans>
