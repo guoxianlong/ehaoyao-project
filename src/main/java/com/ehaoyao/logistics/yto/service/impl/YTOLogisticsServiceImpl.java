@@ -74,11 +74,14 @@ public class YTOLogisticsServiceImpl implements YTOLogisticsService {
 		int dealCount = 0;
 		List<WayBillDetail> wbDetailList = new ArrayList<WayBillDetail>();
 		List<WayBillInfo> wbnfoList = new ArrayList<WayBillInfo>();
+		String upLoadTimeNull = "";
 		
-		for(WayBillInfo wayBillInfo : wayBillInfoList){
+		for(int i=0;i<wayBillInfoList.size();i++){
 			//1,	根据运单号调用圆通物流接口，获取物流信息
+			WayBillInfo wayBillInfo = wayBillInfoList.get(i);
 			waybillNumber = wayBillInfo.getWaybillNumber();
-//			logger.info("【"+Thread.currentThread().getName()+"开始抓取圆通快递单号为：" + waybillNumber + "的快递信息】");
+//			waybillNumber = "806804266812";
+			logger.info("【"+Thread.currentThread().getName()+"开始抓取圆通快递单号为：" + waybillNumber + "的快递信息,当前第"+(i+1)+"条】");
 			// 截取No:字符串，校正运单号
 			if ("No:".equals(waybillNumber.substring(0, 3))) {
 				result = YTServiceNet.getExpressInfo(waybillNumber.substring(3, waybillNumber.length()).trim());
@@ -90,7 +93,7 @@ public class YTOLogisticsServiceImpl implements YTOLogisticsService {
 			Ufinterface expInfo=(Ufinterface) JaxbUtil.createXMLToBean(new StringReader(result.trim()), Ufinterface.class);
 			boolean flag = this.checkRespons(result,wayBillInfo,response,expInfo);
 			if(!flag){
-				logger.info("【处理圆通返回信息出现错误，请求物流单号："+waybillNumber.trim()+"，圆通接口返回信息："+result+"】");
+//				logger.info("【处理圆通返回信息出现错误，请求物流单号："+waybillNumber.trim()+"，圆通接口返回信息："+result+"】");
 				continue;
 			}
 			
@@ -100,7 +103,17 @@ public class YTOLogisticsServiceImpl implements YTOLogisticsService {
 			
 			for(WaybillProcessInfo expressInfo:infoList){
 				String upLoadTime = expressInfo.getUploadTime().replaceAll("/", "-");
-				if(wayBillInfo.getLastTime() != null && sdf.parse(upLoadTime).before(wayBillInfo.getLastTime())){
+				/*try {
+					sdf.parse(upLoadTime);
+				} catch (Exception e) {
+					logger.info("#######################"+result);
+					e.printStackTrace();
+				}*/
+				if(wayBillInfo.getLastTime() != null && upLoadTime!=null && upLoadTime.trim().length()>0 && sdf.parse(upLoadTime).before(wayBillInfo.getLastTime())){
+					continue;
+				}
+				if(upLoadTime==null || upLoadTime.trim().length()<=0 || "".equals(upLoadTime)){
+					upLoadTimeNull += waybillNumber+",";
 					continue;
 				}
 				WayBillDetail wayBillDetail = new WayBillDetail();
@@ -121,6 +134,10 @@ public class YTOLogisticsServiceImpl implements YTOLogisticsService {
 				wayBillInfo.setLastTime((upLoadTime!=null && upLoadTime.trim().length()>0)?sdf.parse(upLoadTime):new Date());
 				wbnfoList.add(wayBillInfo);
 			}
+		}
+		
+		if(upLoadTimeNull.length()>0){
+			logger.info("【调用圆通物流，返回物流时间存在空的运单信息："+upLoadTimeNull+"】");
 		}
 		
 		//3,	批量保存最新物流信息
