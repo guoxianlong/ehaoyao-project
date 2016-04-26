@@ -15,7 +15,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.ehaoyao.logistics.common.mapper.logisticscenter.WayBillDetailMapper;
 import com.ehaoyao.logistics.common.mapper.logisticscenter.WayBillInfoMapper;
 import com.ehaoyao.logistics.common.model.logisticscenter.WayBillDetail;
 import com.ehaoyao.logistics.common.model.logisticscenter.WayBillInfo;
@@ -36,11 +38,14 @@ import com.jd.open.api.sdk.response.etms.TraceApiDto;
  * @author xushunxing
  *
  */
+@Transactional(value="transactionManagerLogisticsCenter")
 @Service
 public class JDWayBillInfoServiceImpl implements JDWayBillInfoService {
 	private static final Logger logger = Logger.getLogger(JDWayBillInfoServiceImpl.class);
 	@Autowired
 	private WayBillInfoMapper waybillInfoMapper;
+	@Autowired
+	private WayBillDetailMapper wayBillDetailMapper;
 	@Autowired
 	private JDWayBillDetailService waybillDetailService;
 	/**
@@ -390,7 +395,7 @@ public class JDWayBillInfoServiceImpl implements JDWayBillInfoService {
 		}
 		//3.1  批量插入插入新的跟踪信息
 		if(waitInsertWayBillDetailList!=null && !waitInsertWayBillDetailList.isEmpty()){
-			waybillDetailService.insertWayBillDetail(waitInsertWayBillDetailList);
+			wayBillDetailMapper.insertWayBillDetailBatch(waitInsertWayBillDetailList);
 		}
 		//3.2  批量更新 运单Info
 		int updateCount =0;

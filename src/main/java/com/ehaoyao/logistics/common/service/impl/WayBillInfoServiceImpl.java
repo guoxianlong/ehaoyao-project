@@ -10,12 +10,21 @@ import net.sf.json.JSONArray;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import com.ehaoyao.logistics.common.mapper.logisticscenter.WayBillDetailMapper;
 import com.ehaoyao.logistics.common.mapper.logisticscenter.WayBillInfoMapper;
+import com.ehaoyao.logistics.common.mapper.ordercenter.OrderInfoMapper;
+import com.ehaoyao.logistics.common.model.logisticscenter.WayBillDetail;
 import com.ehaoyao.logistics.common.model.logisticscenter.WayBillInfo;
 import com.ehaoyao.logistics.common.service.OrderInfoService;
+import com.ehaoyao.logistics.common.service.WayBillDetailService;
 import com.ehaoyao.logistics.common.service.WayBillInfoService;
 import com.ehaoyao.logistics.common.vo.WayBillInfoVo;
 import com.ehaoyao.logistics.jd.service.impl.JDWayBillInfoServiceImpl;
@@ -31,7 +40,15 @@ public class WayBillInfoServiceImpl implements WayBillInfoService {
 	@Autowired
 	private WayBillInfoMapper wayBillInfoMapper;
 	@Autowired
+	private WayBillDetailMapper wayBillDetailMapper;
+	@Autowired
+	private WayBillDetailService wayBillDetailService;
+	@Autowired 
 	private OrderInfoService orderInfoService;
+	@Autowired
+	private OrderInfoMapper orderInfoMapper;
+	@Autowired
+	private DataSourceTransactionManager transactionManagerOrderCenter;
 	/**
 	* @Description:按条件实体类WayBillInfoVo ,查询运单集合
 	* @param @param wayBillInfoVo
@@ -47,36 +64,26 @@ public class WayBillInfoServiceImpl implements WayBillInfoService {
 	}
 	/**
 	 * 
-	* @Description:将S04的运单回写到订单中心的order_info表,主要内容：S04运单对应在order_Info的订单，
-	* 将此订单的expire_time更新为签收时间（物流中心的wayBillInfo的last_time）， order_status更新为S03.
-	* 物流中心的wayBillInfo的isWriteBack标记为1				
+	* @Description:将S04的wayBillInfo的isWriteBack的字段更新为1			
 	* @param @param wayBillInfoList
 	* @param @return
 	* @return int
 	* @throws
 	 */
-	public int writeBackToOrdercenter(List<WayBillInfo> wayBillInfoList) throws Exception {
-		/*1、 调用orderinfo的业务层,将状态回写*/
-		int updateOrderInfoCount =0;
-		try {
-			updateOrderInfoCount = orderInfoService.writeBackUpdateOrderInfo(wayBillInfoList);			
-		} catch (Exception e) {
-			logger.error("已妥投运单回写程序--更新订单中心订单数据程序出错！ 运单信息："+JSONArray.fromObject(wayBillInfoList), e);
-			throw new Exception();
-		}
-		/*2、调用挖吖billinfo的业务层，更改isWriteBack为1*/
-		ArrayList<WayBillInfo> needUpdateList = new ArrayList<WayBillInfo>();
-		for (WayBillInfo wayBillInfo : wayBillInfoList) {
-			wayBillInfo.setIsWriteback(1);
-			needUpdateList.add(wayBillInfo);		
-		}
+	public int writeBackUpdateWayBillInfo(List<WayBillInfo> wayBillInfoList) throws Exception {
 		int updateWayBillInfoCount =0;
 		try {
-			updateWayBillInfoCount = wayBillInfoMapper.updateWayBillInfoBatch(needUpdateList);			
+			/*1、调用billinfo的业务层，更改isWriteBack为1*/
+			ArrayList<WayBillInfo> needUpdateList = new ArrayList<WayBillInfo>();
+			for (WayBillInfo wayBillInfo : wayBillInfoList) {
+				wayBillInfo.setIsWriteback(1);
+				needUpdateList.add(wayBillInfo);		
+			}
+			updateWayBillInfoCount = wayBillInfoMapper.updateWayBillInfoBatch(needUpdateList);
 		} catch (Exception e) {
 			logger.error("已妥投运单回写程序--回写到订单中心成功后,更新运单在物流中心的WayBillInfo表的isWriteBack字段为1的程序出错！ 运单信息："+JSONArray.fromObject(wayBillInfoList), e);
 			throw new Exception();
-		}	
+		}
 		return updateWayBillInfoCount;
 	}	
 }

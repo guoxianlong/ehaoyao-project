@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import com.ehaoyao.logistics.common.model.logisticscenter.WayBillInfo;
 import com.ehaoyao.logistics.common.service.ExpressInfoService;
+import com.ehaoyao.logistics.common.service.OrderInfoService;
 import com.ehaoyao.logistics.common.service.ToLogisticsCenterService;
 import com.ehaoyao.logistics.common.service.WayBillDetailService;
 import com.ehaoyao.logistics.common.service.WayBillInfoService;
@@ -46,6 +47,8 @@ public class WriteBackOrderCenterTask {
 	ToLogisticsCenterService toLogisticsService;	
 	@Autowired
 	ExpressInfoService expressInfoService;
+	@Autowired
+	OrderInfoService orderInfoService;
 	/**
 	 * 
 	* @Description:将物流中心已妥投(s04)、未回写的运单 回写到订单中心
@@ -54,6 +57,8 @@ public class WriteBackOrderCenterTask {
 	* @throws
 	 */
 	public void writeBackOrderCenter() {
+		Date programStartDate = new Date();//程序开始时间
+		logger.info("物流中心已妥投(s04)、未回写的运单 回写到订单中心程序开始！！！！！");
 		/*1、去物流中心抓取   已妥投、未回写、五天内的运单集合*/
 		//1.1   抓运单开始时间、结束时间
 		String writeBackDateStr = appConfigs.getString("writeBackDate");
@@ -79,6 +84,10 @@ public class WriteBackOrderCenterTask {
 			e.printStackTrace();
 			logger.error("抓取S04运单集合的程序出错！！", e);
 		}
+		if(wayBillInfoList.size()==0){
+			logger.info("查到物流中心已妥投(s04)、未回写的运单为0条,物流回写程序结束！！！");
+			return ;
+		}
 		/*2、遍历运单集合，准备批量处理*/
 		int totalWriteBackCount = 0;//累计最终成功回写条数
 		int batchCount =Integer.parseInt(appConfigs.getString("writeBackBatchCount"));//每次处理条数
@@ -93,8 +102,12 @@ public class WriteBackOrderCenterTask {
 			/*3、将运单回写到订单中心,成功后，更新该运单对应订单在订单中心的数据（order_status、expire_time）、
 			 * 更新该运单在物流中心的数据（is_writeback）*/
 			int writeBackCount = 0 ;//每次最终成功回写条数
+			int updateOrderInfoCount=0;
 			try {
-				writeBackCount = wayBillInfoService.writeBackToOrdercenter(subList);
+				//3.1 更新订单中心的order_info，更新字段为expire_time、order_status
+				updateOrderInfoCount = orderInfoService.writeBackUpdateOrderInfo(wayBillInfoList);
+				//3.2 将物流中心的wayBillInfo的isWriteBack标记为1
+				writeBackCount = wayBillInfoService.writeBackUpdateWayBillInfo(subList);				
 			} catch (Exception e) {
 				e.printStackTrace();
 				logger.error("已妥投运单集合回写订单中心程序报错！！！！", e);
@@ -103,7 +116,8 @@ public class WriteBackOrderCenterTask {
 			logger.info("【共从物流中心获取已妥投、未回写运单"+wayBillInfoList.size()+"条记录，每次处理"+batchCount+"条，共需处理"+((wayBillInfoList.size()-1)/batchCount+1)+"次，当前处理第"+count+"次，当前成功回写"+writeBackCount+"条，累计成功回写"+totalWriteBackCount+"条】");
 			count++;//每次处理后加1
 		}
-		
+		Date programEndDate = new Date();
+		logger.info("物流中心已妥投(s04)、未回写的运单总共成功回写"+totalWriteBackCount+"条,共耗时："+(programEndDate.getTime()-programStartDate.getTime())/1000+"s,回写到订单中心程序结束！！！！");
 	}
 	
 }

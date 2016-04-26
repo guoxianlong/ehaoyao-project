@@ -5,6 +5,9 @@ package com.ehaoyao.logistics.common.service.impl;
 
 import java.util.List;
 
+import net.sf.json.JSONArray;
+
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ehaoyao.logistics.common.mapper.ordercenter.OrderInfoMapper;
 import com.ehaoyao.logistics.common.model.logisticscenter.WayBillInfo;
 import com.ehaoyao.logistics.common.service.OrderInfoService;
+import com.ehaoyao.logistics.common.task.ExpressInfoInitTask;
 
 /**
  * @author xushunxing 
@@ -21,6 +25,7 @@ import com.ehaoyao.logistics.common.service.OrderInfoService;
 @Transactional(value="transactionManagerOrderCenter")
 @Service(value="orderInfoServiceImpl")
 public class OrderInfoServiceImpl implements OrderInfoService {
+	private static final Logger logger = Logger.getLogger(ExpressInfoInitTask.class);
 	@Autowired
 	private OrderInfoMapper orderInfoMapper;
 	/**
@@ -32,7 +37,14 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 	* @throws
 	 */
 	public int writeBackUpdateOrderInfo(List<WayBillInfo> wayBillInfoList) throws Exception {
-		return orderInfoMapper.writeBackUpdateOrderInfo(wayBillInfoList);
+		int writeBackUpdateOrderInfo=0;
+		try {
+			writeBackUpdateOrderInfo = orderInfoMapper.writeBackUpdateOrderInfo(wayBillInfoList);
+		} catch (Exception e) {
+			logger.error("已妥投运单回写程序--回写到订单中心的程序出错！ 运单信息："+JSONArray.fromObject(wayBillInfoList), e);
+			throw new Exception();
+		}
+		return writeBackUpdateOrderInfo;
 	}
 
 }

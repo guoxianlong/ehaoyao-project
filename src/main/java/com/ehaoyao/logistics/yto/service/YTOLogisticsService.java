@@ -19,7 +19,7 @@ public interface YTOLogisticsService {
 	 * @return
 	 * @throws Exception
 	 */
-	public int updateYTOWayBills(List<WayBillInfo> wayBillInfoList) throws Exception;
+	public Integer updateYTOWayBills(List<WayBillInfo> wayBillInfoList) throws Exception;
 	
 	
 }

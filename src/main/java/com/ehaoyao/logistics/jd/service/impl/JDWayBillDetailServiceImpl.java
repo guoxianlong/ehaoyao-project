@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ehaoyao.logistics.common.mapper.logisticscenter.WayBillDetailMapper;
 import com.ehaoyao.logistics.common.mapper.logisticscenter.WayBillInfoMapper;
@@ -24,6 +25,7 @@ import com.ehaoyao.logistics.jd.service.JDWayBillDetailService;
  * @author xushunxing
  *
  */
+@Transactional(value="transactionManagerLogisticsCenter")
 @Service
 public class JDWayBillDetailServiceImpl implements JDWayBillDetailService {
 	private static final Logger logger = Logger.getLogger(JDWayBillInfoServiceImpl.class);

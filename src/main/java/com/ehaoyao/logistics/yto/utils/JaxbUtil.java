@@ -31,8 +31,8 @@ public class JaxbUtil {
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			object = jaxbUnmarshaller.unmarshal(reader);
 		} catch (Exception e) {
-			logger.error("jaxb将xml转换为javabean出现异常:" + e.getMessage());
-			e.printStackTrace();
+//			logger.error("jaxb将xml转换为javabean出现异常:" + e.getMessage());
+//			e.printStackTrace();
 		}
 		return object;
 	}

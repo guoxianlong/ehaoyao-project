@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import net.sf.json.JSONArray;
+
 import org.apache.log4j.Logger;
 
 import com.ehaoyao.logistics.common.model.logisticscenter.WayBillInfo;
@@ -58,7 +60,7 @@ public class UpdateWayBillThread extends Thread {
 					updateCount = waybillInfoService.updateWaybillInfoListByJD(subList);
 				} catch (Exception e) {
 					e.printStackTrace();
-					logger.error(Thread.currentThread().getName()+"【物流中心更新运单程序出错！！】");
+					logger.error(Thread.currentThread().getName()+"【物流中心更新运单程序出错！！】     运单信息："+JSONArray.fromObject(subList));
 				}
 				totalUpdateCount+=updateCount;
 				logger.info(Thread.currentThread().getName()+"【物流中心抓取到未妥投、未拒收运单"+wayBillInfoList.size()+"条记录，每次处理"+updateSize+"条，共需处理"+((wayBillInfoList.size()-1)/updateSize+1)+"次，当前处理第"+count+"次，当前成功更新"+updateCount+"条，累计成功更新"+totalUpdateCount+"条】");
@@ -66,6 +68,6 @@ public class UpdateWayBillThread extends Thread {
 			}
 		}
 		Date dateEnd = new Date();
-		logger.info(Thread.currentThread().getName()+"本次京东快递更新物流跟踪信息线程结束！！！耗时："+(dateEnd.getTime()-dateStart.getTime())+"s");
+		logger.info(Thread.currentThread().getName()+"本次京东快递更新物流跟踪信息线程结束！！！耗时："+((dateEnd.getTime()-dateStart.getTime()))/1000+"s");
 	}
 }

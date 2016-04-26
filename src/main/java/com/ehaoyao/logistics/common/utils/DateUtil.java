@@ -18,6 +18,7 @@ public class DateUtil {
 	public final static String DATEFORMATHMSS = "yyyy-MM-dd HH:mm:ss:SSS";
 	public final static String DATEFORMATCH = "yyyy年MM月dd日";
 	public final static String DATEFORMATMCH = "yyyy年MM月dd日 HH时mm分ss秒";
+	public final static String DATEFORMATSLASH = "yyyy/MM/dd HH:mm:ss";
 	public static DateFormat FORMAT_TIME = null;
 
 	public static Calendar c = Calendar.getInstance();;
@@ -367,8 +368,11 @@ public class DateUtil {
 			case 5:
 				FORMAT_TIME = new SimpleDateFormat(format);
 				break;
+			case 6:
+				FORMAT_TIME = new SimpleDateFormat(format);
+				break;
 			default:
-				FORMAT_TIME = new SimpleDateFormat(DATEFORMATHMS);
+				FORMAT_TIME = new SimpleDateFormat(DATEFORMATSLASH);
 				break;
 			}
 			return FORMAT_TIME.parse(strDate);

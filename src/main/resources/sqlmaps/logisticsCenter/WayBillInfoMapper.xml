@@ -282,6 +282,9 @@
 		<if test="waybillStatus !=null and waybillStatus !='' ">
 			and waybill_status = #{waybillStatus,jdbcType=CHAR}
 		</if>
+		<if test="isWriteback !=null ">
+			and is_writeback = #{isWriteback,jdbcType=INTEGER}
+		</if>
 		<if test="lastTimeStart !=null and lastTimeStart !='' ">
 			and last_time &gt;#{lastTimeStart,jdbcType=TIMESTAMP}
 		</if>
