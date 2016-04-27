@@ -96,7 +96,7 @@ public class YTOLogisticsServiceImpl implements YTOLogisticsService {
 			
 			//2,	根据返回物流集合更新物流中心最新物流信息
 			List<WaybillProcessInfo> infoList = expInfo.getResult().getWaybillProcessInfo();
-			Collections.sort(infoList, new SortByUploadTime());
+//			Collections.sort(infoList, new SortByUploadTime());
 			
 			for(WaybillProcessInfo expressInfo:infoList){
 				String upLoadTime = expressInfo.getUploadTime().replaceAll("/", "-");
