@@ -31,7 +31,7 @@ public class YTOLogisticsTask {
 	 * 更新订单采用圆通快递配送的物流信息
 	 */
 	public void updateYTOWayBills(){
-		
+		long startTime = System.currentTimeMillis();
 		int fixThreadCount =Integer.parseInt(ytoConfig.getString("fixThreadCount"));//每个线程处理条数
 		
 		List<WayBillInfo>  subThreadList = null;//每个线程处理结果集
@@ -49,22 +49,31 @@ public class YTOLogisticsTask {
 
 			//创建线程池
 			ExecutorService pool = Executors.newFixedThreadPool(threadCount);
-			//创建子线程处理任务
-			for(int i = 0;i<wayBillInfoList.size();i+=fixThreadCount){
-				if((i+fixThreadCount)>wayBillInfoList.size()){
-					subThreadList = wayBillInfoList.subList(i,wayBillInfoList.size());
-				}else{
-					subThreadList = wayBillInfoList.subList(i,i+fixThreadCount);
+			
+				//创建子线程处理任务
+				for(int i = 0;i<wayBillInfoList.size();i+=fixThreadCount){
+					if((i+fixThreadCount)>wayBillInfoList.size()){
+						subThreadList = wayBillInfoList.subList(i,wayBillInfoList.size());
+					}else{
+						subThreadList = wayBillInfoList.subList(i,i+fixThreadCount);
+					}
+					YTOLogisticsThread ytoLogisticsThread = new YTOLogisticsThread();
+					ytoLogisticsThread.setYtoLogisticsService(ytoLogisticsService);
+					ytoLogisticsThread.setSubThreadList(subThreadList);
+					pool.execute(ytoLogisticsThread);
 				}
-				YTOLogisticsThread ytoLogisticsThread = new YTOLogisticsThread();
-				ytoLogisticsThread.setYtoLogisticsService(ytoLogisticsService);
-				ytoLogisticsThread.setSubThreadList(subThreadList);
-				pool.execute(ytoLogisticsThread);
-			}
-			
-			//关闭线程池
-			pool.shutdown();
-			
+				
+				//关闭线程池
+				pool.shutdown();
+				while(true){
+					if(pool.isTerminated()){
+						break;
+					}
+				}
+				
+			logger.info("【###pool.isTerminated()="+pool.isTerminated()+"###】");
+			long endTime = System.currentTimeMillis();
+			logger.info("【更新物流中心-采用圆通物流配送的物流信息，已完成,共耗时："+(endTime-startTime)/1000+"s】");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

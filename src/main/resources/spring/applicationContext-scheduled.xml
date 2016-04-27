@@ -17,7 +17,7 @@
 		<!-- <task:scheduled ref="expressInfoInitTask" method="insertWayBill" cron="0 0/3 * * * ?"/> -->
         <!-- <task:scheduled ref="jDExpressTask" method="updateWayBillToLogisticsDB" cron="0 0 0/1 * * ?"/>
         <task:scheduled ref="writeBackOrderCenterTask" method="writeBackOrderCenter" cron="0 0/10 * * * ?"/>-->
-        <task:scheduled  ref="ytoLogisticsTask" method="updateYTOWayBills"  cron="0 0/2 * * * ?" /> 
+        <task:scheduled  ref="ytoLogisticsTask" method="updateYTOWayBills"  initial-delay="10000"  fixed-delay="60000"/> 
     </task:scheduled-tasks> 
     
 </beans>

@@ -34,7 +34,6 @@ public class YTOLogisticsServiceImpl implements YTOLogisticsService {
 	private static ResourceBundle ytoConfig = ResourceBundle.getBundle("ytoConfig");
 	private static final Logger logger = Logger.getLogger(YTOLogisticsServiceImpl.class);
 	String waybillsource = ytoConfig.getString("waybillsource");
-	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	@Autowired
 	WayBillInfoMapper waybillInfoMapper;
@@ -75,13 +74,12 @@ public class YTOLogisticsServiceImpl implements YTOLogisticsService {
 		List<WayBillDetail> wbDetailList = new ArrayList<WayBillDetail>();
 		List<WayBillInfo> wbnfoList = new ArrayList<WayBillInfo>();
 		String upLoadTimeNull = "";
-		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		for(int i=0;i<wayBillInfoList.size();i++){
 			//1,	根据运单号调用圆通物流接口，获取物流信息
 			WayBillInfo wayBillInfo = wayBillInfoList.get(i);
 			waybillNumber = wayBillInfo.getWaybillNumber();
-//			waybillNumber = "806804266812";
-			logger.info("【"+Thread.currentThread().getName()+"开始抓取圆通快递单号为：" + waybillNumber + "的快递信息,当前第"+(i+1)+"条】");
+//			logger.info("【"+Thread.currentThread().getName()+"开始抓取圆通快递单号为：" + waybillNumber + "的快递信息,当前第"+(i+1)+"条】");
 			// 截取No:字符串，校正运单号
 			if ("No:".equals(waybillNumber.substring(0, 3))) {
 				result = YTServiceNet.getExpressInfo(waybillNumber.substring(3, waybillNumber.length()).trim());
@@ -93,7 +91,6 @@ public class YTOLogisticsServiceImpl implements YTOLogisticsService {
 			Ufinterface expInfo=(Ufinterface) JaxbUtil.createXMLToBean(new StringReader(result.trim()), Ufinterface.class);
 			boolean flag = this.checkRespons(result,wayBillInfo,response,expInfo);
 			if(!flag){
-//				logger.info("【处理圆通返回信息出现错误，请求物流单号："+waybillNumber.trim()+"，圆通接口返回信息："+result+"】");
 				continue;
 			}
 			
@@ -103,12 +100,6 @@ public class YTOLogisticsServiceImpl implements YTOLogisticsService {
 			
 			for(WaybillProcessInfo expressInfo:infoList){
 				String upLoadTime = expressInfo.getUploadTime().replaceAll("/", "-");
-				/*try {
-					sdf.parse(upLoadTime);
-				} catch (Exception e) {
-					logger.info("#######################"+result);
-					e.printStackTrace();
-				}*/
 				if(wayBillInfo.getLastTime() != null && upLoadTime!=null && upLoadTime.trim().length()>0 && sdf.parse(upLoadTime).before(wayBillInfo.getLastTime())){
 					continue;
 				}
@@ -204,10 +195,10 @@ public class YTOLogisticsServiceImpl implements YTOLogisticsService {
 	public String opeTitleTOWayBillStatus (String opeTitle ){
 		if (opeTitle.contains("已收件")) {
 			return "s01";
-		}else if(opeTitle.contains("已签收")){
-			return "s04";
-		}else if(opeTitle.contains("拒收")){
+		}else if(opeTitle.contains("客户 签收人: 已退回")){
 			return "s03";
+		}else if(opeTitle.contains("客户 签收人:")){
+			return "s04";
 		}else{
 			return "s02";
 		}
