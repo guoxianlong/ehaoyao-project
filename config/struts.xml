@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+    "http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+
+	<!-- 设置是否使用动态方法调用：actionName!methodName -->
+	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
+	<!-- 设置开发模式 -->
+	<constant name="struts.devMode" value="true" />
+	<!--
+		http://localhost:8080/appName/xxx/user!save.action namespace:
+		如果不配置任何值，匹配任意路径：/xxx/y/index,/xxx/y/z/index 一般是以模块命名
+
+		struts-default：配置一些基础的拦截器，类等
+	-->
+
+	<package name="default" namespace="/" extends="struts-default">
+	<action name="logistics"
+			class="com.haoys.logisticsServer.controller.LogisticsController">
+			<result name="queryDetail">/LOGISTICS_JSP/logisticsDetail.jsp</result>
+		</action>
+	</package>
+</struts>
+    

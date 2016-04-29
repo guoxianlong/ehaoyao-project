@@ -1,0 +1,12 @@
+/META-INF/
+/com/
+/express.properties
+/expressCodeToName.properties
+/expressIDtoKD100Code.properties
+/flagCodeToName.properties
+/jdbc.properties
+/log4j.properties
+/memcached.properties
+/orderCodeToKD100Code.properties
+/struts.xml
+/taskConfig.properties

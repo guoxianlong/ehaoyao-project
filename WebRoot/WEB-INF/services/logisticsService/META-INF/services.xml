@@ -1,0 +1,18 @@
+<service name="LogisticsService">
+	<description>
+		LogisticsService
+	</description>
+	<parameter name="ServiceClass">
+		com.haoys.logisticsServer.ws.service.LogisticsWebService
+    </parameter>
+	<messageReceivers>
+		<messageReceiver mep="http://www.w3.org/2004/08/wsdl/in-out"
+			class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
+	</messageReceivers>
+
+
+
+
+</service>
+
+ 
