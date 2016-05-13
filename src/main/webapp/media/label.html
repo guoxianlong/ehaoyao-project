@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+
+<style type="text/css">
+.form-inline{margin:10px 0;}
+.form-inline .form-title{display:block; float:left; padding:0 5px;  text-align:right; line-height:34px;}
+.rightbox{width:700px;}
+</style>
+<title>标签管理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script>
+		var num = 1;
+			$(function(){
+				$("select[name=ulabel]").live("change",function(){
+					$(this).nextAll().remove();
+					var id = $(this).val();
+					//alert(id);
+					var select = $(this);
+					$.ajax({
+						type:'POST',
+						url:'json.html',
+						data:'id='+id,
+						dataType:"json",
+						success:function(res){
+							if(res!=null){
+								num++;
+								var str="<div class='col-xs-2 col-md-2'>";
+								str+="<select name='ulabel"+num+"' class='form-control input-sm'><option value=''>-请选择-</option>";
+								for(var i=0;i<res.length;i++){
+									str+="<option value='"+res[i].id+"'>"+res[i].name+"</option>";
+								}
+									str+="</select></div>";
+								//alert(str);
+								select.parent().after(str);
+							}
+						}
+					})
+
+				});
+			})
+	</script>
+
+	<script>
+		$(function(){
+			$("select[name=clabel]").live("change",function(){
+				//要添加的元素HTML
+				var selectStr	= '<div id="did" class="right_input" style="width:100px;">';
+					selectStr	+= '<select name="" class="form-control input-sm" >';
+					selectStr	+= '<option value="0">京东</option>';
+					selectStr	+= '<option value="1">天猫</option>';
+					selectStr	+= '<option value="2">官网</option>';
+					selectStr	+= '</select>';
+					selectStr	+= '</div>';
+				//生成的文本个数
+				var cid 	= parseInt($(this).val());
+				
+				//移除页面所有
+				var actionNode	= $("#element-node")
+				actionNode.nextAll().remove();		
+				if(cid > 0){
+					//循环生成
+					for(var j=0;j<cid;j++){
+						actionNode.after(selectStr);
+					}
+				}
+			});
+	});
+	</script>
+
+</head>
+<body>
+<div class="right_box">
+	<div class="right_h"><h3> 标签编辑模板</h3></div>
+	<div class="right_h right_bg" > 通用标签信息</div>
+	  <div class="right_box_l">
+		  <div class="right_inline">
+			  <div class="right_title">标签编码</div>
+			  <div class="right_input" style="width:300px;"><input name="text" type="text" class="form-control input-sm"  placeholder=" "></div>
+		  </div>
+		  <div class="right_inline">
+			  <div class="right_title">标签名称</div>
+			  <div class="right_input" style="width:300px;"><input name="text" type="text" class="form-control input-sm" placeholder=" "></div>
+		  </div>
+		  <div class="right_inline">
+			  <div class="right_title">标签层级</div>
+			  <div class="right_input" style="width:300px;">
+				  	<select name="clabel" class="form-control input-sm" >
+						<option value='0'>一级标签</option>
+						<option value='1'>二级标签</option>
+						<option value='2'>三级标签</option>
+						<option value='3'>四级标签</option>
+					</select>
+			  </div>
+		  </div>
+		  <div class="right_inline">
+			  <div class="right_title" id="element-node">父标签</div>
+			  <div id="did" class="right_input" style="width:100px;">
+			  		<select name="" class="form-control input-sm" >
+						<option value='0'>京东</option>
+						<option value='1'>天猫</option>
+						<option value='2'>官网</option>
+					</select>
+			  </div>
+		  </div>
+		  <div class="right_inline ">
+		  	<button type="button" class="btn btn-info   btn-sm pull-right" style="margin:5px 15px 0 0;">保存</button>
+		  	<button type="button" class="btn btn-info pull-right  btn-sm" style="margin:5px 15px 0 0;">取消</button>
+		  </div>
+	</div>
+
+	<div class="clears"></div>
+	<div class="bianji">
+		<ul id="acc1" class="ui-accordion-container">
+			<li>
+		   		<a class="ui-accordion-link acc1"><span style="float:right; font-size:12px; font-family:'宋体'; padding:10px 15px 0 0;">收起</span>标签管理</a>
+		   	</li>
+	    </ul>
+	</div>
+
+	<div class="row">
+	  <div class="col-xs-2 col-md-2 text-center"><span class="form-title" style="margin-right:25px;" ><strong>标签分类级</strong></span></div>
+	  <div class="col-xs-2 col-md-2">
+			<select name="ulabel" class="form-control input-sm" >
+				<option value=''>-请选择-</option>
+				<option value='1'>京东商城</option>
+				<option value='2'>官网商城</option>
+			</select>
+	  </div>
+	</div>
+
+	<div class="col-xs-10"  style="margin-top:15px;">
+		<form class="form-inline" role="form">
+		  <div class="form-group">
+		    <label class="sr-only" for="exampleInputEmail2">模糊查询标签编码</label>
+		    <input type="email" class="form-control" id="exampleInputEmail2" placeholder="模糊查询标签编码">
+		  </div>
+		  <div class="form-group">
+		    <label class="sr-only" for="exampleInputPassword2">模糊查询标签名称</label>
+		    <input type="password" class="form-control" id="exampleInputPassword2" placeholder="模糊查询标签名称">
+		  </div>
+		  <button type="submit" class="btn btn-default">搜索</button>
+		</form>
+	</div>
+	<div class="col-xs-10"  style="margin-top:15px;">
+		<table width="100%" border="0"  class="table table-bordered"> 
+			<tr>
+			    <td width="13%">标签编码</td>
+			    <td width="10%">标签名称</td>
+			    <td width="10%">层级</td>
+			    <td width="12%">父标签</td>
+			    <td width="20%">操作</td>
+			</tr>
+			<tr>
+			    <td>&nbsp;</td>
+			    <td>&nbsp;</td>
+			    <td>&nbsp;</td>
+			    <td>&nbsp;</td>
+			    <td>
+			 		<button type="button" class="btn btn-success   btn-xs">编辑</button>
+			 		<button type="button" class="btn btn-danger btn-xs">删除</button>
+					<button type="button" class="btn btn-primary  btn-xs">创建下一级</button>
+				</td>
+			</tr>
+			<tr>
+			    <td>&nbsp;</td>
+			    <td>&nbsp;</td>
+			    <td>&nbsp;</td>
+			    <td>&nbsp;</td>
+			    <td>
+			 		<button type="button" class="btn btn-success   btn-xs">编辑</button>
+			 		<button type="button" class="btn btn-danger btn-xs">删除</button>
+					<button type="button" class="btn btn-primary  btn-xs">创建下一级</button>
+				</td>
+		    </tr>
+		</table>
+		<div class="btn-toolbar pull-right" role="toolbar">
+		  <div class="btn-group"> <button type="button" class="btn btn-default btn-xs">1</button></div>
+		  <div class="btn-group"> <button type="button" class="btn btn-default btn-xs">2</button></div>
+		  <div class="btn-group"> <button type="button" class="btn btn-default btn-xs">3</button></div>
+		</div>
+	</div>
+</body>
+</html>

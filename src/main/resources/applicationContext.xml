@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security" 
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd 
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+	http://www.springframework.org/schema/security  
+	http://www.springframework.org/schema/security/spring-security.xsd
+	http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+	 ">
+	<context:annotation-config/>
+	<mvc:annotation-driven />
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+	<context:component-scan base-package="com.haoyao.goods.dao" />
+	<context:component-scan base-package="com.haoyao.goods.service" /><!-- 自动装配 -->  
+	<context:component-scan base-package="com.haoyao.goods.action" />
+	<context:component-scan base-package="com.ehaoyao.opertioncenter.*.service" /><!-- 自动装配 -->  
+	<context:component-scan base-package="com.ehaoyao.opertioncenter.*.action" />
+	<context:component-scan base-package="com.ehaoyao.opertioncenter.*.dao" />
+	<!-- 自动扫描所有注解该路径 -->
+	<context:property-placeholder location="classpath:/hibernate.properties" ignore-unresolvable="true" />
+	<!-- 支持文件上传 -->
+	<beans:bean id="multipartResolver"     class="org.springframework.web.multipart.commons.CommonsMultipartResolver"  p:defaultEncoding="utf-8"/>
+	  
+	<beans:bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<beans:property name="driverClassName">
+			<beans:value>${dataSource.driverClassName}</beans:value>
+		</beans:property>
+		<beans:property name="url">
+			<beans:value>${dataSource.url}</beans:value>
+		</beans:property>
+		<beans:property name="username">
+			<beans:value>${dataSource.username}</beans:value>
+		</beans:property>
+		<beans:property name="password">
+			<beans:value>${dataSource.password}</beans:value>
+		</beans:property>
+		<beans:property name="initialSize">
+			<beans:value>3</beans:value>
+		</beans:property>
+		<beans:property name="maxActive">
+			<beans:value>20</beans:value>
+		</beans:property>
+		<beans:property name="maxWait">
+			<beans:value>-1</beans:value>
+		</beans:property>
+		<beans:property name="maxIdle">
+			<beans:value>20</beans:value>
+		</beans:property>
+		<beans:property name="removeAbandoned" value="true" />
+		<beans:property name="removeAbandonedTimeout" value="60" />
+		<beans:property name="timeBetweenEvictionRunsMillis" value="300000" />
+		<beans:property name="logAbandoned" value="true" />
+	</beans:bean>
+	<beans:bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<beans:property name="dataSource" ref="dataSource" />
+		<beans:property name="hibernateProperties">
+			<beans:props>
+				<beans:prop key="hibernate.dialect">
+					${dataSource.dialect}
+				</beans:prop>
+				<beans:prop key="hibernate.hbm2ddl.auto">
+					${dataSource.hbm2ddl.auto}
+				</beans:prop>
+				<beans:prop key="hibernate.jdbc.batch_size">
+					${dataSource.jdbc.batch_size}
+				</beans:prop>
+			</beans:props>
+		</beans:property>
+		<beans:property name="packagesToScan">
+			<beans:list>
+				<beans:value>com.haoyao.goods.model</beans:value>
+				<beans:value>com.ehaoyao.opertioncenter.*.model</beans:value>
+				<!-- 扫描实体类，也就是平时所说的model -->
+			</beans:list>
+		</beans:property>
+	</beans:bean>
+	<beans:bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<beans:property name="sessionFactory" ref="sessionFactory" />
+	</beans:bean>
+	
+	 <!-- spring hibernate工具类模板 -->
+	<beans:bean id="hibernateTemplate"
+		class="org.springframework.orm.hibernate3.HibernateTemplate">
+		<beans:property name="sessionFactory" ref="sessionFactory"></beans:property>
+	</beans:bean>
+	<!-- spring jdbc 工具类模板 -->
+	<beans:bean id="jdbcTemplate"
+		class="org.springframework.jdbc.core.JdbcTemplate">
+		<beans:property name="dataSource">
+			<beans:ref bean="dataSource" />
+		</beans:property>
+	</beans:bean>
+	<beans:bean id="transactionInterceptor"
+		class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<beans:property name="transactionManager" ref="transactionManager" />
+		<beans:property name="transactionAttributes">
+			<beans:props>
+				<beans:prop key="get*">PROPAGATION_REQUIRED,readOnly</beans:prop>
+				<beans:prop key="find*">PROPAGATION_REQUIRED,readOnly</beans:prop>
+				<beans:prop key="query*">PROPAGATION_REQUIRED,readOnly</beans:prop>
+				<beans:prop key="load*">PROPAGATION_REQUIRED,readOnly</beans:prop>
+				<beans:prop key="export*">PROPAGATION_REQUIRED,readOnly</beans:prop>
+				<beans:prop key="save*">PROPAGATION_REQUIRED,-Exception</beans:prop>
+				<beans:prop key="insert*">PROPAGATION_REQUIRED,-Exception</beans:prop>
+				<beans:prop key="add*">PROPAGATION_REQUIRED,-Exception</beans:prop>
+				<beans:prop key="update*">PROPAGATION_REQUIRED,-Exception</beans:prop>
+				<beans:prop key="del*">PROPAGATION_REQUIRED,-Exception</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+	<beans:bean
+		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<beans:property name="beanNames">
+			<beans:list>
+	            <beans:value>shortMessageServiceImpl</beans:value>
+	            <beans:value>commuServiceImpl</beans:value>
+	            <beans:value>callerScreenServiceImpl</beans:value>
+	            <beans:value>taskAllocateServiceImpl</beans:value>
+	            <beans:value>returnGoodsServiceImpl</beans:value>
+			</beans:list>
+		</beans:property>
+		<beans:property name="interceptorNames">
+			<beans:list>
+				<beans:value>transactionInterceptor</beans:value>
+			</beans:list>
+		</beans:property>
+	</beans:bean>
+</beans:beans>
+

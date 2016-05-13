@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+	<!--系统参数  -->
+	<beans:bean id="settings" class="com.haoyao.goods.security.Settings" >
+		<beans:property name="uploadPath"><beans:value>/usr/local/apache-tomcat-6.0.36/webapps/data/goodscenter/imges</beans:value></beans:property>
+		<beans:property name="spPath"><beans:value>http://192.168.98.201:18080/</beans:value></beans:property> 
+		<beans:property name="wwPath"><beans:value>http://img01.img.ehaoyao.com/</beans:value></beans:property>   
+	</beans:bean>
+	
+</beans:beans>

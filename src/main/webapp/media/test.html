@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<metahttp-equiv="X-UA-Compatible" content="IE=9;">
+<title>商品中心后台</title>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<link href="css/bootstrap.min.css" rel="stylesheet">
+
+<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery.accordion.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function() {
+		$("#acc1").accordion({
+			alwaysOpen: false,
+			autoheight: false,
+			header: 'a.acc1',
+			clearStyle: true
+		});
+	});
+	</script>
+</head>
+
+<body>
+<div class="full"> 
+  <!--页面内容开始-->
+  <div class="top"><div class="pull-right" style=""> <span style="line-height:33px; height:33px;vertical-align :middle">欢迎您 <font color="#FF6600">ADMIN</font>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;退出</span></div><h2>&nbsp;商品中心后台</h2>
+    
+  </div>
+  <div class="content_all">
+  <!--主内容开始-->
+  
+  <div class="clears"></div>
+  <div class="list_a">
+<div class="list_a_2">  
+  <div class="left_menu">
+  <div class="caidandazi">商品中心</div>
+  <div class="clears"></div>
+    <ul id="acc1" class="ui-accordion-container">
+   
+      <li> <a class="ui-accordion-link acc1">商品信息管理</a>
+        <div>
+        <div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span> <a href="#">商品查询</a></div>
+        <div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span>  <a href="bianji.html" target="right">添加商品</a></div>
+		<div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span> <a href="#">商品图片</a></div>
+		<div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span>  <a href="#">商品变更审核</a></div>
+		<div class="clears"></div>
+        </div>
+      </li>
+      <li> <a class="ui-accordion-link acc1">销售套餐管理</a>
+        <div>
+        <div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span>  <a href="#" target="right">商品生成套餐</a></div>
+        <div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span>  <a href="#">套餐信息管理</a></div>
+		<div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span>  <a href="#">导出及同步套餐</a></div>
+		<div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span>  <a href="#">编辑商图片</a></div>
+		<div class="clears"></div>
+        </div>
+      </li>
+           <li> <a href="#" class="ui-accordion-link acc1">分类管理</a>
+		       <div>
+        <div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span>  <a href="#" target="right">药监分类管理</a></div>
+        <div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span>  <a href="#">前端分类及标签管理</a></div>
+		<div class="clears"></div>
+        </div>
+      </li>
+	  <li> <a href="#" class="ui-accordion-link acc1">商品质检</a>
+		       <div>
+        <div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span>  <a href="#" target="right">商品查询</a></div>
+        <div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span>  <a href="#">商品变更质检</a></div>
+		<div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span>  <a href="#">套餐查询质检</a></div>
+		<div class="clears"></div>
+        </div>
+      </li>
+	  <li> <a href="#" class="ui-accordion-link acc1">销售套餐管理</a>
+		       <div>
+        <div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span>  <a href="#" target="right">商品生成套餐</a></div>
+        <div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span>  <a href="#">商品查询</a></div>
+		<div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span>  <a href="#">套餐编辑</a></div>
+		<div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span>  <a href="#">编辑商图片</a></div>
+		<div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span>  <a href="#">商品变更审核</a></div>
+        <div class="clears"></div>
+        </div>
+      </li>
+    </ul>
+    </div>
+  
+  </div>
+  </div>
+
+  <div class="right_a">
+   <iframe src="jichu2.html" name="right" id="mainFrame" width="100%" frameborder="0" scrolling="no"></iframe>
+<script type="text/JavaScript">
+function reinitIframe(){
+var iframe = document.getElementById("mainFrame");
+try{
+var bHeight = iframe.contentWindow.document.body.scrollHeight;
+var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+var height = Math.max(bHeight, dHeight);
+iframe.height = height;
+}catch (ex){}
+}
+window.setInterval("reinitIframe()", 200);
+</script>
+  </div>
+  <!--主内容结束--></div>
+  
+   <!--底部内容-->
+   <!--底部内容结束-->
+   <!--页面内容结束-->
+<div class="clears"></div>
+</div>
+</body>
+</html>

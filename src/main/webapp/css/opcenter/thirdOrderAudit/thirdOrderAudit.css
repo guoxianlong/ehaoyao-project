@@ -1,0 +1,195 @@
+/*优先级描述：
+important > 内联 > ID > 类 > 标签 | 伪类 | 属性选择 > 伪对象 > 继承 > 通配符 通配符 > 继承*/
+
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+	position: relative;
+	padding: 0px 0px 5px 0px;
+	margin: 0px 0px 5px 0px;
+	text-align: center;
+	border: solid 1px #669966;
+	color: #CCFFCC;
+	background: #66CC66;
+	/*字体阴影效果*/
+	text-shadow: 10px 10px 20px #000;
+	/*四角弧度*/
+	-moz-border-radius: 10px; /* Firefox */
+  	-webkit-border-radius: 10px; /* Safari 和 Chrome */
+  	border-radius: 10px; /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
+	/*投影*/
+	-moz-box-shadow: 0 0 15px #000;
+	-webkit-box-shadow: 0 0 15px #000;
+	box-shadow: 0 0 15px #000;
+}
+
+.span {
+	font-size: 15px;
+	color: #66CC99;
+	margin: 0 5px;
+}
+
+.input {
+	border: 1px solid #ccc;
+	-moz-border-radius: 4px; /* Firefox */
+  	-webkit-border-radius: 4px; /* Safari 和 Chrome */
+  	border-radius: 4px; /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
+	height: 30px;
+	outline: none;
+	transition: all 0.30s ease-in-out;
+}
+
+.input:focus {
+	-moz-box-shadow: 0 0 8px rgba(81, 255, 238, 1);
+	-webkit-box-shadow: 0 0 8px rgba(81, 255, 238, 1);
+	box-shadow: 0 0 8px rgba(81, 255, 238, 1);
+}
+
+.fieldset {
+	border: 1px solid #CCCC99;
+	margin: 20px 25px;
+	/*上、左右、下*/
+	padding: 5px 20px 10px;
+	-moz-border-radius: 15px; /* Firefox */
+  	-webkit-border-radius: 15px; /* Safari 和 Chrome */
+  	border-radius: 15px; /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
+  	background-color: #F2FCF5;
+	width: auto;
+}
+
+.fieldset-small {
+	width: auto;
+	margin: 5px 10px;
+	/*上、左右、下*/
+	padding: 0px 20px 10px 20px;
+	border: 1px solid #CCCC99;
+	-moz-border-radius: 15px; /* Firefox */
+  	-webkit-border-radius: 15px; /* Safari 和 Chrome */
+  	border-radius: 15px; /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
+  	background-color: #F2FCF5;
+	font-size: 12px;
+	vertical-align: middle;
+}
+
+.legend-small {
+	margin: 0 ;
+	padding: 0 10px;
+	border: 0px;
+	width: auto;
+	font-size: 14px;
+	color: #66CC66;
+}
+
+.legend {
+	margin: 0 10px;
+	padding: 0 10px;
+	border: 0px;
+	width: auto;
+	color: #66CC66;
+}
+
+.span,
+.label > span,
+.fieldset > label > span,
+.fieldset-small > label > span {
+	padding: 0px 3px;
+	font-size: 12px;
+	color: #66CCFF;
+	width: auto;
+}
+
+.legend > span {
+	padding: 0px 3px;
+	font-size: 12px;
+	color: #66CC99;
+	width: auto;
+}
+
+.fieldset > label,
+.fieldset-small > label,
+.label {
+	margin: 5px 0px 0px 20px;
+    font-size: 12px;
+    color: #000;
+}
+
+.fieldset-small > label > font {
+	color: #66CCFF;
+}
+
+.button {
+	padding: 3px 8px;
+	margin: 8px 10px 0px;
+	color: #fff;
+	background-color: #428bca;
+	border-color: #357ebd;
+	font-size: 14px;
+	/*字体的粗细*/
+	font-weight: normal;
+	/*行高*/
+	/* line-height: 1.5; */
+	text-align: center;
+	/*文本不会换行，文本会在在同一行上继续，直到遇到 <br> 标签为止。*/
+	white-space: nowrap;
+	vertical-align: middle;
+	/*光标小手形*/
+	cursor: pointer;
+	border: 1px solid transparent;
+	-moz-border-radius: 4px; /* Firefox */
+  	-webkit-border-radius: 4px; /* Safari 和 Chrome */
+  	border-radius: 4px; /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
+	/*文本不能被选择*/
+	user-select: none;
+	float: right;
+}
+
+
+
+.contentDiv {
+	overflow: auto;
+	/* background-color: black; */
+}
+
+.page {
+	font-size: 12px;
+}
+
+.orderDetailDiv {
+	margin-bottom: 30px;
+}
+
+
+
+
+#loading {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background: rgba(210, 210, 255, 0.65);
+	z-index: 999999;
+	top: 0;
+	left: 0;
+}
+
+#loading .loaded {
+	position: relative;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+}
+
+#loading .loaded .load {
+	position: absolute;
+	width: 30px;
+	height: 30px;
+	background: url('../../../images/loading.gif') no-repeat;
+	background-size: 30px 30px;
+	left: 50%;
+	margin-left: -30px;
+	top: 50%;
+	margin-top: -30px;
+}

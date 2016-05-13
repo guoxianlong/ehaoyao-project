@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+
+<head>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+
+<link rel="stylesheet" href="css/jquery.tooltip.css" type="text/css"/>
+<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="js/jquery.tooltip.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<style type="text/css">
+
+
+.form-inline{margin:10px 0;}
+.form-inline .form-title{display:block; float:left; padding:0 5px;  text-
+align:right; line-height:34px;}
+.rightbox{width:700px;}
+	.select-box{height:70px; border:1px solid #ccc; overflow:hidden; overflow-y:scroll;}
+		.select-box .select-items{position:relative; float:left; margin:5px 0 0 5px; padding:5px 10px; border:1px solid #ccc; cursor:pointer;}
+		.select-box .select-items span{color:red; font-weight:bold;}
+		.select-box .select-items i{display:none; position:absolute; top:0; right:0; width:10px; height:10px; line-height:10px; text-align:center; font-style:normal; background:#427fed; color:#FFFFFF;}
+		.select-box .select-items-hover{border-color:#427fed;}
+		.select-box .select-items-hover i{display:block;}
+		.form-panel{overflow:hidden;}
+		.form-panel .pull-left{margin-right:20px;}
+<!--.addfileA{ 
+   position:relative;   
+    cursor:hand; 
+	   text-decoration:none;   
+	   background-image: url('images/goods_editor/u16.png'); 
+	   width:50px;
+	   height: 50px;
+	   } 
+		.addfileI {  
+		 cursor:hand; 
+		 position:relative; 
+		left:0px; 
+		width:50px; 
+		height: 50px;
+		background-color: blue;    
+		opacity:0;    
+		filter:alpha(opacity=0)}
+		.addfileB{ 
+   position:relative;   
+    cursor:hand; 
+	   text-decoration:none;   
+	   background-image: url('images/goods_editor/u16.png'); 
+	   width:50px;
+	   height: 50px;
+	   } 
+		.addfileI1 {  
+		 cursor:hand; 
+		 position:relative; 
+		left:0px; 
+		width:50px;
+		height: 50px;   
+		background-color: blue;    
+		opacity:0;    
+		filter:alpha(opacity=0)}
+		.addfileC{ 
+   position:relative;   
+    cursor:hand; 
+	   text-decoration:none;   
+	   background-image: url('images/goods_editor/u16.png'); 
+	   width:50px;
+	   height: 50px;
+	   } 
+		.addfileI2 {  
+		 cursor:hand; 
+		 position:relative; 
+		left:0px; 
+		width:50px;
+		height: 50px;   
+		background-color: blue;    
+		opacity:0;    
+		filter:alpha(opacity=0)}
+		.addfileD{ 
+   position:relative;   
+    cursor:hand; 
+	   text-decoration:none;   
+	   background-image: url('images/goods_editor/u16.png'); 
+	   width:50px;
+	   height: 50px;
+	   } 
+		.addfileI3 {  
+		 cursor:hand; 
+		 position:relative; 
+		left:0px; 
+		width:50px;  
+		height: 50px; 
+		background-color: blue;    
+		opacity:0;    
+		filter:alpha(opacity=0)}
+			.addfileE{ 
+   position:relative;   
+    cursor:hand; 
+	   text-decoration:none;   
+	   background-image: url('images/goods_editor/u16.png'); 
+	   width:50px;
+	   height: 50px;
+	   } 
+		.addfileI4 {  
+		 cursor:hand; 
+		 position:relative; 
+		left:0px; 
+		width:50px;  
+		height: 50px; 
+		background-color: blue;    
+		opacity:0;    
+		filter:alpha(opacity=0)}
+			.addfileF{ 
+   position:relative;   
+    cursor:hand; 
+	   text-decoration:none;   
+	   background-image: url('images/goods_editor/u16.png'); 
+	   width:50px;
+	   height: 50px;
+	   } 
+		.addfileI5 {  
+		 cursor:hand; 
+		 position:relative; 
+		left:0px; 
+		width:50px;  
+		height: 50px; 
+		background-color: blue;    
+		opacity:0;    
+		filter:alpha(opacity=0)}
+			 -->
+</style>
+<script type="text/javascript">
+    $(document).ready(function(){
+    	//设置图片的双击事件处理 第一张图片
+	   // $("#filepath").click(function(){
+	    	//var imgPath = $("#filepath").attr('src') + '?' + new Date().getTime();//第一张图片
+	    	//读取img的宽、高
+			//var width = $("#filepath").attr("width");
+			//var height = $("#filepath").attr("height");
+			//var proportion = width + ":" + height;
+			//var filepatha = $("#filepatha").attr('src') + '?' + new Date().getTime();//第二张图片
+			//var filepathb = $("#filepathb").attr('src') + '?' + new Date().getTime();//第三张图片
+			//var filepathc = $("#filepathc").attr('src') + '?' + new Date().getTime();//第四张图片
+			//var filepathd = $("#filepathd").attr('src') + '?' + new Date().getTime();//第五张图片
+			//var filepathe = $("#filepathe").attr('src') + '?' + new Date().getTime();//第六张图片
+			//window.location.href="<%=request.getContextPath() %>/imageScissorAction.do?path="+imgPath+"&proportion="+proportion+"&filepatha="+filepatha+"&filepathb="+filepathb+"&filepathc="+filepathc+"&filepathd="+filepathd+"&filepathe="+filepathe+"&staus="+1;   
+	   // });
+	  //设置图片的双击事件处理 第二张图片
+	   // $("#filepatha").click(function(){
+	    	//var filepatha = $("#filepatha").attr('src') + '?' + new Date().getTime();//第二张图片
+	    	//读取img的宽、高
+			//var width = $("#filepatha").attr("width");
+			//var height = $("#filepatha").attr("height");
+			//var proportion = width + ":" + height;
+			//var imgPath=$("#filepath").attr('src') + '?' + new Date().getTime();//第一张图片
+			//var filepathb = $("#filepathb").attr('src') + '?' + new Date().getTime();//第三张图片
+			//var filepathc = $("#filepathc").attr('src') + '?' + new Date().getTime();//第四张图片
+			//var filepathd = $("#filepathd").attr('src') + '?' + new Date().getTime();//第五张图片
+			//var filepathe = $("#filepathe").attr('src') + '?' + new Date().getTime();//第六张图片
+			//window.location.href="<%=request.getContextPath() %>/imageScissorAction.do?filepatha="+filepatha+"&proportion="+proportion+"&path="+imgPath+"&filepathb="+filepathb+"&filepathc="+filepathc+"&filepathd="+filepathd+"&filepathe="+filepathe+"&staus="+2;   
+	   // });
+	  //设置图片的双击事件处理 第三张图片
+	    //$("#filepathb").click(function(){
+	    	//var filepathb = $("#filepathb").attr('src') + '?' + new Date().getTime();//第三张图片
+	    	//读取img的宽、高
+			//var width = $("#filepathb").attr("width");
+			//var height = $("#filepathb").attr("height");
+			//var proportion = width + ":" + height;
+			//var imgPath=$("#filepath").attr('src') + '?' + new Date().getTime();//第一张图片
+			//var filepatha = $("#filepatha").attr('src') + '?' + new Date().getTime();//第二张图片
+			//var filepathc = $("#filepathc").attr('src') + '?' + new Date().getTime();//第四张图片
+			//var filepathd = $("#filepathd").attr('src') + '?' + new Date().getTime();//第五张图片
+			//var filepathe = $("#filepathe").attr('src') + '?' + new Date().getTime();//第六张图片
+			//window.location.href="<%=request.getContextPath() %>/imageScissorAction.do?filepathb="+filepathb+"&proportion="+proportion+"&path="+imgPath+"&filepatha="+filepatha+"&filepathc="+filepathc+"&filepathd="+filepathd+"&filepathe="+filepathe+"&staus="+3;   
+	    });
+	  //设置图片的双击事件处理 第四张图片
+	    //$("#filepathc").click(function(){
+	    	//var filepathc = $("#filepathc").attr('src') + '?' + new Date().getTime();//第四张图片
+	    	//读取img的宽、高
+			//var width = $("#filepathc").attr("width");
+			//var height= $("#filepathc").attr("height");
+			//var proportion = width + ":" + height;
+			//var imgPath=$("#filepath").attr('src') + '?' + new Date().getTime();//第一张图片
+			//var filepatha = $("#filepatha").attr('src') + '?' + new Date().getTime();//第二张图片
+			//var filepathb = $("#filepathb").attr('src') + '?' + new Date().getTime();//第三张图片
+			//var filepathd = $("#filepathd").attr('src') + '?' + new Date().getTime();//第五张图片
+			//var filepathe = $("#filepathe").attr('src') + '?' + new Date().getTime();//第六张图片
+			//window.location.href="<%=request.getContextPath() %>/imageScissorAction.do?filepathc="+filepathc+"&proportion="+proportion+"&path="+imgPath+"&filepatha="+filepatha+"&filepathb="+filepathb+"&filepathd="+filepathd+"&filepathe="+filepathe+"&staus="+4;   
+	   // });
+	  
+	    //设置图片的双击事件处理 第五张图片
+	    //$("#filepathd").click(function(){
+	    //	var filepathd = $("#filepathd").attr('src') + '?' + new Date().getTime();//第五张图片
+	    	//读取img的宽、高
+		//	var width = $("#filepathd").attr("width");
+		//	var height= $("#filepathcd").attr("height");
+			//var proportion = width + ":" + height;
+			//var imgPath=$("#filepath").attr('src') + '?' + new Date().getTime();//第一张图片
+			//var filepatha = $("#filepatha").attr('src') + '?' + new Date().getTime();//第二张图片
+			//var filepathb = $("#filepathb").attr('src') + '?' + new Date().getTime();//第三张图片
+			//var filepathc = $("#filepathc").attr('src') + '?' + new Date().getTime();//第四张图片
+			//var filepathe = $("#filepathe").attr('src') + '?' + new Date().getTime();//第六张图片
+			//window.location.href="<%=request.getContextPath() %>/imageScissorAction.do?filepathd="+filepathd+"&proportion="+proportion+"&path="+imgPath+"&filepatha="+filepatha+"&filepathb="+filepathb+"filepathc="+filepathc+"&filepathe="+filepathe+"&staus="+5;   
+	   // });
+	    //设置图片的双击事件处理 第六张图片
+	   // $("#filepathe").click(function(){
+	    	//var filepathe = $("#filepathe").attr('src') + '?' + new Date().getTime();//第六张图片
+	    	//读取img的宽、高
+			//var width = $("#filepathc").attr("width");
+			//var height= $("#filepathc").attr("height");
+			//var proportion = width + ":" + height;
+			//var imgPath=$("#filepath").attr('src') + '?' + new Date().getTime();//第一张图片
+			//var filepatha = $("#filepatha").attr('src') + '?' + new Date().getTime();//第二张图片
+			//var filepathb = $("#filepathb").attr('src') + '?' + new Date().getTime();//第三张图片
+			//var filepathc = $("#filepathc").attr('src') + '?' + new Date().getTime();//第四张图片
+			//var filepathd = $("#filepathd").attr('src') + '?' + new Date().getTime();//第五张图片
+			//window.location.href="<%=request.getContextPath() %>/imageScissorAction.do?filepathe="+filepathe+"&proportion="+proportion+"&path="+imgPath+"&filepatha="+filepatha+"&filepathb="+filepathb+"&filepathc="+filepathc+"&filepathd="+filepathd+"&staus="+6;   
+	    //});
+   // });
+    
+    
+    
+    function dogongs(){
+     var imgPath=document.getElementById("bpath").value;//第一张图片
+     var bpath1=document.getElementById("bpath1").value;//第二张图片
+     var bpath2=document.getElementById("bpath2").value;//第三张图片
+     var bpath3=document.getElementById("bpath3").value;//第四张图片
+     var bpath4=document.getElementById("bpath4").value;//第五张图片
+     var bpath5=document.getElementById("bpath5").value;//第六张图片
+     alert("imgPath"+imgPath);
+     alert("bpath1"+bpath1);
+     alert("bpath2"+bpath2);
+ 	 alert("bpath3"+bpath3);
+ 	 alert("bpath4"+bpath4);
+ 	 alert("bpath5"+bpath5);
+     if(imgPath!=""||bpath1!=""||bpath2!=""||bpath3!=""||bpath4!=""||bpath5!=""){
+    	 document.form.action="goodsp.do?method=upload&imgPath="+imgPath+"&bpath1="+bpath1+"&bpath2="+bpath2+"&bpath3="+bpath3+"&bpath4="+bpath4+"&bpath5="+bpath5;
+       	 document.form.submit();
+     }else{ 
+    	 alert("请选择一张图片");
+     }
+    }
+    //上传第一张
+function openBrowse(){ 
+    	
+    	document.getElementById("imgPath").click(); 
+    	document.getElementById("filepath").src=document.getElementById("imgPath").value;
+    	document.getElementById("bpath").value=document.getElementById("imgPath").value;
+    	} 
+//上传第二张
+function openBrowsea(){ 
+    	
+    	document.getElementById("imgPatha").click(); 
+    	document.getElementById("filepatha").src=document.getElementById("imgPatha").value;
+    	document.getElementById("bpath1").value=document.getElementById("imgPatha").value;
+    	} 
+//上传第三张
+function openBrowseb(){ 
+	
+	document.getElementById("imgPathb").click(); 
+	document.getElementById("filepathb").src=document.getElementById("imgPathb").value;
+	document.getElementById("bpath2").value=document.getElementById("imgPathb").value;
+	} 
+//上传第四张
+function openBrowsec(){ 
+	
+	document.getElementById("imgPathc").click(); 
+	document.getElementById("filepathc").src=document.getElementById("imgPathc").value;
+	document.getElementById("bpath3").value=document.getElementById("imgPathc").value;
+	} 
+//上传第五张
+function openBrowsed(){ 
+	
+	document.getElementById("imgPathd").click(); 
+	document.getElementById("filepathd").src=document.getElementById("imgPathd").value;
+	document.getElementById("bpath4").value=document.getElementById("imgPathd").value;
+	} 
+//上传第六张
+function openBrowsee(){ 
+	
+	document.getElementById("imgPathe").click(); 
+	document.getElementById("filepathe").src=document.getElementById("imgPathe").value;
+	document.getElementById("bpath5").value=document.getElementById("imgPathe").value;
+	} 
+	
+	
+$(document).ready(function(){
+	  var qyijindex=window.document.getElementById("qyij").selectedIndex;//前端选中第一级
+	  var qerjindex=window.document.getElementById("qerj").selectedIndex;//前端选中第二级
+	  var qsanjindex=window.document.getElementById("qsanj").selectedIndex;//前端选中第三级
+	  
+	  var yijindex=window.document.getElementById("yij").selectedIndex;//药监选中第一级
+	  var erjindex=window.document.getElementById("erj").selectedIndex;//药监选中第二级
+	  var sanjindex=window.document.getElementById("sanj").selectedIndex;//药监选中第三级
+	  //var val=window.document.getElementById("qyij").options[index].value;
+	  qyijindex=document.getElementById("fxingyi").value;
+	  qerjindex=document.getElementById("fxinger").value;
+	  qsanjindex=document.getElementById("fxingsan").value;
+	  
+	  yijindex=document.getElementById("yxingyi").value;
+	  erjindex=document.getElementById("yxinger").value;
+	  sanjindex=document.getElementById("yxingsan").value;
+	  //alert(qyijindex);
+	 // alert(qerjindex);
+	 // alert(qsanjindex);
+	 // wyiji(qyijindex,qerjindex);//药监
+	  //werji(erjindex);//药监
+	 // wsanji(sanjindex);//药监
+	  wqyiji(qyijindex,qerjindex);//前端
+	  wqerji(qerjindex,qsanjindex);//前端
+	  wqsanji(qsanjindex);//前端
+	  
+	  
+	  wyiji(yijindex,erjindex);//药监
+	  werji(erjindex,sanjindex);//药监
+	  wsanji(sanjindex);//药监
+	  <c:forEach items="${listlableid}" var="a"> 
+	  addItem('${a.labelId}', '${a.labelName}');
+	  </c:forEach> 
+	 
+	 
+	 
+	  
+	  $(".pimg").click(function(){
+		
+			var _this = $(this);
+			imgShow("#outerdiv", "#innerdiv", "#bigimg", _this);
+		});
+	
+});
+
+//药监页面第一次加载第一级时出发的事件
+function wyiji(yij,erjindex){
+	//alert(yij);
+	  var item="<option value=0 >请选择</option>"
+	  document.getElementById("erj").length=0;
+	  document.getElementById("sanj").length=0;
+	 // var  yij=document.getElementById("yij").value;
+	  $.ajax({
+			type : "POST",  
+			dataType: "json",//返回json格式的数据
+			url:"<%=request.getContextPath()%>/goodsp.do?method=getTreeLister&ida="+yij,
+			success: function(data){
+	             $.each(data,function(i,result){  
+	            	 item +="<option value="+result['id']+" >"+result['className']+"</option>";
+	             });  
+	             $('#erj').append(item);  
+	             $("#erj option").each(function(){
+	                // alert($(this).val());
+	                 if($(this).val() == erjindex){
+	                 $(this).attr("selected",true);
+	                 }
+	             });   
+			}
+		});
+}
+//药监页面第一次加载第二级点击时触发的事件
+function werji(erj,sanjindex){
+	  var item="<option value=0>请选择</option>"
+	  document.getElementById("sanj").length=0;
+	 // var  erj=document.getElementById("erj").value;
+	  $.ajax({
+			type : "POST",  
+			dataType: "json",//返回json格式的数据
+			url:"<%=request.getContextPath()%>/goodsp.do?method=getTreeListsan&idc="+erj,
+			success: function(data){
+	             $.each(data,function(i,result){  
+	            	  item +="<option value="+result['id']+">"+result['className']+"</option>";
+	             });  
+	             $('#sanj').append(item);
+	             $("#sanj option").each(function(){
+	                // alert($(this).val());
+	                 if($(this).val() == sanjindex){
+	                 $(this).attr("selected",true);
+	                 }
+	             });   
+			}
+		});
+}
+//药监页面第一次加载点击第三级时出发的事件
+function wsanji(sanj){
+	 // var sanj=document.getElementById("sanj").value;
+	  $.ajax({
+			type : "POST",  
+			dataType: "json",//返回json格式的数据
+			url:"<%=request.getContextPath()%>/goodsp.do?method=getTreesan&sanj="+sanj,
+			success: function(data){
+	           
+			}
+		});
+}
+	
+	
+//前端商品点击第一级时出发的事件
+function wqyiji(qyij,qerjindex){
+	  var item="<option value=0 >请选择</option>"
+	  document.getElementById("qerj").length=0;
+	  document.getElementById("qsanj").length=0;
+	  //var  qyij=document.getElementById("qyij").value;
+	  $.ajax({
+			type : "POST",  
+			dataType: "json",//返回json格式的数据
+			url:"<%=request.getContextPath()%>/goodsp.do?method=getTreeListerq&ida="+qyij,
+			success: function(data){
+	             $.each(data,function(i,result){  
+	            	 item +="<option value="+result['id']+">"+result['className']+"</option>";
+	             });  
+	             $('#qerj').append(item);
+	             $("#qerj option").each(function(){
+	                 //alert($(this).val());
+	                 if($(this).val() == qerjindex){
+	                 $(this).attr("selected",true);
+	                 }
+	             });       
+			}
+		});
+	
+	
+}
+//前端商品第二级点击时触发的事件
+function wqerji(qerj,qsanjindex){
+	  var item="<option value=0>请选择</option>"
+	  document.getElementById("qsanj").length=0;
+	  //var  qerj=document.getElementById("qerj").value;
+	  $.ajax({
+			type : "POST",  
+			dataType: "json",//返回json格式的数据
+			url:"<%=request.getContextPath()%>/goodsp.do?method=getTreeListsanq&idc="+qerj,
+			success: function(data){
+	             $.each(data,function(i,result){  
+	            	  item +="<option value="+result['id']+">"+result['className']+"</option>";
+	             });  
+	             $('#qsanj').append(item);  
+	             $("#qsanj option").each(function(){
+	                // alert($(this).val());
+	                 if($(this).val() == qsanjindex){
+	                 $(this).attr("selected",true);
+	                 }
+	             });      
+			}
+		});
+}
+//前端商品点击第三级时出发的事件
+function wqsanji(qsanj){
+	  //var qsanj=document.getElementById("qsanj").value;
+	  $.ajax({
+			type : "POST",  
+			dataType: "json",//返回json格式的数据
+			url:"<%=request.getContextPath()%>/goodsp.do?method=getTreesanq&sanj="+qsanj,
+			success: function(data){
+	           
+			}
+		});
+}
+    
+
+
+
+
+//药监点击第一级时出发的事件
+function yiji(){
+	  var item="<option value=0 >请选择</option>"
+	  document.getElementById("erj").length=0;
+	  document.getElementById("sanj").length=0;
+	  var  yij=document.getElementById("yij").value;
+	  $.ajax({
+			type : "POST",  
+			dataType: "json",//返回json格式的数据
+			url:"<%=request.getContextPath()%>/goodsp.do?method=getTreeLister&ida="+yij,
+			success: function(data){
+	             $.each(data,function(i,result){  
+	            	 item +="<option value="+result['id']+">"+result['className']+"</option>";
+	             });  
+	             $('#erj').append(item);  
+			}
+		});
+}
+//药监第二级点击时触发的事件
+function erji(){
+	  var item="<option value=0>请选择</option>"
+	  document.getElementById("sanj").length=0;
+	  var  erj=document.getElementById("erj").value;
+	  $.ajax({
+			type : "POST",  
+			dataType: "json",//返回json格式的数据
+			url:"<%=request.getContextPath()%>/goodsp.do?method=getTreeListsan&idc="+erj,
+			success: function(data){
+	             $.each(data,function(i,result){  
+	            	  item +="<option value="+result['id']+">"+result['className']+"</option>";
+	             });  
+	             $('#sanj').append(item);  
+			}
+		});
+}
+//药监点击第三级时出发的事件
+function sanji(){
+	  var sanj=document.getElementById("sanj").value;
+	  $.ajax({
+			type : "POST",  
+			dataType: "json",//返回json格式的数据
+			url:"<%=request.getContextPath()%>/goodsp.do?method=getTreesan&sanj="+sanj,
+			success: function(data){
+	           
+			}
+		});
+}
+	
+	
+//前端商品点击第一级时出发的事件
+function qyiji(){
+	  var item="<option value=0 >请选择</option>"
+	  document.getElementById("qerj").length=0;
+	  document.getElementById("qsanj").length=0;
+	  var  qyij=document.getElementById("qyij").value;
+	  $.ajax({
+			type : "POST",  
+			dataType: "json",//返回json格式的数据
+			url:"<%=request.getContextPath()%>/goodsp.do?method=getTreeListerq&ida="+qyij,
+			success: function(data){
+	             $.each(data,function(i,result){  
+	            	 item +="<option value="+result['id']+">"+result['className']+"</option>";
+	             });  
+	             $('#qerj').append(item);  
+			}
+		});
+}
+//前端商品第二级点击时触发的事件
+function qerji(){
+	  var item="<option value=0>请选择</option>"
+	  document.getElementById("qsanj").length=0;
+	  var  qerj=document.getElementById("qerj").value;
+	  $.ajax({
+			type : "POST",  
+			dataType: "json",//返回json格式的数据
+			url:"<%=request.getContextPath()%>/goodsp.do?method=getTreeListsanq&idc="+qerj,
+			success: function(data){
+	             $.each(data,function(i,result){  
+	            	  item +="<option value="+result['id']+">"+result['className']+"</option>";
+	             });  
+	             $('#qsanj').append(item);  
+			}
+		});
+}
+//前端商品点击第三级时出发的事件
+function qsanji(){
+	  var qsanj=document.getElementById("qsanj").value;
+	  $.ajax({
+			type : "POST",  
+			dataType: "json",//返回json格式的数据
+			url:"<%=request.getContextPath()%>/goodsp.do?method=getTreesanq&sanj="+qsanj,
+			success: function(data){
+	           
+			}
+		});
+}
+
+
+
+
+//标签单机第一级时！得到第二级的数据
+function oneji(){
+	var item="";
+	 document.getElementById("twoj").length=0;
+	 document.getElementById("threej").length=0;
+	 document.getElementById("fourj").length=0;
+	 var onej=document.getElementById("onej").value;
+	  $.ajax({
+			type : "POST",  
+			dataType: "json",//返回json格式的数据
+			url:"<%=request.getContextPath()%>/goodsp.do?method=getTreeLabelers&fid="+onej,
+			success: function(data){
+	             $.each(data,function(i,result){  
+	            	 item +="<option value="+result['id']+">"+result['labelName']+"</option>";
+	             });  
+	             $('#twoj').append(item);  
+			}
+		});
+}
+//标签单机第第二级时！得到第三级的数据
+function twoji(){
+	var item="";
+	 document.getElementById("threej").length=0;
+	 document.getElementById("fourj").length=0;
+	 var twoj=document.getElementById("twoj").value;
+	  $.ajax({
+			type : "POST",  
+			dataType: "json",//返回json格式的数据
+			url:"<%=request.getContextPath()%>/goodsp.do?method=getTreeLabelsans&fid="+twoj,
+			success: function(data){
+	             $.each(data,function(i,result){  
+	            	 item +="<option value="+result['id']+">"+result['labelName']+"</option>";
+	             });  
+	             $('#threej').append(item);  
+			}
+		});
+}
+function threeji(){
+	var item="";
+	 document.getElementById("fourj").length=0;
+	 var threej=document.getElementById("threej").value;
+	  $.ajax({
+			type : "POST",  
+			dataType: "json",//返回json格式的数据
+			url:"<%=request.getContextPath()%>/goodsp.do?method=getTreeLabelsis&fid="+threej,
+			success: function(data){
+	             $.each(data,function(i,result){  
+	            	 item +="<option value="+result['id']+">"+result['labelName']+"</option>";
+	             });  
+	             $('#fourj').append(item);  
+			}
+		});
+}
+function addItem(kw, text){
+	var html = '<div class="select-items" id="kw" value='+kw+'><span>'+ text +'</span><i>x</i></div>';
+	$('#keywordPanel').append(html).find('.select-items').off().on({
+		mouseenter: function(){
+			$(this).addClass('select-items-hover');
+		},
+		mouseleave: function(){
+			$(this).removeClass('select-items-hover');
+		},
+		click: function(){
+			
+			$(this).detach();
+		}
+	});
+
+	
+}
+
+
+
+
+
+
+
+function addfl(){
+	
+	var flone=document.getElementById("onej").value;//id值
+	var fltwo=document.getElementById("twoj").value;//id值
+	var flthree=document.getElementById("threej").value;//id值
+	var flfour=document.getElementById("fourj").value;//id值
+	
+	if(flone!=""){
+		if(fltwo==""&&flthree==""&&flfour==""){
+			//alert("one"+flone);flid
+		   var onename=jQuery("#onej  option:selected").text();
+			addItem(flone, onename);
+		   //$('#flid').append(onename);
+		}
+		if(fltwo!=""&&flthree==""&&flfour==""){
+			//alert("two"+fltwo);
+			var twoname=jQuery("#twoj  option:selected").text();
+			//$('#flid').append(twoname);
+			addItem(fltwo, twoname);
+			
+		}
+		if(fltwo!=""&&flthree!=""&&flfour==""){
+			//alert("three"+flthree);
+			var threename=jQuery("#threej  option:selected").text();
+			//$('#flid').append(threename);
+			addItem(flthree, threename);
+		}
+		if(fltwo!=""&&flthree!=""&&flfour!=""){
+			//alert("four"+flfour);
+			var fourname=jQuery("#fourj  option:selected").text();
+			addItem(flfour, fourname);
+			//$('#flid').append(fourname);
+		}
+	}
+}
+function add(){
+
+	var ids="";
+	$.each($('#keywordPanel').find('.select-items'), function(i){
+		var id =$(this).attr("value");
+		//alert(id);
+		ids+=id+",";
+	});
+	
+	//var imgPath=document.getElementById("bpath").value;//第一张图片
+   // var bpath1=document.getElementById("bpath1").value;//第二张图片
+    //var bpath2=document.getElementById("bpath2").value;//第三张图片
+    //var bpath3=document.getElementById("bpath3").value;//第四张图片
+    //var bpath4=document.getElementById("bpath4").value;//第五张图片
+    //var bpath5=document.getElementById("bpath5").value;//第六张图片
+   // alert("imgPath"+imgPath);
+   // alert("bpath1"+bpath1);
+   // alert("bpath2"+bpath2);
+	//alert("bpath3"+bpath3);
+	//alert("bpath4"+bpath4);
+	//alert("bpath5"+bpath5);
+	//document.form.action="goodsp.do?method=upload&imgPath="+imgPath+"&bpath1="+bpath1+"&bpath2="+bpath2+"&bpath3="+bpath3;
+	if(confirm('你确定要提交吗？')){
+	 document.form.action = "goodsp.do?method=upload&ids="+ids;
+	 document.form.submit();
+	 }else{
+         return false;
+     }
+}
+
+
+
+function imgShow(outerdiv, innerdiv, bigimg, _this){
+	var src = _this.attr("src");//获取当前点击的pimg元素中的src属性
+	$(bigimg).attr("src", src);//设置#bigimg元素的src属性
+	   /*获取当前点击图片的真实大小，并显示弹出层及大图*/
+	$("<img/>").attr("src", src).load(function(){
+		var windowW = $(window).width();//获取当前窗口宽度
+		var windowH = $(window).height();//获取当前窗口高度
+		var realWidth = this.width;//获取图片真实宽度
+		var realHeight = this.height;//获取图片真实高度
+		var imgWidth, imgHeight;
+		var scale = 0.8;//缩放尺寸，当图片真实宽度和高度大于窗口宽度和高度时进行缩放
+	
+		if(realHeight>windowH*scale) {//判断图片高度
+			imgHeight = windowH*scale;//如大于窗口高度，图片高度进行缩放
+			imgWidth = imgHeight/realHeight*realWidth;//等比例缩放宽度
+			if(imgWidth>windowW*scale) {//如宽度扔大于窗口宽度
+				imgWidth = windowW*scale;//再对宽度进行缩放
+			}
+		} else if(realWidth>windowW*scale) {//如图片高度合适，判断图片宽度
+			imgWidth = windowW*scale;//如大于窗口宽度，图片宽度进行缩放
+			imgHeight = imgWidth/realWidth*realHeight;//等比例缩放高度
+		} else {//如果图片真实高度和宽度都符合要求，高宽不变
+			imgWidth = realWidth;
+			imgHeight = realHeight;
+		}
+		$(bigimg).css("width",imgWidth);//以最终的宽度对图片缩放
+	
+		var w = (windowW-imgWidth)/2;//计算图片与窗口左边距
+		var h = (windowH-imgHeight)/2;//计算图片与窗口上边距
+		$(innerdiv).css({"top":h, "left":w});//设置#innerdiv的top和left属性
+		$(outerdiv).fadeIn("fast");//淡入显示#outerdiv及.pimg
+	});
+	
+	$(outerdiv).click(function(){
+		$(this).fadeOut("fast");
+	});
+}
+
+function back(){
+	
+	 document.form.action = "goodsp.do?method=getGoodsList";
+	 document.form.submit();
+}
+
+    </script>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>套餐编辑</title>
+	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+	<meta content="" name="description" />
+	<meta content="" name="author" />
+
+
+<body>
+
+<div class="right_box">
+<div class="right_h">
+  <h3> 套餐编辑</h3>
+</div>
+  <div class="right_h right_bg" > 套餐信息</div>
+<div class="right_box2">
+  <div class="right_box_l">
+  <div class="right_inline">
+  <div class="right_title">套餐名</div>
+  <div class="right_input" style="width:300px;"><input name="text" type="text" class="form-control input-sm"  placeholder=" "></div>
+  </div>
+  <div class="right_inline">
+  <div class="right_title">主商品名</div>
+  <div class="right_input" style="width:300px;"><input name="text" type="text" class="form-control input-sm" placeholder=" "></div>
+  </div>
+  <div class="right_inline">
+  <div class="right_title">快速购买码</div>
+  <div class="right_input" style="width:300px;"><input name="text" type="text" class="form-control input-sm"  placeholder=" "></div>
+  </div>
+  <div class="right_inline">
+  <div class="right_title">拼音码</div>
+  <div class="right_input" style="width:300px;"><input name="text" type="text" class="form-control input-sm"  placeholder="普通商品的商品名"></div>
+  </div>
+  <div class="right_inline">
+  <div class="right_title">关键词</div>
+  <div class="right_input" style="width:300px;"><input name="text" type="text" class="form-control input-sm"  placeholder=" "></div>
+  </div>
+  <div class="right_inline">
+  <div class="right_title">规格/型号</div>
+  <div class="right_input" style="width:300px;"><input name="text" type="text" class="form-control input-sm"  placeholder=" "></div>
+  </div>
+  <div class="right_inline">
+  <div class="right_title">拼音编码</div>
+  <div class="right_input" style="width:300px;"><input name="text" type="text" class="form-control input-sm"  placeholder=" "></div>
+  </div>
+  
+  
+  <div class="right_inline"><div class="right_title">前端分类一级</div>
+  
+  <div class="right_input" style="width:150px;">
+<select id="qyij" name="qyij" onChange="qyiji()" class="form-control input-sm" >
+<option value="0">请选择</option>
+   <c:forEach items="${listq}" var="item">
+   <option value="${item.id }" ${fxingyi eq item.id? 'selected=selected':'' } >${item.className }</option>
+   </c:forEach>
+</select>
+  </div>
+  
+  </div>
+  
+  <div class="right_inline">
+  <div class="right_title" style="text-align:right">二级</div>
+  <div class="right_input" style="width:150px;">
+<select id="qerj" name="qerj"  onchange="qerji()" class="form-control input-sm" >
+  <option value="0">请选择</option>
+</select>
+  </div>
+  
+  </div>
+  <div class="right_inline">
+  <div class="right_title" style="text-align:right">三级</div>
+  <div class="right_input" style="width:150px;">
+<select name="qsanj" id="qsanj" onChange="qsanji()" class="form-control input-sm" >
+  <option>请选择</option>
+</select>
+  </div>
+  </div>
+  </div>
+  <div class="right_box_r ">
+  <div class="right_input" style="float:right">
+<button type="button" class="btn btn-info btn-sm margin3 " >拷贝主商品信息</button>
+ <button type="button" class="btn btn-info  btn-sm margin3 "   >套餐信息保存</button>
+
+</div>
+  <div class="right_inline">
+    <table  border="0" cellspacing="0" cellpadding="0" class="table table-bordered pull-right table-striped" style=" width:400px; text-align:center" >
+      <tr>
+        <td width="138" valign="middle">商品名</td>
+        <td width="78">数量</td>
+        <td width="75" valign="middle">是否赠品</td>
+        <td width="107" valign="middle">操作</td>
+      </tr>
+      <tr>
+        <td valign="middle">&nbsp;</td>
+        <td align="center"><input name="text4" type="text" class="form-control "  placeholder=" " style="width:40px; height:20px;"></td>
+        <td valign="middle"><label class="checkbox-inline">
+  <input type="checkbox" id="inlineCheckbox1" value="option1">
+   非赠品
+</label></td>
+        <td valign="middle"><a href="#">上移</a> <a href="#">下移&nbsp;</a> <a href="#">移除</a></td>
+      </tr>
+      <tr>
+        <td valign="middle">&nbsp;</td>
+        <td>&nbsp;</td>
+        <td valign="middle">&nbsp;</td>
+        <td valign="middle">&nbsp;</td>
+      </tr>
+      <tr>
+        <td valign="middle">&nbsp;</td>
+        <td>&nbsp;</td>
+        <td valign="middle">&nbsp;</td>
+        <td valign="middle">&nbsp;</td>
+      </tr>
+    </table>
+	</div>
+	
+	<p><button type="button" class="btn btn-info pull-right   btn-sm "   data-toggle="modal" data-target="#tianjia">添加商品</button></p>
+  </div>
+  
+  <div class="right_inline">
+    <div class="right_box_3">
+	<div class="right_inline">基本定价属性</div>
+	<div class="right_inline"><div class="right_title">成本粗估</div><div class="right_input" style="width:130px;"><input name="text" type="text" class="form-control input-sm"  placeholder=" "></div></div>
+	<div class="right_inline"><div class="right_title">建议零售价</div><div class="right_input" style="width:130px;"><input name="text" type="text" class="form-control input-sm"  placeholder=" "></div></div>
+	<div class="right_inline"><div class="right_title">基本定价</div><div class="right_input" style="width:130px;"><input name="text" type="text" class="form-control input-sm"  placeholder=" "></div></div>
+	</div>
+	
+	<div class="right_box_3" style="padding-top:45px">
+	  <div class="right_inline"><strong>销售状态</strong></div>
+	<div class="right_inline">
+	  <div class="right_title">是否可销售</div>
+	  <div class="right_input" style="width:100px;"><select class="form-control input-sm">
+  <option>可销售</option>
+  <option>药品</option>
+  <option>器械</option>
+  <option>食品保健</option>
+  <option>化妆品</option>
+</select></div></div>
+	<div class="right_inline">
+	  <div class="right_title">基库存数量</div>
+	  <div class="right_input" style="width:130px;"><input name="text" type="text" class="form-control input-sm"  placeholder=" "></div></div>
+	</div>
+	
+	<div class="right_box_3b">
+	<div class="right_inline">
+	<div class="right_pic"> <img class="pimg" src="${bpath1}"  id="filepatha" name="filepatha"   value="${bpath1}"  width="90" height="70"/></div>
+	<div class="right_pic_long2" ><img class="pimg" src="${bpath5}"  id="filepathe"  name="filepathe"  value="${bpath5}"  width="90" height="70"/></div>
+	
+ <span style="float:right; margin:10px 105px 0 0"><button type="button" class="btn btn-info btn-sm pull-right" >更换套餐图片，请先保存套餐</button></span>
+ </div>
+	</div>
+  
+  </div>
+  <div class="right_box2">
+  <div class="right_box_l">
+   
+        <div class="right_inline">简介 [自动同步主商品]</div>
+		<div class="right_inline"><textarea name="textarea" rows="4" class="form-control input-sm" style="width:360px;"></textarea></div>
+  </div>
+  
+  <div class="right_box_l">
+   
+        <div class="right_inline">详细介绍 [自动同步所含商品]</div>
+		<div class="right_inline"><textarea class="form-control input-sm" rows="4" style="width:360px;"></textarea></div>
+      
+    
+  </div>
+  <div class="right_box_l">
+   
+        <div class="right_inline"><span class="pull-right" style="padding-right:35px" data-toggle="modal" data-target="#editAddress">预览</span>详细介绍(HTML)</div>
+		<div id="editAddress" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+	    <div class="modal-dialog">
+		    <div class="modal-content">
+		        <div class="modal-header" style="background:#f7f8fa; border-bottom:#4fc1e9 1px solid; border-radius:4px 4px 0 0;">
+		        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		        	<h4 class="modal-title"><i class="glyphicon glyphicon-list-alt" style="margin:0 10px 0 0; color:#4fc1e9 "></i>详细介绍预览</h4>
+		        </div>
+	          <div class="modal-body">习近平:丢失共产党人远大目标会迷失方向
+
+习近平夫妇着中式服装赴荷兰国宴(图) 荷兰将以彭丽媛命名郁金香
+李克强:决不放过非法偷排行为 刘云山谈教育实践 张高丽出席论坛
+法国卫星拍摄到或与MH370有关漂浮物
+
+[马方]飞行员未做战术规避 不知雷达盲区 否认机长与女子通话
+[进展]中澳所拍可疑物不同 马方与家属举行近7小时闭门会议 专题
+[搜救]中方否认军机误降澳机场 澳方在搜索区域发现小碎片 最新
+江西副省长姚木根或涉水</div>
+	    </div>
+		
+	</div>
+	    </div>
+		<div class="right_inline"><textarea class="form-control input-sm" rows="4" style="width:360px;"></textarea></div>
+      
+    
+  </div>
+  <div class="right_box_l">
+   
+        <div class="right_inline"><span class="pull-right" style="padding-right:35px" data-toggle="modal" data-target="#yulan">预览</span>图文介绍（html）</div>
+		<div id="yulan" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+	    <div class="modal-dialog">
+		    <div class="modal-content">
+		        <div class="modal-header" style="background:#f7f8fa; border-bottom:#4fc1e9 1px solid; border-radius:4px 4px 0 0;">
+		        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		        	<h4 class="modal-title"><i class="glyphicon glyphicon-list-alt" style="margin:0 10px 0 0; color:#4fc1e9 "></i>图文介绍预览</h4>
+		        </div>
+	          <div class="modal-body">习
+[马方]飞行员未做战术规避 不知雷达盲区 否认机长与女子通话
+[进展]中澳所拍可疑物不同 马方与家属举行近7小时闭门会议 专题
+[搜救]中方否认军机误降澳机场 澳方在搜索区域发现小碎片 最新
+江西副省长姚木根或涉水</div>
+	    </div>
+		
+	</div>
+	    </div>
+		<div class="right_inline"><textarea class="form-control input-sm" rows="4" style="width:360px;"></textarea></div>
+      
+    
+  </div>
+  
+  </div>
+  </div>
+  
+  <div class="right_h2 right_bg" >
+    <strong>其它分类属性关键词</strong>
+  </div>
+  
+  <div class="right_box2">
+    <div class="right_input" style="width:720px;">
+<div id="keywordPanel" class="select-box"></div>
+ 
+  </div>
+  <div class="right_inline">
+    <div class="right_box_4">
+  <select id="onej" onChange="oneji()" multiple class="form-control">
+  <c:forEach items="${listlabel}" var="item">
+  <option  value="${item.id }">${item.labelName }</option>
+ </c:forEach>
+</select>
+  </div>
+    <div class="right_box_4">
+  <select id="twoj" name="twoj" onclick="twoji()" multiple class="form-control">
+ 
+</select>
+  </div>
+    <div class="right_box_4">
+  <select id="threej" name="threej" onChange="threeji()" multiple class="form-control">
+
+</select>
+  </div>
+    <div class="right_box_4">
+  <select id="fourj" name="fourj" multiple class="form-control">
+ 
+</select>
+  </div>
+  
+  </div>
+  <div class="right_inline"><button type="button" class="btn btn-info pull-right  
+
+btn-sm" style="margin:5px 50px 0 0; width:100px;" onClick="addfl()">添加</button></div>
+  </div>
+  <!----------------------->
+<div class="right_h right_bg" ><button type="button" class="btn btn-info  btn-sm margin3 pull-right "    >子套餐保存</button><strong>子套餐属性 </strong></div>
+<div class="right_box2">
+<div class="right_inline"><div class="right_input" style="float:right">
+<button type="button" class="btn btn-info btn-sm margin3 " >列出所有套餐</button>
+ <button type="button" class="btn btn-info  btn-sm margin3 "   >自动生成所有套餐</button>
+
+</div><div class="right_title_tc" >子套餐数：15</div><div class="right_title_tc" >子套餐价格：18-28</div><div class="right_title_tc" >套餐基本价格：20</div></div>
+<div class="right_inline">
+<table width="950" border="0"  class="table table-bordered"> 
+  <tr>
+    <th width="65">颜色</th>
+										<th width="82">尺寸</th>
+										<th width="127">选项3（无）</th>
+										<th width="110">价格（可不填）</th>
+										<th width="101">内部编码</th>
+										<th width="265">描述（可不填）</th>
+										<th width="168">操作</th>
+    </tr>
+      <c:forEach items="${yhuserList}" var="item">
+  <tr>
+    <td align="center"><select class="form-control input-sm" style="width:60px;">
+  <option>黑</option>
+  <option>白</option>
+  <option>蓝</option>
+ 
+</select></td>
+	   <td align="center"><select class="form-control input-sm" style="width:80px;">
+  <option>黑</option>
+  <option>白</option>
+  <option>蓝</option>
+ 
+</select></td>
+	   <td>&nbsp;</td>
+	   <td align="center"><input name="text" type="text" class="form-control input-sm"  placeholder=" " style="width:80px;"></td>
+	   <td align="center"><c:if test="${item.examineStatus==0 }">
+	     <input name="text2" type="text" class="form-control input-sm"  placeholder=" " style="width:80px;">
+	   </c:if></td>
+	   <td align="center"><input name="text3" type="text" class="form-control input-sm"  placeholder=" " style="width:230px;"></td>
+	   <td align="center"><button type="button" class="btn btn-info btn-xs" >禁用</button>
+        <button type="button" onClick="tomodify('${item.id }','1')" class="btn btn-success   btn-xs"   >启用</button>
+      
+        <c:if test="${item.examineStatus==0 }">
+      <button type="button" onClick="toshenghe('${item.id }')" class="btn btn-warning  btn-xs"  >删除</button>
+            </c:if>
+            <c:if test="${item.examineStatus==2 }">            </c:if>      </td>
+  </tr>
+  </c:forEach>
+</table>
+
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+<div id="tianjia" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+	   
+			<!-- -->
+			
+			<div class="right_box" style="width:800px; background:#fff; padding:0 10px; margin-top:15px" >
+
+
+<div class="right_h right_bg" ><button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="margin-right:15px;">&times;</button>商品查询/编辑</div>
+
+
+
+<div class="right_inline">
+						<div class="right_title">内部编码</div>
+						<div class="right_input" style="width:350px;"><input name="text" id="shangpi" type="text" class="form-control input-sm" onFocus="if(this.value=='商品编码分类名') {this.value='';}this.style.color='#333';" onBlur="if(this.value=='') {this.value='商品编码分类名';this.style.color='#878787';}"  value="商品编码分类名" ></div>
+
+ <div class="right_input" style="width:110px;">
+<select id="shzt" onChange="shengh()" class="form-control input-sm">
+  <option value="0" >已审核</option>
+  <option value="1" >未审核</option>
+</select></div>
+ <div class="right_input" style="width:110px;">
+ <select class="form-control input-sm">
+  <option >未质检</option>
+  <option >未审核</option>
+</select></div>
+
+<button type="button" onClick="chang('1')" class="btn btn-info  btn-sm margin3 ">搜索</button>
+ <button type="button" class="btn btn-info  btn-sm margin3 " id="productBtn">高级</button>
+
+</div>
+ <div class="right_box2"  id="productPanel">
+<div class="right_inline">
+      <div class="right_title"><strong>套餐</strong></div>
+						<div class="right_title_min">是否医药类</div>
+						<div class="right_input" >
+						 <select class="form-control input-sm" >
+  <option>不限</option>
+  <option>未审核</option>
+  <option>3</option>
+  <option>4</option>
+  <option>5</option>
+</select></div>
+<div class="right_title_min">商品件数</div>
+ <div class="right_input" >
+						 <select class="form-control input-sm" >
+  <option>不限</option>
+  <option>未审核</option>
+  <option>3</option>
+  <option>4</option>
+  <option>5</option>
+</select>
+</div>
+<div class="right_title_min">是否可销售
+</div>
+ <div class="right_input" >
+						 <select class="form-control input-sm" >
+  <option>不限</option>
+  <option>未审核</option>
+  <option>3</option>
+  <option>4</option>
+  <option>5</option>
+</select></div>
+
+    <div class="right_title_min">平台</div>
+  <div class="right_input" >
+    <select name="select" class="form-control input-sm" >
+      <option>全部</option>
+      <option>官网</option>
+      <option>微信</option>
+      
+    </select>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="right_inline">
+	<div class="right_title"><strong>通用</strong></div>	
+	<div class="right_input" style="width:110px"><input name="text2" id="goodsName" type="text" class="form-control input-sm" onFocus="if(this.value=='套餐名包含') {this.value='';}this.style.color='#333';" onBlur="if(this.value=='') {this.value='套餐名包含';this.style.color='#878787';}"  value="套餐名包含"></div>
+	<div class="right_input" style="width:110px"><input name="text2" id="interiorCode" type="text" class="form-control input-sm"  onfocus="if(this.value=='商品名包含') {this.value='';}this.style.color='#333';" onBlur="if(this.value=='') {this.value='商品名包含';this.style.color='#878787';}"  value="商品名包含"> </div>
+	<div class="right_input" style="width:110px"><input name="text3" id="brand" type="text" class="form-control  input-sm"  onfocus="if(this.value=='编码') {this.value='';}this.style.color='#333';" onBlur="if(this.value=='') {this.value='编码';this.style.color='#878787';}"  value="编码"></div>
+						<!--  
+						<input name="text3" type="text" class="form-control" style="width:20%;">
+						-->
+   </div>
+
+
+
+
+
+
+
+
+   
+ 
+<div class="right_inline"> <div class="right_title"><strong>销售用</strong></div>
+						<div class="right_title_min">商品生成时间</div>
+						<div class="right_input" >
+						 <select class="form-control input-sm" >
+  <option>不限</option>
+  <option>未审核</option>
+  <option>3</option>
+  <option>4</option>
+  <option>5</option>
+</select></div>
+<div class="right_title_min">基本售价范围</div>
+
+<div class="right_input" style="width:60px;"><input name="text" type="text" id="starjia" class="form-control input-sm"  style="width:60px;" onFocus="if(this.value=='0') {this.value='';}this.style.color='#333';" onBlur="if(this.value=='') {this.value='0';this.style.color='#878787';}"  value="0"></div>
+<div class="right_title_min">到</div>
+<div class="right_input" style="width:60px"><span class="right_input" style="width:60px">
+  <input name="text4" type="text" id="endjia" class="form-control input-sm" style="width:60px;" onFocus="if(this.value=='999') {this.value='';}this.style.color='#333';" onBlur="if(this.value=='') {this.value='999';this.style.color='#878787';}"  value="999">
+</span></div>
+
+</div>
+<div class="right_inline" >
+ <div class="right_title">&nbsp;</div>
+
+						<div class="right_title_min">药监分类一级</div>
+		<div class="right_input">
+<select id="yij" onChange="yiji()"  class="form-control input-sm" >
+  <option value="0">请选择</option>
+  <c:forEach items="${lista}" var="item">
+  <option value="${item.id }">${item.className }</option>
+  </c:forEach>
+</select></div>
+<div class="right_title_min">二级</div>
+<div class="right_input">
+<select id="erj"  onchange="erji()" class="form-control input-sm" >
+ <option value="0">请选择</option>
+</select>
+</div>
+<div class="right_title_min">三级</div><div class="right_input">
+<select id="sanj" onChange="sanji()" class="form-control input-sm" >
+  <option>请选择</option>
+</select></div>
+</div><div class="right_inline">
+<div class="right_title">&nbsp;</div>
+						<div class="right_title_min">前端分类一级</div>
+		<div class="right_input">
+<select id="qyij" onChange="qyiji()" class="form-control input-sm" >
+<option value="0">请选择</option>
+   <c:forEach items="${listq}" var="item">
+   <option value="${item.id }">${item.className }</option>
+   </c:forEach>
+</select></div>
+<div class="right_title_min">二级</div>
+<div class="right_input">
+<select id="qerj"  onchange="qerji()" class="form-control input-sm" >
+  <option value="0">请选择</option>
+</select>
+</div>
+<div class="right_title_min">三级</div><div class="right_input input-sm">
+<select id="qsanj" onChange="qsanji()" class="form-control input-sm" >
+  <option value="0">请选择</option>
+</select></div></div>
+<div class="right_inline"><button type="button" onClick="gaojichang('2')" class="btn btn-info  ">高级搜索</button></div>
+
+</div>
+
+
+
+<div class="right_inline" >
+
+ 
+ 
+
+
+
+
+
+
+
+<div class="right_inline" >
+<div class="form-inline">
+	
+		<!-- 			
+						 <select class="form-control pull-right">
+  <option>商品A-Z</option>
+  <option>未审核</option>
+  <option>3</option>
+  <option>4</option>
+  <option>5</option>
+</select>
+ <select class="form-control pull-right">
+  <option>每页50项</option>
+  <option>未审核</option>
+  <option>3</option>
+  <option>4</option>
+  <option>5</option>
+</select>
+ -->	
+</div>
+
+</div>
+
+<div class="right_inline" style="padding-top:15px;">
+ <div class="right_title_min"  >
+<label class="checkbox-inline">
+  <input type="checkbox" id="selAll" onClick="selectAll();"  style="margin-top:9px;"> 全选
+
+</label></div>
+ <div class="right_title_min"  >
+<label class="checkbox-inline">
+  <input type="checkbox" id="inlineCheckbox2" value="option2" style="margin-top:9px;">所有页全选
+
+</label></div>
+ <div class="right_input" style="float:right">
+<button type="button" class="btn btn-info btn-sm margin3 " >批量下架</button>
+ <button type="button" class="btn btn-info  btn-sm margin3 "   >批量审核通过</button>
+<button type="button" class="btn btn-info btn-sm margin3 "  >批量生成单品套餐(限已质检)</button>
+</div>
+
+</div>
+
+<div class="right_inline"  >
+
+<table width="800" border="0"  class="table table-bordered"> 
+  <tr>
+    <td width="29"><label class="checkbox-inline">
+   <input type="checkbox" name="checkAll" id="checkAll" onClick="setSelectAll();"/> 
+</label></td>
+                                        <th width="100">内部编码</th>
+										<th width="100">商品名</th>
+										<th width="100">通用名</th>
+										<th width="100">处方类型</th>
+										<th width="100">审核状态</th>
+										<th width="100">基本价格</th>
+										<th width="100">生产厂家</th>
+										<th width="60">操作</th>
+    </tr>
+      <c:forEach items="${yhuserList}" var="item">
+  <tr>
+    <td><label class="checkbox-inline">
+<input type="checkbox" name="checkAll" id="checkAll" onClick="setSelectAll();"/> 
+     </label></td>
+       <td>  </td>
+	   <td> </td>
+	   <td> </td>
+	   <td> </td>
+	   <td><c:if test="${item.examineStatus==0 }">未审核</c:if>
+	         <c:if test="${item.examineStatus==1 }">审核通过</c:if>
+	         <c:if test="${item.examineStatus==2 }">审核未通过</c:if>         
+	   </td>
+	   <td> </td>
+	   <td> </td>
+    <td><button type="button" class="btn btn-info btn-xs" >添加</button>
+       
+            </c:if>
+      </td>
+  </tr>
+  </c:forEach>
+</table>
+
+</div>
+</div>
+</div>
+			<!-- -->
+	
+	
+	    </div>
+
+
+
+
+
+
+
+</body>
+	
+     
+	<script language="javascript"> 
+
+//选中全选按钮，下面的checkbox全部选中 
+var selAll = document.getElementById("selAll"); 
+function selectAll() 
+{ 
+  var obj = document.getElementsByName("checkAll"); 
+  if(document.getElementById("selAll").checked == false) 
+  { 
+  for(var i=0; i<obj.length; i++) 
+  { 
+    obj[i].checked=false; 
+  } 
+  }else 
+  { 
+  for(var i=0; i<obj.length; i++) 
+  {	  
+    obj[i].checked=true; 
+  }	
+  } 
+  
+} 
+
+//当选中所有的时候，全选按钮会勾上 
+function setSelectAll() 
+{ 
+var obj=document.getElementsByName("checkAll"); 
+var count = obj.length; 
+var selectCount = 0; 
+
+for(var i = 0; i < count; i++) 
+{ 
+if(obj[i].checked == true) 
+{ 
+selectCount++;	
+} 
+} 
+if(count == selectCount) 
+{	
+document.all.selAll.checked = true; 
+} 
+else 
+{ 
+document.all.selAll.checked = false; 
+} 
+} 
+
+//反选按钮 
+function inverse() { 
+var checkboxs=document.getElementsByName("checkAll"); 
+for (var i=0;i<checkboxs.length;i++) { 
+  var e=checkboxs[i]; 
+  e.checked=!e.checked; 
+  setSelectAll(); 
+} 
+} 
+
+</script> 
+</html>

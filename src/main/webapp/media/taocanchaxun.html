@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>套餐查询</title>
+	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+	<meta content="" name="description" />
+	<meta content="" name="author" />
+	
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+
+
+<script type="text/javascript" src="js/jquery-1.8.3.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script language="javascript">
+  //查询分页跳转
+      function gotoPage(pageno)
+      {
+        document.getElementById('pageno').value = pageno;
+        document.form.submit();
+      }
+  //搜索
+    function chang(ba){
+    	shengh();
+        var shzt=document.getElementById("shzt").value;
+    	var goodsName=document.getElementById("shangpi").value;
+    	document.form.action = "goodsp.do?method=getGoodsList&goodsName="+goodsName+"&shzt="+shzt+"&ba="+ba;
+		document.form.submit();
+    }
+  //高级搜索
+    function gaojichang(ba){
+      yiji();
+      qyiji();
+      var yijid=document.getElementById("yij").value;//药监第一级选中的值
+      var qyijid=document.getElementById("qyij").value;//药监第一级选中的值
+	  var shangpin=document.getElementById("goodsName").value;//商品名包含
+	  var interiorCode=document.getElementById("interiorCode").value;//编号包含
+	  var brand=document.getElementById("brand").value;//品牌包含
+	  var starjia=document.getElementById("starjia").value;//售价开始值
+	  var endjia=document.getElementById("endjia").value;//售价最大值
+	  document.form.action = "goodsp.do?method=getGoodsList&shangpin="+shangpin+"&interiorCode="+interiorCode+"&brand="+brand+"&starjia="+starjia+"&endjia="+endjia+"&yijid="+yijid+"&qyijid="+qyijid+"&ba="+ba;
+	  document.form.submit();
+	  
+    }
+  function shengh(){
+	  var shzt=document.getElementById("shzt").value;
+  }
+  //药监点击第一级时出发的事件
+  function yiji(){
+	  var item="<option value=0 >请选择</option>"
+	  document.getElementById("erj").length=0;
+	  document.getElementById("sanj").length=0;
+	  var  yij=document.getElementById("yij").value;
+	  $.ajax({
+			type : "POST",  
+			dataType: "json",//返回json格式的数据
+			url:"<%=request.getContextPath()%>/goodsp.do?method=getTreeLister&ida="+yij,
+			success: function(data){
+	             $.each(data,function(i,result){  
+	            	 item +="<option value="+result['id']+">"+result['className']+"</option>";
+	             });  
+	             $('#erj').append(item);  
+			}
+		});
+  }
+  //药监第二级点击时触发的事件
+  function erji(){
+	  var item="<option value=0>请选择</option>"
+	  document.getElementById("sanj").length=0;
+	  var  erj=document.getElementById("erj").value;
+	  $.ajax({
+			type : "POST",  
+			dataType: "json",//返回json格式的数据
+			url:"<%=request.getContextPath()%>/goodsp.do?method=getTreeListsan&idc="+erj,
+			success: function(data){
+	             $.each(data,function(i,result){  
+	            	  item +="<option value="+result['id']+">"+result['className']+"</option>";
+	             });  
+	             $('#sanj').append(item);  
+			}
+		});
+  }
+  //药监点击第三级时出发的事件
+  function sanji(){
+	  var sanj=document.getElementById("sanj").value;
+	  $.ajax({
+			type : "POST",  
+			dataType: "json",//返回json格式的数据
+			url:"<%=request.getContextPath()%>/goodsp.do?method=getTreesan&sanj="+sanj,
+			success: function(data){
+	           
+			}
+		});
+  }
+//前端商品点击第一级时出发的事件
+  function qyiji(){
+	  var item="<option value=0 >请选择</option>"
+	  document.getElementById("qerj").length=0;
+	  document.getElementById("qsanj").length=0;
+	  var  qyij=document.getElementById("qyij").value;
+	  $.ajax({
+			type : "POST",  
+			dataType: "json",//返回json格式的数据
+			url:"<%=request.getContextPath()%>/goodsp.do?method=getTreeListerq&ida="+qyij,
+			success: function(data){
+	             $.each(data,function(i,result){  
+	            	 item +="<option value="+result['id']+">"+result['className']+"</option>";
+	             });  
+	             $('#qerj').append(item);  
+			}
+		});
+  }
+  //前端商品第二级点击时触发的事件
+  function qerji(){
+	  var item="<option value=0>请选择</option>"
+	  document.getElementById("qsanj").length=0;
+	  var  qerj=document.getElementById("qerj").value;
+	  $.ajax({
+			type : "POST",  
+			dataType: "json",//返回json格式的数据
+			url:"<%=request.getContextPath()%>/goodsp.do?method=getTreeListsanq&idc="+qerj,
+			success: function(data){
+	             $.each(data,function(i,result){  
+	            	  item +="<option value="+result['id']+">"+result['className']+"</option>";
+	             });  
+	             $('#qsanj').append(item);  
+			}
+		});
+  }
+  //前端商品点击第三级时出发的事件
+  function qsanji(){
+	  var qsanj=document.getElementById("qsanj").value;
+	  $.ajax({
+			type : "POST",  
+			dataType: "json",//返回json格式的数据
+			url:"<%=request.getContextPath()%>/goodsp.do?method=getTreesanq&sanj="+qsanj,
+			success: function(data){
+	           
+			}
+		});
+  }
+  
+  //编辑跳转
+  function tomodify(id,starus){
+	  document.form.action = "goodsp.do?id="+id+"&starus="+starus;
+	  document.form.submit();
+  }
+  //审核跳转
+  function toshenghe(id){
+	  document.form.action = "goodsp.do?method=shenghe&id="+id;
+	  document.form.submit();
+  }
+</script>
+
+<body>
+
+<div class="right_box">
+
+
+
+<div class="right_h">套餐查询模板</h3></div>
+<div class="right_inline"  style="min-width:800px;">
+  <div class="right_title">快速搜索</div>
+  
+  <div class="right_input" style="width:350px;"><input name="text" type="text" class="form-control input-sm"  placeholder=" "></div>
+  <div class="right_input" style="width:110px;">
+    <select name="select" class="form-control input-sm" >
+      <option>已审核</option>
+      
+      <option>未审核</option>
+      <option>全部</option>
+      
+    </select>
+  </div>
+  <div class="right_input" >
+    <select name="select" class="form-control input-sm" >
+      <option>未质检</option>
+      
+      <option>已质检</option>
+      <option>全部</option>
+      
+    </select>
+  </div>
+  <button type="button" class="btn btn-info   btn-sm margin3" >搜索</button>
+  <button type="button" class="btn btn-info   btn-sm margin3"  id="productBtn" >高级</button>
+  
+</div>
+  <div class="right_box2"  id="productPanel">
+  <div class="right_inline">
+  <div class="right_title"><strong>套餐</strong></div>
+   <div class="right_title_min">是否医药类</div>
+  <div class="right_input" s>
+    <select name="select" class="form-control input-sm" >
+      <option>不限</option>
+      <option>药品</option>
+      <option>器械</option>
+      <option>食品保健</option>
+      <option>化妆品</option>
+    </select>
+  </div>
+  <div class="right_title_min">商品件数</div>
+  <div class="right_input" >
+    <select name="select" class="form-control input-sm" >
+      <option>不限定</option>
+      <option>单品多件</option>
+      <option>单品单件</option>
+      <option>多品</option>
+     
+    </select>
+  </div>
+  <div class="right_title_min">是否可销售</div>
+  <div class="right_input" >
+    <select name="select" class="form-control input-sm" >
+      <option>不限定</option>
+      <option>可销售</option>
+      <option>不可销售</option>
+      <option>下架</option>
+      <option>等待质检</option>
+    </select>
+  </div>
+    <div class="right_title_min">平台</div>
+  <div class="right_input" >
+    <select name="select" class="form-control input-sm" >
+      <option>全部</option>
+      <option>官网</option>
+      <option>微信</option>
+      
+    </select>
+  </div>
+</div>
+
+
+
+<div class="right_inline">
+ <div class="right_title"><strong>通用</strong></div>
+<div class="right_input" style="width:110px">
+<input name="" type="text" class="form-control input-sm"  onfocus="if(this.value=='套餐名包含') {this.value='';}this.style.color='#333';" onBlur="if(this.value=='') {this.value='套餐名包含';this.style.color='#878787';}"  value="套餐名包含"/>
+</div>
+<div class="right_input" style="width:110px"><input name="Input" type="text" class="form-control input-sm"  onFocus="if(this.value=='商品名包含') {this.value='';}this.style.color='#333';" onBlur="if(this.value=='') {this.value='商品名包含';this.style.color='#878787';}"  value="商品名包含"/></div>
+<div class="right_input" style="width:110px"><input name="Input" type="text" class="form-control input-sm"  onFocus="if(this.value=='商品名包含') {this.value='';}this.style.color='#333';" onBlur="if(this.value=='') {this.value='商品名包含';this.style.color='#878787';}"  value="编码"/></div>
+<div class="right_input" style="width:110px">
+<input name="" type="text" class="form-control input-sm"  onfocus="if(this.value=='分类和标签') {this.value='';}this.style.color='#333';" onBlur="if(this.value=='') {this.value='分类和标签';this.style.color='#878787';}"  value="分类和标签"/>
+</div>
+<div class="right_input" style="width:110px">
+<input name="" type="text" class="form-control input-sm"  onfocus="if(this.value=='品牌包含') {this.value='';}this.style.color='#333';" onBlur="if(this.value=='') {this.value='品牌名包含';this.style.color='#878787';}"  value="品牌包含"/>
+</div>
+<div class="right_title_min">多规格套餐</div>
+ <div class="right_input" >
+    <select name="select" class="form-control input-sm"  >
+      <option>所有套餐</option>
+      <option>母套餐（含多个子套餐）</option>
+      <option>单品母套餐（含同模版）</option>
+      
+    </select>
+  </div>
+ </div>
+<div class="right_inline">
+ <div class="right_title"><strong>销售用</strong></div>
+ <div class="right_title_min">套餐生成时间</div>
+<div class="right_input" style="width:110px;">
+    <select name="select" class="form-control input-sm" >
+      <option>全部</option>
+      
+      <option>24小时内</option>
+      <option>72小时内</option>
+	   <option>一周内</option>
+	   <option>30天内</option>
+      
+    </select>
+  </div>
+  <div class="right_title_min">套餐售价范围</div>
+<div class="right_input" style="width:60px">
+<input name="" type="text" class="form-control input-sm"  onfocus="if(this.value=='0') {this.value='';}this.style.color='#333';" onBlur="if(this.value=='') {this.value='0';this.style.color='#878787';}"  value="0"/>
+</div>
+ <div class="right_title_min">到</div>
+<div class="right_input" style="width:60px">
+<input name="" type="text" class="form-control input-sm"  onfocus="if(this.value=='999') {this.value='';}this.style.color='#333';" onBlur="if(this.value=='') {this.value='999';this.style.color='#878787';}"  value="999"/>
+</div>
+ <div class="right_title_min">是否有图片</div>
+<div class="right_input" style="width:110px;">
+    <select name="select" class="form-control input-sm" >
+      <option>不限</option>
+      
+      <option>无主图片</option>
+      <option>有主图片</option>
+	   <option>有套餐图片</option>
+
+      
+    </select>
+  </div>
+ 
+ </div>
+ <div class="right_inline">
+<div class="right_title">&nbsp;</div>
+						<div class="right_title_min">前端分类一级</div>
+		<div class="right_input">
+<select id="qyij" onChange="qyiji()" class="form-control input-sm" >
+<option value="0">请选择</option>
+   <c:forEach items="${listq}" var="item">
+   <option value="${item.id }" ${qyijid eq item.id? 'selected=selected':'' }>${item.className }</option>
+   </c:forEach>
+</select></div>
+<div class="right_title_min">二级</div>
+<div class="right_input">
+<select id="qerj"  onchange="qerji()" class="form-control input-sm" >
+  <option value="0">请选择</option>
+</select>
+</div>
+<div class="right_title_min">三级</div><div class="right_input input-sm">
+<select id="qsanj" onChange="qsanji()" class="form-control input-sm" >
+  <option value="0">请选择</option>
+</select></div></div>
+ <div class="right_inline">
+ <div class="right_title"><strong>审核用</strong></div>
+ <div class="right_title_min">处方类型 </div>
+ <div class="right_input" style="width:110px;">
+    <select name="select" class="form-control input-sm" >
+      <option>不限</option>
+      
+      <option>医药类</option>
+      <option>OTC</option>
+	   <option>处方药</option>
+	   <option>非处方药</option>
+      
+    </select>
+  </div>
+  <div class="right_title_min">是否含麻</div>
+  <div class="right_input" style="width:110px;">
+    <select name="select" class="form-control input-sm" >
+      <option>不限</option>
+      
+      <option>a</option>
+      <option>b</option>
+	   <option>c</option>
+
+      
+    </select>
+  </div>
+  <div class="right_title_min">是否打胎</div>
+  <div class="right_input" style="width:110px;">
+    <select name="select" class="form-control input-sm" >
+      <option>不限</option>
+      
+      <option>a</option>
+      <option>b</option>
+	   <option>c</option>
+
+      
+    </select>
+  </div>
+  </div><div class="right_inline" >
+ <div class="right_title">&nbsp;</div>
+
+						<div class="right_title_min">药监分类一级</div>
+		<div class="right_input">
+<select id="yij" onChange="yiji()"  class="form-control input-sm" >
+  <option value="0">请选择</option>
+  <c:forEach items="${lista}" var="item">
+  <option value="${item.id }">${item.className }</option>
+  </c:forEach>
+</select></div>
+<div class="right_title_min">二级</div>
+<div class="right_input">
+<select id="erj"  onchange="erji()" class="form-control input-sm" >
+ <option value="0">请选择</option>
+</select>
+</div>
+<div class="right_title_min">三级</div><div class="right_input">
+<select id="sanj" onChange="sanji()" class="form-control input-sm" >
+  <option>请选择</option>
+</select></div>
+</div>
+ 
+ 
+</div>
+  
+
+
+ 
+ 
+ 
+ 
+ </div>
+</div>
+
+ 
+
+ 
+
+ 
+ 
+ <div class="right_box">
+ <div class="right_box2">
+ 
+ <div class="right_inline " style="width:880px;"  >
+       <div class="right_input" style="width:110px; float:right">
+    <select name="select" class="form-control input-sm" >
+      <option>套餐名A-z</option>
+      <option>套餐名A-z</option>
+      <option>上架时间</option>
+      <option>分类</option>
+	 
+
+      
+    </select>
+  </div>
+    <div class="right_input" style="width:110px; float:right">
+    <select name="select" class="form-control input-sm" >
+      <option>每页50</option>
+      
+      <option>每页20</option>
+      <option>每页100</option>
+	
+
+      
+    </select>
+  </div>
+<div class="right_title"><strong>搜索结果</strong></div>
+	<div class="right_title_min">999条 1/45页</div>
+	
+ </div>
+ <div class="right_inline" style="width:880px">
+ <div class="right_input" style="float:right">  <button type="button" class="btn btn-info   btn-sm margin3" >批量质检通过</button><button type="button" class="btn btn-info   btn-sm margin3" >批量审核通过</button><button type="button" class="btn btn-info   btn-sm margin3" >批量下架</button></div>
+ <div class="right_title_min"  ><label class="checkbox-inline" >
+ <input type="checkbox" id="selAll" onClick="selectAll();"  style="margin-top:9px;" >
+   全选
+</label>
+   </div>
+   <div class="right_title_min"  ><label class="checkbox-inline" >
+  <input type="checkbox" id="inlineCheckbox1" value="option1" style="margin-top:9px;" >
+   所有页全选
+</label>
+   </div>
+   <div class="right_title"  style=" text-align:right">导出至</div>
+   <div class="right_input" style="width:110px;">
+    <select name="select" class="form-control input-sm" >
+      <option>通用excel</option>
+      
+      <option>微信</option>
+      <option>官网</option>
+    </select>
+  </div>
+  <button type="button" class="btn btn-info   btn-sm margin3" >批量导出</button>
+ </div><div class="right_inline"  style="width:880px; ">
+ <table width="98%" border="0"  class="table table-striped table-bordered" > 
+  <tr>
+    <td width="3%"><label class="checkbox-inline">
+ <input type="checkbox" name="checkAll" id="checkAll" onClick="setSelectAll();"/> 
+
+</label></td>
+    <td width="8%">内部编码</td>
+    <td width="8%">商品名</td>
+    <td width="11%">通用名</td>
+    <td width="10%">处方类型</td>
+    <td width="11%">商品规格</td>
+    <td width="16%">生产厂家</td>
+    <td width="9%">审核状态</td>
+    <td width="24%">操作</td>
+    </tr>
+  <tr>
+    <td><label class="checkbox-inline">
+ <input type="checkbox" name="checkAll" id="checkAll" onClick="setSelectAll();"/>
+
+</label></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td><button type="button" class="btn btn-info btn-xs" >查看</button>
+        <button type="button" class="btn btn-success   btn-xs"   >编辑</button>
+      <button type="button" class="btn btn-primary  btn-xs"  >编辑图片</button>
+      <button type="button" class="btn btn-warning  btn-xs"  >编审</button></td>
+  </tr>
+  <tr>
+    <td><label class="checkbox-inline">
+   <input type="checkbox" name="checkAll" id="checkAll" onClick="setSelectAll();"/>
+
+</label></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td><button type="button" class="btn btn-info btn-xs" >查看</button>
+ <button type="button" class="btn btn-success   btn-xs"   >编辑</button>
+<button type="button" class="btn btn-primary  btn-xs"  >编辑图片</button>
+<button type="button" class="btn btn-warning  btn-xs"  >编审</button></td>
+    </tr>
+</table>
+ </div>
+ 
+ 
+ </div>
+ 
+ </div>
+ 
+ 
+ 
+</body>
+
+
+     
+	<script>
+		$(document).ready(function(){
+			$('#productName').blur(function(){
+				if( $(this).val() != '' ){
+					$('#jx').attr('href', 'http://www.jxdyf.com/search/'+ $(this).val() +'.html');
+					$('#baidu').attr('href', 'http://www.baidu.com/#wd='+$(this).val());
+				};
+			});
+			$('#productBtn').click(function(){
+				$('#productPanel').toggle();
+			});
+			$('#keyword1').find('option').on({
+				click: function(){
+					var db = ['21','22','23'],
+						dbhtml = '';
+
+					$.each(db, function(i){
+						dbhtml += '<option kw="2级">'+ this +'</option>';
+					});
+					$('#keyword2').html(dbhtml).find('option').off().on({
+						click: function(){
+							var db1 = ['31','32','33'],
+								dbhtml1 = '';
+
+							$.each(db, function(i){
+								dbhtml1 += '<option kw="3级">'+ this +'</option>';
+							});
+							$('#keyword3').html(dbhtml1).find('option').off().on({
+								dblclick: function(){
+									addItem($(this).attr('kw'), $(this).html());
+								}
+							});
+						},
+						dblclick: function(){
+							addItem($(this).attr('kw'), $(this).html());
+						}
+					});
+				},
+				dblclick: function(){
+					addItem($(this).attr('kw'), $(this).html());
+				}
+			});
+			function addItem(kw, text){
+				var html = '<div class="select-items">'+ kw +':<span>'+ text +'</span><i>x</i></div>';
+
+				$('#keywordPanel').append(html).find('.select-items').off().on({
+					mouseenter: function(){
+						$(this).addClass('select-items-hover');
+					},
+					mouseleave: function(){
+						$(this).removeClass('select-items-hover');
+					},
+					click: function(){
+						$(this).detach();
+					}
+				});
+			};
+			$('#byCheck').click(function(){
+				$('#checkText').attr('disabled', 'disabled');
+			});
+			$('#notByCheck').click(function(){
+				$('#checkText').removeAttr('disabled');
+			});
+			$('#byQuality').click(function(){
+				$('#qualityText').attr('disabled', 'disabled');
+			});
+			$('#notByQuality').click(function(){
+				$('#qualityText').removeAttr('disabled');
+			});
+			$('#showLog').click(function(){
+				$('#logtable').toggle();
+			});
+		});
+		
+	
+
+	</script>
+	
+	<script language="javascript"> 
+
+//选中全选按钮，下面的checkbox全部选中 
+var selAll = document.getElementById("selAll"); 
+function selectAll() 
+{ 
+  var obj = document.getElementsByName("checkAll"); 
+  if(document.getElementById("selAll").checked == false) 
+  { 
+  for(var i=0; i<obj.length; i++) 
+  { 
+    obj[i].checked=false; 
+  } 
+  }else 
+  { 
+  for(var i=0; i<obj.length; i++) 
+  {	  
+    obj[i].checked=true; 
+  }	
+  } 
+  
+} 
+
+//当选中所有的时候，全选按钮会勾上 
+function setSelectAll() 
+{ 
+var obj=document.getElementsByName("checkAll"); 
+var count = obj.length; 
+var selectCount = 0; 
+
+for(var i = 0; i < count; i++) 
+{ 
+if(obj[i].checked == true) 
+{ 
+selectCount++;	
+} 
+} 
+if(count == selectCount) 
+{	
+document.all.selAll.checked = true; 
+} 
+else 
+{ 
+document.all.selAll.checked = false; 
+} 
+} 
+
+//反选按钮 
+function inverse() { 
+var checkboxs=document.getElementsByName("checkAll"); 
+for (var i=0;i<checkboxs.length;i++) { 
+  var e=checkboxs[i]; 
+  e.checked=!e.checked; 
+  setSelectAll(); 
+} 
+} 
+
+</script> 
+</html>

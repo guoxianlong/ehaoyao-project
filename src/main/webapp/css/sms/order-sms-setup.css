@@ -1,0 +1,11 @@
+.w50 {width:50px;}
+.w80 {width:80px;}
+.w100 {width:100px;}
+.w150 {width:150px;}
+.w240 {width:240px;}
+.w300 {width:300px;}
+#main h4 {margin-bottom:20px; padding-left:10px; border-left:3px solid #000;}
+#main .condition {margin-bottom:10px;}
+#main .pagination {margin:0;}
+.modal-dialog {width:1000px;}
+.switch {margin-right:10px;}

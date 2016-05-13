@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+	<display-name>haoyao</display-name>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:applicationContext*.xml</param-value>
+	</context-param>
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+	<filter>
+		<filter-name>sessionInView</filter-name>
+		<filter-class>
+			org.springframework.orm.hibernate3.support.OpenSessionInViewFilter</filter-class>
+			<init-param> 
+            <param-name>singleSession</param-name> 
+            <param-value>true</param-value>            
+        </init-param> 
+        <init-param> 
+        <param-name> flushMode </param-name> 
+   <param-value>AUTO </param-value>         
+        </init-param> 
+	</filter>
+
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		
+		
+	</filter>
+	<filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+ 	
+    <!-- 电销客服访问 -->
+ 	<filter>     
+	    <filter-name>custServFilter</filter-name>     
+	    <filter-class>com.ehaoyao.opertioncenter.custServiceCenter.filter.CustServFilter</filter-class>
+	</filter>
+    
+	<filter-mapping>
+		<filter-name>sessionInView</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
+    <!-- 客服请求过滤器 -->
+	<filter-mapping>
+        <filter-name>custServFilter</filter-name>
+        <url-pattern>/outScreen.do</url-pattern>
+    </filter-mapping>
+	<filter-mapping>
+        <filter-name>custServFilter</filter-name>
+        <url-pattern>/member2.do</url-pattern>
+    </filter-mapping>
+	<filter-mapping>
+        <filter-name>custServFilter</filter-name>
+        <url-pattern>/healthRecords2.do</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>custServFilter</filter-name>
+        <url-pattern>/callerScreen.do</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>custServFilter</filter-name>
+        <url-pattern>/commu.do</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>custServFilter</filter-name>
+        <url-pattern>/nowTaskReport.do</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>custServFilter</filter-name>
+        <url-pattern>/user2.do</url-pattern>
+    </filter-mapping>
+    
+	<servlet>
+		<servlet-name>spring</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:spring-servlet.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet> 
+	<servlet-mapping>
+		<servlet-name>spring</servlet-name>
+		<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+ 
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	</listener>
+	
+	<welcome-file-list>
+		<welcome-file>/index.jsp</welcome-file>
+	</welcome-file-list>
+	
+	<!--  防止多人登陆 ,控制一个用户只能登录一次，不能在其他地方重新登录-->
+  	<listener>
+		<listener-class>
+			org.springframework.security.web.session.HttpSessionEventPublisher 
+		</listener-class>
+	</listener>
+
+
+	<!-- 条形码生成 -->
+	<servlet>
+		<servlet-name>BarcodeServlet</servlet-name>
+		<servlet-class>com.ehaoyao.opertioncenter.common.BarcodeServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>BarcodeServlet</servlet-name>
+		<url-pattern>/barcode</url-pattern>
+	</servlet-mapping> 
+
+</web-app>
