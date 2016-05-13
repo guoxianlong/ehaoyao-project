@@ -6,17 +6,51 @@ import java.util.Map;
 import com.ehaoyao.logistics.common.model.logisticscenter.WayBillInfo;
 import com.ehaoyao.logistics.common.vo.WayBillInfoVo;
 
+/**
+ * 运单主表数据库持久化工具类
+ *
+ */
 public interface WayBillInfoMapper {
+	/**
+	 * 根据主键删除运单
+	 * @param id
+	 * @return
+	 */
     int deleteByPrimaryKey(Long id);
 
+    /**
+     * 插入一条运单信息
+     * @param record
+     * @return
+     */
     int insert(WayBillInfo record);
 
+    /**
+     * 可选择性插入一条运单数据
+     * @param record
+     * @return
+     */
     int insertSelective(WayBillInfo record);
 
+    /**
+     * 根据主键查询运单
+     * @param id
+     * @return
+     */
     WayBillInfo selectByPrimaryKey(Long id);
 
+    /**
+     * 根据主键可选择性更新运单
+     * @param record
+     * @return
+     */
     int updateByPrimaryKeySelective(WayBillInfo record);
 
+    /**
+     * 根据主键更新运单
+     * @param record
+     * @return
+     */
     int updateByPrimaryKey(WayBillInfo record);    
     /**
      * 批量保存运单信息

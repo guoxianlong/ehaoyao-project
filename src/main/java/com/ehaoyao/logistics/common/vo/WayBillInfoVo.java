@@ -34,6 +34,8 @@ public class WayBillInfoVo {
 
     private Date createTime;
     
+    private Date orderTime;
+    
     private Date lastTimeStart;
     
     private Date lastTimeEnd;
@@ -117,7 +119,15 @@ public class WayBillInfoVo {
         this.createTime = createTime;
     }
     
-    public Date getLastTimeStart() {
+    public Date getOrderTime() {
+		return orderTime;
+	}
+
+	public void setOrderTime(Date orderTime) {
+		this.orderTime = orderTime;
+	}
+
+	public Date getLastTimeStart() {
 		return lastTimeStart;
 	}
 

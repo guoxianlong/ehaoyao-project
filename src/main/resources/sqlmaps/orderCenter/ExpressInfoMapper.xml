@@ -59,12 +59,13 @@
     <result column="shuold_pay" property="shuoldPay" jdbcType="VARCHAR" />
     <result column="pay_type" property="payType" jdbcType="VARCHAR" />
     <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+    <result column="last_time" property="lastTime" jdbcType="TIMESTAMP" />
   </resultMap>
    <sql id="Composite_Column_List" >
     f.id, f.express_id, f.express_com_id, f.express_com_code, f.express_com_name, f.order_number, 
     f.express_price, f.delivery_date_type, f.delivery_type, f.express_status, f.delivery_date, 
     f.delivery_notice, f.remark, f.distribution_center_name, f.picking_code, f.distribution_station_name, 
-    f.products_count, f.outbound_time, f.order_flag, f.jd_trade_no, f.start_time, f.shuold_pay, f.pay_type, o.order_status
+    f.products_count, f.outbound_time, f.order_flag, f.jd_trade_no, f.start_time, f.shuold_pay, f.pay_type, o.order_status, o.last_time 
   </sql>
   
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
@@ -105,8 +106,11 @@
 		<if test="orderFlag !=null and orderFlag !='' ">
 			and f.order_flag = #{orderFlag,jdbcType=VARCHAR}
 		</if>
-		<if test="orderNumber !=null and orderNumber !='' ">
-			and f.order_number = #{orderNumber,jdbcType=VARCHAR}
+		<if test="orderNumberArr !=null and orderNumberArr !='' ">
+			and f.order_number in
+			<foreach item="item" index="index" collection="orderNumberArr" open="(" separator="," close=")">  
+			 #{item}  
+			</foreach> 
 		</if>
 		<if test="wayBillNumber !=null and wayBillNumber !='' ">
 			and f.express_id = #{wayBillNumber,jdbcType=VARCHAR}

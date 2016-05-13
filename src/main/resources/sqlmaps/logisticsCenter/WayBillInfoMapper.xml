@@ -11,10 +11,12 @@
     <result column="is_writeback" property="isWriteback" jdbcType="INTEGER" />
     <result column="last_time" property="lastTime" jdbcType="TIMESTAMP" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, order_flag, order_number, waybill_source, waybill_number, waybill_status, is_writeback, 
-    last_time, create_time
+    last_time, create_time, modify_time, order_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -65,11 +67,11 @@
   <insert id="insertWayBillInfoBatch" parameterType="java.util.List" >
     insert into waybill_info (order_flag, order_number, 
       waybill_source, waybill_number, waybill_status, 
-      is_writeback, last_time, create_time) values 
+      is_writeback, last_time, create_time, order_time) values 
    	<foreach collection="list" item="item" index="index" separator="," >
    	( #{item.orderFlag,jdbcType=VARCHAR}, #{item.orderNumber,jdbcType=VARCHAR}, 
       #{item.waybillSource,jdbcType=VARCHAR}, #{item.waybillNumber,jdbcType=VARCHAR}, #{item.waybillStatus,jdbcType=CHAR}, 
-      #{item.isWriteback,jdbcType=INTEGER}, #{item.lastTime,jdbcType=TIMESTAMP}, #{item.createTime,jdbcType=TIMESTAMP}
+      #{item.isWriteback,jdbcType=INTEGER}, #{item.lastTime,jdbcType=TIMESTAMP}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.orderTime,jdbcType=TIMESTAMP}
       )
       </foreach>
   </insert>
@@ -104,6 +106,9 @@
       <if test="createTime != null" >
         create_time,
       </if>
+      <if test="orderTime != null" >
+        order_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -132,6 +137,9 @@
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderTime != null" >
+        #{orderTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -289,13 +297,13 @@
 			and last_time &gt;#{lastTimeStart,jdbcType=TIMESTAMP}
 		</if>
 		<if test="lastTimeEnd !=null and lastTimeEnd !='' ">
-			and last_time &lt; #{lastTimeEnd,jdbcType=TIMESTAMP}
+			and last_time &lt;= #{lastTimeEnd,jdbcType=TIMESTAMP}
 		</if>
 		<if test="createTimeStart !=null and createTimeStart !='' ">
 			and create_time &gt;#{createTimeStart,jdbcType=TIMESTAMP}
 		</if>
 		<if test="createTimeEnd !=null and createTimeEnd !='' ">
-			and create_time &lt; #{createTimeEnd,jdbcType=TIMESTAMP}
+			and create_time &lt;= #{createTimeEnd,jdbcType=TIMESTAMP}
 		</if>
 		<if test="waybillStatusList != null and waybillStatusList.size > 0">
 			<foreach collection="waybillStatusList" item="waybillStatus" open="AND waybill_status IN (" close=")" separator=",">

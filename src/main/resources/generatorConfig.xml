@@ -15,7 +15,7 @@
 			<property name="forceBigDecimals" value="false" />
 		</javaTypeResolver>
 		<!-- 生成模型的包名和位置 -->
-		<javaModelGenerator targetPackage="com.ehaoyao.logistics.jd.vo" targetProject="obtain_logistics_info">
+		<javaModelGenerator targetPackage="com.ehaoyao.logistics.common.model.ordercenter" targetProject="obtain_logistics_info">
 			<property name="enableSubPackages" value="true" />
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
@@ -24,10 +24,10 @@
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
 		<!-- 生成DAO的包名和位置 -->
-		<javaClientGenerator type="XMLMAPPER" targetPackage="com.ehaoyao.logistics.jd.vo" targetProject="obtain_logistics_info">
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.ehaoyao.logistics.common.mapper.ordercenter" targetProject="obtain_logistics_info">
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 		<!-- 要生成那些表(更改tableName和domainObjectName就可以) -->
-		<table tableName="order_info" domainObjectName="OrderInfo" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
+		<table tableName="express_info_remove" domainObjectName="ExpressInfoRemove" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
 	</context>
 </generatorConfiguration>

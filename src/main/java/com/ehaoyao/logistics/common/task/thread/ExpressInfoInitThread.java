@@ -10,14 +10,37 @@ import com.ehaoyao.logistics.common.vo.OrderExpressVo;
 
 import net.sf.json.JSONArray;
 
+/**
+ * 初始运单主处理线程类
+ * @author longshanw
+ *
+ */
 public class ExpressInfoInitThread implements Runnable {
 	private static final Logger logger = Logger.getLogger(ExpressInfoInitThread.class);
 	private static ResourceBundle appConfigs = ResourceBundle.getBundle("application");
+	
 	
 	private List<OrderExpressVo> subThreadList;
 	
 	private ToLogisticsCenterService toLogisticsService;
 	
+	/**
+	 * 拆单：split 正常：normal
+	 */
+	private String flag;
+	
+	public ExpressInfoInitThread() {
+		super();
+	}
+
+	public ExpressInfoInitThread(List<OrderExpressVo> subThreadList, ToLogisticsCenterService toLogisticsService,
+			String flag) {
+		super();
+		this.subThreadList = subThreadList;
+		this.toLogisticsService = toLogisticsService;
+		this.flag = flag;
+	}
+
 	public List<OrderExpressVo> getSubThreadList() {
 		return subThreadList;
 	}
@@ -33,6 +56,16 @@ public class ExpressInfoInitThread implements Runnable {
 	public void setToLogisticsService(ToLogisticsCenterService toLogisticsService) {
 		this.toLogisticsService = toLogisticsService;
 	}
+
+	
+	public String getFlag() {
+		return flag;
+	}
+
+	public void setFlag(String flag) {
+		this.flag = flag;
+	}
+
 
 	@Override
 	public void run() {
@@ -52,9 +85,9 @@ public class ExpressInfoInitThread implements Runnable {
 				}
 				//	将订单中心查询到的已配送的订单及运单号等信息插入物流中心
 				if(subList!=null&&!subList.isEmpty()){
-					insCount = (Integer) toLogisticsService.insertLogisticsCenter(subList);
+					insCount = (Integer) toLogisticsService.insertLogisticsCenter(subList,flag);
 					totalInsCount+=insCount;
-					logger.info("【线程："+Thread.currentThread().getName()+"，共需处理"+subThreadList.size()+"条记录，每次处理"+dealCount+"条，共需处理"+((subThreadList.size()-1)/dealCount+1)+"次，当前处理第"+count+"次，当前成功插入"+insCount+"条，累计成功插入"+totalInsCount+"条】");
+					logger.info("【初始化运单-线程："+Thread.currentThread().getName()+"，共需处理"+subThreadList.size()+"条记录，每次处理"+dealCount+"条，共需处理"+((subThreadList.size()-1)/dealCount+1)+"次，当前处理第"+count+"次，当前成功插入"+insCount+"条，累计成功插入"+totalInsCount+"条】");
 					count++;//每次处理后加1
 				}
 			}
@@ -62,11 +95,11 @@ public class ExpressInfoInitThread implements Runnable {
 			if(subList!=null){
 				arr = JSONArray.fromObject(subList);
 			}
-			logger.error("【线程："+Thread.currentThread().getName()+"处理异常！处理信息："+(arr!=null?arr.toString():"")+"异常信息：】"+e);
+			logger.error("【初始化运单-线程："+Thread.currentThread().getName()+"处理异常！处理信息："+(arr!=null?arr.toString():"")+"异常信息：】"+e);
 			e.printStackTrace();
 		}finally{
 			long threadEndTime = System.currentTimeMillis();
-			logger.info("【线程："+Thread.currentThread().getName()+"，处理结束，共成功插入"+totalInsCount+"条记录,一共耗时："+(threadEndTime-threadStartTime)/1000.0+"s】");
+			logger.info("【初始化运单-线程："+Thread.currentThread().getName()+"，处理结束，共成功插入"+totalInsCount+"条记录,一共耗时："+(threadEndTime-threadStartTime)/1000.0+"s】");
 		}
 		
 

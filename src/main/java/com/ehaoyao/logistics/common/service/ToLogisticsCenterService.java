@@ -12,10 +12,11 @@ public interface ToLogisticsCenterService {
 
     /**
      * 保存订单/运单信息至物流中心
+     * @param flag 拆单：split 正常：normal
      * @param expressVoList
      * @return
      * @throws Exception
      */
-    Object insertLogisticsCenter(List<OrderExpressVo> orderExpressList) throws Exception;
+    Object insertLogisticsCenter(List<OrderExpressVo> orderExpressList, String flag) throws Exception;
 
 }

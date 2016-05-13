@@ -2,22 +2,61 @@ package com.ehaoyao.logistics.common.model.logisticscenter;
 
 import java.util.Date;
 
+/**
+ * 运单明细数据库映射表
+ *
+ */
 public class WayBillDetail {
+	
+	/**
+	 * 主键id
+	 */
     private Long id;
 
-    private String waybillSource;//运单来源
+    /*
+     * 运单来源
+     */
+    private String waybillSource;
 
-    private String waybillNumber;//运单号
+    /**
+     * 运单号
+     */
+    private String waybillNumber;
 
-    private String waybillStatus;//运单状态
+    /**
+     * 运单状态
+     */
+    private String waybillStatus;
 
-    private Date waybillTime;//运单跟踪信息时间
+    /**
+     * 运单跟踪信息时间
+     */
+    private Date waybillTime;
 
-    private String waybillContent;//运单跟踪内容
+    /**
+     * 运单跟踪内容
+     */
+    private String waybillContent;
+    
+    /**
+     * 运单配送地址
+     */
+    private String waybillAddress;
 
-    private String operator;//操作人
+    /**
+     * 操作人
+     */
+    private String operator;
 
-    private Date createTime;//创建时间
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+    
+    /**
+     * 更新时间
+     */
+    private Date modifyTime;
 
     public Long getId() {
         return id;
@@ -66,8 +105,16 @@ public class WayBillDetail {
     public void setWaybillContent(String waybillContent) {
         this.waybillContent = waybillContent == null ? null : waybillContent.trim();
     }
+    
+    public String getWaybillAddress() {
+		return waybillAddress;
+	}
 
-    public String getOperator() {
+	public void setWaybillAddress(String waybillAddress) {
+		this.waybillAddress = waybillAddress  == null ? null : waybillAddress.trim();
+	}
+
+	public String getOperator() {
         return operator;
     }
 
@@ -82,4 +129,14 @@ public class WayBillDetail {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+
+	public Date getModifyTime() {
+		return modifyTime;
+	}
+
+	public void setModifyTime(Date modifyTime) {
+		this.modifyTime = modifyTime;
+	}
+    
+    
 }

@@ -1,7 +1,11 @@
 package com.ehaoyao.logistics.common.model.ordercenter;
 
 import java.util.Date;
-
+/**
+ * 订单中心，主订单表
+ * @author longshanw
+ *
+ */
 public class OrderInfo {
 	
 	/******************************订单中心-订单状态描述****************************************/
@@ -26,68 +30,161 @@ public class OrderInfo {
 	 */
 	public static final String ORDER_INFO_ORDER_STATUS_CANCEL = "s04";
 	
+	/**
+	 * 订单表主键id
+	 */
     private Long id;
 
+    /**
+     * 平台id
+     */
     private String originalId;
 
+    /**
+     * 订单编号
+     */
     private String orderNumber;
 
+    /**
+     * 订单时间
+     */
     private String startTime;
 
+    /**
+     * 订单配送完成时间
+     */
     private String expireTime;
 
+    /**
+     * 订单备注
+     */
     private String remark;
 
+    /**
+     * 支付类型
+     */
     private String payType;
 
+    /**
+     * 用户支付金额
+     */
     private Double price;
 
+    /**
+     * 收货人
+     */
     private String receiver;
 
+    /**
+     * 收货人详细地址
+     */
     private String addressDetail;
 
+    /**
+     * 手机号
+     */
     private String mobile;
 
+    /**
+     * 电话
+     */
     private String telephone;
 
+    /**
+     * 配送日期
+     */
     private String deliveryDate;
 
+    /**
+     * 省份
+     */
     private String province;
 
+    /**
+     * 城市
+     */
     private String city;
 
+    /**
+     * 区域
+     */
     private String country;
 
+    /**
+     * 订单金额
+     */
     private Double orderPrice;
 
+    /**
+     * 优惠金额
+     */
     private Double discountAmount;
 
+    /**
+     * 运费
+     */
     private Double expressPrice;
 
+    /**
+     * 渠道标识
+     */
     private String orderFlag;
 
+    /**
+     * 满返满送
+     */
     private String overReturnFree;
 
+    /**
+     * 昵称
+     */
     private String nickName;
 
+    /**
+     * 地址别名
+     */
     private String addressAlias;
 
+    /**
+     * 
+     */
     private String appSignature;
 
+    /**
+     * 订单状态  s00:初始 s01:已发货 s02:物流信息通知平台 s03:交易完成(配送完成) s04:取消退款
+     */
     private String orderStatus;
 
+    /**
+     * 付款类型
+     */
     private String feeType;
 
+    /**
+     * 是否推送至erp 0:否 1:是
+     */
     private String toErp;
 
+    /**
+     * 支付时间
+     */
     private String paymentTime;
 
     private Date toOrdercenterTime;
 
+    /**
+     * 至erp时间
+     */
     private String toErpTime;
 
+    /**
+     * 最后更新时间
+     */
     private Date lastTime;
 
+    /**
+     * 客服工号
+     */
     private String kfAccount;
 
     public Long getId() {

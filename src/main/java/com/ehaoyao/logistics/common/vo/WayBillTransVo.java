@@ -1,9 +1,26 @@
 package com.ehaoyao.logistics.common.vo;
 
+/**
+ * 主要用于根据运单来源及运单号进行去重
+ * @author longshanw
+ *
+ */
 public class WayBillTransVo {
+	/**
+	 * 运单来源
+	 */
 	private String wayBillSource;
+	/**
+	 * 运单来源+运单号
+	 */
 	private String wayBillSourceNum;
+	/**
+	 * 订单来源+订单号
+	 */
 	private String orderFlagNum;
+	/**
+	 * 封装查询实体
+	 */
 	private OrderExpressVo orderExpress;
 
 	public WayBillTransVo() {

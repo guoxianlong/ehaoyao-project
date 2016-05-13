@@ -21,6 +21,8 @@ import com.ehaoyao.logistics.common.mapper.logisticscenter.WayBillDetailMapper;
 import com.ehaoyao.logistics.common.mapper.logisticscenter.WayBillInfoMapper;
 import com.ehaoyao.logistics.common.model.logisticscenter.WayBillDetail;
 import com.ehaoyao.logistics.common.model.logisticscenter.WayBillInfo;
+import com.ehaoyao.logistics.common.utils.VersionCachePool;
+import com.ehaoyao.logistics.common.vo.LogisticsDetail;
 import com.ehaoyao.logistics.common.vo.WayBillInfoVo;
 import com.ehaoyao.logistics.jd.service.JDWayBillDetailService;
 import com.ehaoyao.logistics.jd.service.JDWayBillInfoService;
@@ -285,7 +287,7 @@ public class JDWayBillInfoServiceImpl implements JDWayBillInfoService {
 		return updateCount;
 	}
 	/**
-	* @Description:查询 date天内、waybillSource 、waybillStatus多个状态的运单集合
+	* @Description:查询startDate~endDate时间内、waybillSource 、waybillStatus多个状态的运单集合
 	* @param @param date
 	* @param @param waybillSource
 	* @param @param waybillStatusList
@@ -294,21 +296,16 @@ public class JDWayBillInfoServiceImpl implements JDWayBillInfoService {
 	* @return 
 	* @throws
 	*/ 
-	public List<WayBillInfo> queryWayBillInfoList(int date,
+	public List<WayBillInfo> queryWayBillInfoList(Date startDate,Date endDate,
 			String waybillSource, List<String> waybillStatusList)
 			throws Exception {
-		/*1、 获得开始抓运单时间、结束时间*/
-		Calendar calendar = new GregorianCalendar();
-		calendar.add(Calendar.DATE, -date);
-		Date startTime = calendar.getTime();
-		Date endTime = new Date();
-		/*2、将查询条件封装*/
+		/*1、将查询条件封装*/
 		WayBillInfoVo wayBillInfoVo = new WayBillInfoVo();
-		wayBillInfoVo.setCreateTimeStart(startTime);
-		wayBillInfoVo.setCreateTimeEnd(endTime);
+		wayBillInfoVo.setCreateTimeStart(startDate);
+		wayBillInfoVo.setCreateTimeEnd(endDate);
 		wayBillInfoVo.setWaybillStatusList(waybillStatusList);
 		wayBillInfoVo.setWaybillSource(waybillSource);
-		/*3、调用mapper获取运单号集合*/
+		/*2、调用mapper获取运单号集合*/
 		List<WayBillInfo> wayBillInfoList = waybillInfoMapper.selectWayBillInfoList(wayBillInfoVo);				
 		return wayBillInfoList;
 	}
@@ -326,6 +323,7 @@ public class JDWayBillInfoServiceImpl implements JDWayBillInfoService {
 		SimpleDateFormat jdSdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		ArrayList<WayBillInfo> waitUpdateWayBillInfoList = new ArrayList<WayBillInfo>();
 		ArrayList<WayBillDetail> waitInsertWayBillDetailList = new ArrayList<WayBillDetail>();
+		String putMemError = "";
 		for (WayBillInfo wayBillInfo: wayBillInfoList) {
 			String waybillNumber=wayBillInfo.getWaybillNumber();
 			String strs = waybillNumber.substring(0, 3);
@@ -341,11 +339,20 @@ public class JDWayBillInfoServiceImpl implements JDWayBillInfoService {
 			 * 添加新的几条物流跟踪信息到WayBillDetail表中,
 			 * 新旧物流跟踪信息的标准:新的物流跟踪信息的OPenTime字段比WayBillInfo的lastTime大*/		
 			//2.1  对跟踪信息集合根据 OPenTIme进行排序
-			if(null !=apiDtos){
+			if(null !=apiDtos && !apiDtos.isEmpty()){
+				/**
+				 *	将京东运单信息放入至缓存服务器 
+				 */
+				boolean flag = putMemcached(apiDtos,waybillNumber);
+				if(!flag){
+					putMemError+=waybillNumber+",";
+				}
+				
 				Collections.sort(apiDtos, new SortByOpeTime());
 				Date lastTime = wayBillInfo.getLastTime();
 				int waybillDetailSuccessCount =0;//添加成功的新物流跟踪信息个数
 				//2.3 遍历 跟踪信息集合(京东), 如果OpenTime大于lastTime或lastTime为null，则添加跟踪信息到DB
+				int newestIndex=0;//最新的跟踪信息索引
 				for (int i = 0; i < apiDtos.size(); i++) {
 					TraceApiDto traceApiDto = apiDtos.get(i);
 					String opeTime = traceApiDto.getOpeTime();
@@ -371,10 +378,17 @@ public class JDWayBillInfoServiceImpl implements JDWayBillInfoService {
 						//2.4  添加到待更新的 运单详情集合中
 						waitInsertWayBillDetailList.add(waybillDetail);
 						waybillDetailSuccessCount++;
+						//2.5 为防止物流公司传来的跟踪信息有误(某些运单妥投后,还会出现新的跟踪信息),对物流状态为s04跟踪信息以后的，均不做保存/更新处理。
+						if(waybillStatus=="s03" || waybillStatus=="s04"){
+							newestIndex=i;
+							break;
+						}
+						newestIndex=i;
 					}
 				}
+				// 2.5.1  根据该运单 最新的物流跟踪信息，更新运单Info
 				if(waybillDetailSuccessCount>0){
-					TraceApiDto newestTraceApiDto = apiDtos.get(apiDtos.size()-1);
+					TraceApiDto newestTraceApiDto = apiDtos.get(newestIndex);
 					String opeTimeNew = newestTraceApiDto.getOpeTime();
 					Date lastTimeNew =null;
 					try {
@@ -393,6 +407,10 @@ public class JDWayBillInfoServiceImpl implements JDWayBillInfoService {
 				}
 			}
 		}
+		
+		if(putMemError.trim().length()>0){
+			logger.info("【京东运单-放入缓存服务器失败的运单信息："+putMemError+"】");
+		}
 		//3.1  批量插入插入新的跟踪信息
 		if(waitInsertWayBillDetailList!=null && !waitInsertWayBillDetailList.isEmpty()){
 			wayBillDetailMapper.insertWayBillDetailBatch(waitInsertWayBillDetailList);
@@ -403,5 +421,37 @@ public class JDWayBillInfoServiceImpl implements JDWayBillInfoService {
 			updateCount = waybillInfoMapper.updateWayBillInfoBatch(waitUpdateWayBillInfoList);
 		}
 		return updateCount;
+	}
+	
+	/**
+	 * 将运单信息放入至缓存服务器 
+	 * @param apiDtos
+	 * @param waybillNumber
+	 */
+	public boolean putMemcached(List<TraceApiDto> apiDtos,String waybillNumber){
+		
+		List<LogisticsDetail> logDetail = new ArrayList<LogisticsDetail>();
+		for (TraceApiDto tap : apiDtos) {
+			LogisticsDetail detail = new LogisticsDetail();
+			String date=tap.getOpeTime();
+			date=date.replaceAll("/", "-");
+			detail.setReceiptTime(date);
+			detail.setReceiptAddress("");
+			detail.setContext(tap.getOpeRemark() + ":"
+					+ tap.getOpeTitle());//该订单的物流实时更新内容
+			detail.setTrackingNumber(waybillNumber);//物流单号
+			logDetail.add(detail);
+		}
+		//将该订单的物流信息放入缓存服务器中
+		if(!logDetail.isEmpty()){
+			/*PutMemcachedResponse putMemcachedResponse =LogisticsServerClient.putMemcached("jd", waybillNumber,
+					logDetail);
+			if(putMemcachedResponse.get_return()!=1){
+				System.out.println("putMemcachedResponse="+JSONObject.toJSONString(putMemcachedResponse));
+			}
+			return putMemcachedResponse.get_return()==1?true:false;*/
+			return VersionCachePool.putObject("jd_" + waybillNumber, logDetail);
+		}
+		return false;
 	}
 }

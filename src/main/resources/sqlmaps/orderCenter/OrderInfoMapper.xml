@@ -422,8 +422,9 @@
 				</foreach>
 			</trim>
 		</trim>
-		where
-		<foreach collection="list" separator="or" item="i" index="index" >
+		where order_status='s02' 
+		and 
+		<foreach collection="list" separator="or" item="i" index="index" open="(" close=")" >
              order_number = #{i.orderNumber}
 		</foreach>
 	</update>  

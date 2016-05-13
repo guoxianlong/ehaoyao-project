@@ -2,6 +2,10 @@ package com.ehaoyao.logistics.common.model.logisticscenter;
 
 import java.util.Date;
 
+/**
+ * 运单主表数据库映射表
+ *
+ */
 public class WayBillInfo {
 	
 	/***********************************运单配送状态定义****************************************************/
@@ -31,23 +35,60 @@ public class WayBillInfo {
 	 */
 	public static final String WAYBILL_INFO_STATUS_DELIVERED = "s04";
 	
+	/**
+	 *	主键id 
+	 */
     private Long id;
     
-    private String orderFlag;//订单标识
+    /**
+     * 订单标识
+     */
+    private String orderFlag;
 
-    private String orderNumber;//订单号
+    /**
+     * 订单号
+     */
+    private String orderNumber;
 
-    private String waybillSource;//运单来源
+    /**
+     * 运单来源
+     */
+    private String waybillSource;
 
-    private String waybillNumber;//运单号
+    /**
+     * 运单号
+     */
+    private String waybillNumber;
 
-    private String waybillStatus;//运单状态 /s00 :初始化  s01:揽件  s02:配送中  s04：妥投
+    /**
+     * 运单状态  s00 :初始化  s01:揽件  s02:配送中  s04：妥投
+     */
+    private String waybillStatus;
 
-    private Integer isWriteback;//运单妥投是否回写到订单中心
+    /**
+     * 运单妥投是否回写到订单中心 0:未回写  1:已回写
+     */
+    private Integer isWriteback;
 
-    private Date lastTime;//最新更新物流信息时间
+    /**
+     * 最新平台更新物流信息时间
+     */
+    private Date lastTime;
 
-    private Date createTime;//运单创建时间
+    /**
+     * 运单创建时间
+     */
+    private Date createTime;
+    
+    /**
+     * 最新更新时间  数据库已设置为自动更新
+     */
+    private Date modifyTime;
+    
+    /**
+     * 订单时间(下单时间)
+     */
+    private Date orderTime;
 
     public Long getId() {
         return id;
@@ -120,4 +161,23 @@ public class WayBillInfo {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+
+	public Date getModifyTime() {
+		return modifyTime;
+	}
+
+	public void setModifyTime(Date modifyTime) {
+		this.modifyTime = modifyTime;
+	}
+
+	public Date getOrderTime() {
+		return orderTime;
+	}
+
+	public void setOrderTime(Date orderTime) {
+		this.orderTime = orderTime;
+	}
+	
+	
+    
 }

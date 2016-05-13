@@ -10,6 +10,11 @@ import com.ehaoyao.logistics.yto.service.YTOLogisticsService;
 
 import net.sf.json.JSONArray;
 
+/**
+ * 主要业务实现线程
+ * @author longshanw
+ *
+ */
 public class YTOLogisticsThread implements Runnable {
 	private static final Logger logger = Logger.getLogger(YTOLogisticsThread.class);
 	private static ResourceBundle ytoConfig = ResourceBundle.getBundle("ytoConfig");
@@ -53,21 +58,26 @@ public class YTOLogisticsThread implements Runnable {
 				}
 				//分批次/条数，调用圆通物流接口并更新物流中心运单物流信息
 				if(subList!=null&&!subList.isEmpty()){
-					updCount = (Integer) ytoLogisticsService.updateYTOWayBills(subList);
-					totalUpdCount+=updCount;
-					logger.info("【线程："+Thread.currentThread().getName()+"，共需处理"+subThreadList.size()+"条记录，每次处理"+dealCount+"条，共需处理"+((subThreadList.size()-1)/dealCount+1)+"次，当前处理第"+count+"次，当前成功更新运单物流信息"+updCount+"条，累计成功更新运单物流信息"+totalUpdCount+"条】");
-					count++;//每次处理后加1
+					try {
+						updCount = (Integer) ytoLogisticsService.updateYTOWayBills(subList);
+						totalUpdCount+=updCount;
+						logger.info("【圆通更新物流-线程：" + Thread.currentThread().getName() + "，共需处理" + subThreadList.size() + "条记录，每次处理"
+								+ dealCount + "条，共需处理" + ((subThreadList.size() - 1) / dealCount + 1) + "次，当前处理第" + count
+								+ "次，当前成功更新运单物流信息" + updCount + "条，累计成功更新运单物流信息" + totalUpdCount + "条】");
+						count++;//每次处理后加1
+					} catch (Exception e) {
+						if(subList!=null){
+							arr = JSONArray.fromObject(subList);
+						}
+						logger.error("【圆通更新物流-线程：" + Thread.currentThread().getName() + "，共需处理" + subThreadList.size() + "条记录，每次处理"
+							+ dealCount + "条，共需处理" + ((subThreadList.size() - 1) / dealCount + 1) + "次，当前处理第" + count
+							+ "次，当前成功更新运单物流信息" + updCount + "条，累计成功更新运单物流信息" + totalUpdCount + "条，处理信息："+(arr!=null?arr.toString():"")+"，处理出错，错误信息："+e.getMessage()+"】");
+					}
 				}
 			}
-		} catch (Exception e) {
-			if(subList!=null){
-				arr = JSONArray.fromObject(subList);
-			}
-			logger.error("【线程："+Thread.currentThread().getName()+"处理异常！处理信息："+(arr!=null?arr.toString():"")+"异常信息：】"+e);
-			e.printStackTrace();
 		}finally{
 			long threadEndTime = System.currentTimeMillis();
-			logger.info("【线程："+Thread.currentThread().getName()+"，处理结束，共成功更新运单物流信息"+totalUpdCount+"条记录,一共耗时："+(threadEndTime-threadStartTime)/1000.0+"s】");
+			logger.info("【圆通更新物流-线程："+Thread.currentThread().getName()+"，处理结束，共成功更新运单物流信息"+totalUpdCount+"条记录,一共耗时："+(threadEndTime-threadStartTime)/1000.0+"s】");
 		}
 	}
 

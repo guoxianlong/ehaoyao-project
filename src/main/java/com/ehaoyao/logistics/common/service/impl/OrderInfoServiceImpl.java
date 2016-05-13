@@ -30,7 +30,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 	private OrderInfoMapper orderInfoMapper;
 	/**
 	 * 
-	* @Description：根据物流中心妥投的运单，更新订单中心的order_info表,更新字段为expire_time、order_status
+	* @Description：根据物流中心妥投的运单，更新订单中心的order_info表orderStatus为s02的记录,更新字段为expire_time、order_status
 	* @param @param wayBillInfoList
 	* @param @return
 	* @return int

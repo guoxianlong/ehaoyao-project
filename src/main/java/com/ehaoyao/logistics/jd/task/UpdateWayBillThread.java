@@ -4,6 +4,7 @@ package com.ehaoyao.logistics.jd.task;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import net.sf.json.JSONArray;
 
@@ -20,7 +21,7 @@ import com.ehaoyao.logistics.jd.service.JDWayBillInfoService;
  */
 public class UpdateWayBillThread extends Thread {
 	private static final Logger logger = Logger.getLogger(UpdateWayBillThread.class);
-	private static ReadConfigs configs = new ReadConfigs("jdconfig");
+	private static ResourceBundle jdconfig = ResourceBundle.getBundle("jdconfig");
 	private List<WayBillInfo> wayBillInfoList;
 	private  JDWayBillInfoService  waybillInfoService;
 	
@@ -41,11 +42,11 @@ public class UpdateWayBillThread extends Thread {
 	}
 
 	public void run() {
-		logger.info("启动京东快递更新物流信息新线程！！！！！");
+		logger.info("【启动京东快递更新物流信息新线程！！！】");
 		Date dateStart = new Date();
 		int updateCount = 0 ;//每次最终成功更新条数
 		int totalUpdateCount = 0;//累计最终成功更新条数
-		int updateSize = configs.getInteger("updateSize");//每次处理条数
+		int updateSize = Integer.parseInt(jdconfig.getString("updateSize"));//每次处理条数
 		int count = 1;//当前处理次数 
 		for(int i = 0;i<wayBillInfoList.size();i+=updateSize){
 			List<WayBillInfo>  subList = null;
@@ -60,14 +61,14 @@ public class UpdateWayBillThread extends Thread {
 					updateCount = waybillInfoService.updateWaybillInfoListByJD(subList);
 				} catch (Exception e) {
 					e.printStackTrace();
-					logger.error(Thread.currentThread().getName()+"【物流中心更新运单程序出错！！】     运单信息："+JSONArray.fromObject(subList));
+					logger.error("【京东更新物流-线程：" + Thread.currentThread().getName()+",物流中心更新京东运单程序出错！！】     运单信息："+JSONArray.fromObject(subList));
 				}
 				totalUpdateCount+=updateCount;
-				logger.info(Thread.currentThread().getName()+"【物流中心抓取到未妥投、未拒收运单"+wayBillInfoList.size()+"条记录，每次处理"+updateSize+"条，共需处理"+((wayBillInfoList.size()-1)/updateSize+1)+"次，当前处理第"+count+"次，当前成功更新"+updateCount+"条，累计成功更新"+totalUpdateCount+"条】");
+				logger.info("【京东更新物流-线程：" + Thread.currentThread().getName()+",物流中心抓取到未妥投、未拒收京东运单"+wayBillInfoList.size()+"条记录，每次处理"+updateSize+"条，共需处理"+((wayBillInfoList.size()-1)/updateSize+1)+"次，当前处理第"+count+"次，当前成功更新"+updateCount+"条，累计成功更新"+totalUpdateCount+"条】");
 				count++;//每次处理后加1
 			}
 		}
 		Date dateEnd = new Date();
-		logger.info(Thread.currentThread().getName()+"本次京东快递更新物流跟踪信息线程结束！！！耗时："+((dateEnd.getTime()-dateStart.getTime()))/1000+"s");
+		logger.info("【京东更新物流-线程：" + Thread.currentThread().getName()+",本次京东快递更新物流跟踪信息线程结束！！！耗时："+((dateEnd.getTime()-dateStart.getTime()))/1000+"s】");
 	}
 }

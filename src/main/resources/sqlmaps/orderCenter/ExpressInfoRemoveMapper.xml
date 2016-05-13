@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ehaoyao.logistics.common.mapper.ordercenter.ExpressInfoRemoveMapper" >
+  <resultMap id="BaseResultMap" type="com.ehaoyao.logistics.common.model.ordercenter.ExpressInfoRemove" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="express_id" property="expressId" jdbcType="VARCHAR" />
+    <result column="express_com_id" property="expressComId" jdbcType="VARCHAR" />
+    <result column="express_com_code" property="expressComCode" jdbcType="VARCHAR" />
+    <result column="express_com_name" property="expressComName" jdbcType="VARCHAR" />
+    <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+    <result column="delivery_date" property="deliveryDate" jdbcType="VARCHAR" />
+    <result column="order_flag" property="orderFlag" jdbcType="VARCHAR" />
+    <result column="subOrderSn" property="subordersn" jdbcType="VARCHAR" />
+    <result column="sku" property="sku" jdbcType="VARCHAR" />
+    <result column="to_gw" property="toGw" jdbcType="VARCHAR" />
+    <result column="split" property="split" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, express_id, express_com_id, express_com_code, express_com_name, order_number, 
+    delivery_date, order_flag, subOrderSn, sku, to_gw, split
+  </sql>
+  
+  
+  
+  <resultMap id="CompositeResultMap" type="com.ehaoyao.logistics.common.vo.OrderExpressVo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="express_id" property="expressId" jdbcType="VARCHAR" />
+    <result column="express_com_id" property="expressComId" jdbcType="VARCHAR" />
+    <result column="express_com_code" property="expressComCode" jdbcType="VARCHAR" />
+    <result column="express_com_name" property="expressComName" jdbcType="VARCHAR" />
+    <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+    <result column="delivery_date" property="deliveryDate" jdbcType="VARCHAR" />
+    <result column="order_flag" property="orderFlag" jdbcType="VARCHAR" />
+    <result column="subOrderSn" property="subordersn" jdbcType="VARCHAR" />
+    <result column="sku" property="sku" jdbcType="VARCHAR" />
+    <result column="to_gw" property="toGw" jdbcType="VARCHAR" />
+    <result column="split" property="split" jdbcType="VARCHAR" />
+    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Composite_Column_List" >
+    f.id, f.express_id, f.express_com_id, f.express_com_code, f.express_com_name, f.order_number, 
+    f.delivery_date, f.order_flag, f.subOrderSn, f.sku, f.to_gw, f.split, o.order_status, o.start_time  
+  </sql>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from express_info_remove
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <!-- 根据条件查询，已配送的 -->
+  <select id="selectHasShipByCondition" resultMap="CompositeResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Composite_Column_List" />
+    from express_info_remove f join order_info o on  f.order_number=o.order_number and f.order_flag=o.order_flag   
+    and f.express_id is not null and f.express_id!='' 
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+		<if test="orderFlag !=null and orderFlag !='' ">
+			and f.order_flag = #{orderFlag,jdbcType=VARCHAR}
+		</if>
+		<if test="orderNumberArr !=null and orderNumberArr !='' ">
+			and f.order_number in
+			<foreach item="item" index="index" collection="orderNumberArr" open="(" separator="," close=")">  
+			 #{item}  
+			</foreach> 
+		</if>
+		<if test="wayBillNumber !=null and wayBillNumber !='' ">
+			and f.express_id = #{wayBillNumber,jdbcType=VARCHAR}
+		</if>
+		<if test="wayBillTimeStart !=null and wayBillTimeStart !='' ">
+			and o.last_time &gt;= #{wayBillTimeStart,jdbcType=VARCHAR}
+		</if>
+		<if test="wayBillTimeEnd !=null and wayBillTimeEnd !='' ">
+			and o.last_time &lt;= #{wayBillTimeEnd,jdbcType=VARCHAR}
+		</if>
+		<if test="orderStatusArr !=null and orderStatusArr.length>0 ">
+			and o.order_status in 
+			<foreach item="item" index="index" collection="orderStatusArr" open="(" separator="," close=")">  
+			 #{item}  
+			</foreach> 
+		</if>
+		 order by o.last_time,o.start_time  
+    </trim>
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from express_info_remove
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ehaoyao.logistics.common.model.ordercenter.ExpressInfoRemove" >
+    insert into express_info_remove (id, express_id, express_com_id, 
+      express_com_code, express_com_name, order_number, 
+      delivery_date, order_flag, subOrderSn, 
+      sku, to_gw, split)
+    values (#{id,jdbcType=BIGINT}, #{expressId,jdbcType=VARCHAR}, #{expressComId,jdbcType=VARCHAR}, 
+      #{expressComCode,jdbcType=VARCHAR}, #{expressComName,jdbcType=VARCHAR}, #{orderNumber,jdbcType=VARCHAR}, 
+      #{deliveryDate,jdbcType=VARCHAR}, #{orderFlag,jdbcType=VARCHAR}, #{subordersn,jdbcType=VARCHAR}, 
+      #{sku,jdbcType=VARCHAR}, #{toGw,jdbcType=VARCHAR}, #{split,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ehaoyao.logistics.common.model.ordercenter.ExpressInfoRemove" >
+    insert into express_info_remove
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="expressId != null" >
+        express_id,
+      </if>
+      <if test="expressComId != null" >
+        express_com_id,
+      </if>
+      <if test="expressComCode != null" >
+        express_com_code,
+      </if>
+      <if test="expressComName != null" >
+        express_com_name,
+      </if>
+      <if test="orderNumber != null" >
+        order_number,
+      </if>
+      <if test="deliveryDate != null" >
+        delivery_date,
+      </if>
+      <if test="orderFlag != null" >
+        order_flag,
+      </if>
+      <if test="subordersn != null" >
+        subOrderSn,
+      </if>
+      <if test="sku != null" >
+        sku,
+      </if>
+      <if test="toGw != null" >
+        to_gw,
+      </if>
+      <if test="split != null" >
+        split,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="expressId != null" >
+        #{expressId,jdbcType=VARCHAR},
+      </if>
+      <if test="expressComId != null" >
+        #{expressComId,jdbcType=VARCHAR},
+      </if>
+      <if test="expressComCode != null" >
+        #{expressComCode,jdbcType=VARCHAR},
+      </if>
+      <if test="expressComName != null" >
+        #{expressComName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null" >
+        #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryDate != null" >
+        #{deliveryDate,jdbcType=VARCHAR},
+      </if>
+      <if test="orderFlag != null" >
+        #{orderFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="subordersn != null" >
+        #{subordersn,jdbcType=VARCHAR},
+      </if>
+      <if test="sku != null" >
+        #{sku,jdbcType=VARCHAR},
+      </if>
+      <if test="toGw != null" >
+        #{toGw,jdbcType=VARCHAR},
+      </if>
+      <if test="split != null" >
+        #{split,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ehaoyao.logistics.common.model.ordercenter.ExpressInfoRemove" >
+    update express_info_remove
+    <set >
+      <if test="expressId != null" >
+        express_id = #{expressId,jdbcType=VARCHAR},
+      </if>
+      <if test="expressComId != null" >
+        express_com_id = #{expressComId,jdbcType=VARCHAR},
+      </if>
+      <if test="expressComCode != null" >
+        express_com_code = #{expressComCode,jdbcType=VARCHAR},
+      </if>
+      <if test="expressComName != null" >
+        express_com_name = #{expressComName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null" >
+        order_number = #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryDate != null" >
+        delivery_date = #{deliveryDate,jdbcType=VARCHAR},
+      </if>
+      <if test="orderFlag != null" >
+        order_flag = #{orderFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="subordersn != null" >
+        subOrderSn = #{subordersn,jdbcType=VARCHAR},
+      </if>
+      <if test="sku != null" >
+        sku = #{sku,jdbcType=VARCHAR},
+      </if>
+      <if test="toGw != null" >
+        to_gw = #{toGw,jdbcType=VARCHAR},
+      </if>
+      <if test="split != null" >
+        split = #{split,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ehaoyao.logistics.common.model.ordercenter.ExpressInfoRemove" >
+    update express_info_remove
+    set express_id = #{expressId,jdbcType=VARCHAR},
+      express_com_id = #{expressComId,jdbcType=VARCHAR},
+      express_com_code = #{expressComCode,jdbcType=VARCHAR},
+      express_com_name = #{expressComName,jdbcType=VARCHAR},
+      order_number = #{orderNumber,jdbcType=VARCHAR},
+      delivery_date = #{deliveryDate,jdbcType=VARCHAR},
+      order_flag = #{orderFlag,jdbcType=VARCHAR},
+      subOrderSn = #{subordersn,jdbcType=VARCHAR},
+      sku = #{sku,jdbcType=VARCHAR},
+      to_gw = #{toGw,jdbcType=VARCHAR},
+      split = #{split,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,5 +1,6 @@
 package com.ehaoyao.logistics.common.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,19 +19,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ehaoyao.logistics.common.mapper.logisticscenter.WayBillDetailMapper;
 import com.ehaoyao.logistics.common.mapper.logisticscenter.WayBillInfoMapper;
 import com.ehaoyao.logistics.common.model.logisticscenter.WayBillDetail;
 import com.ehaoyao.logistics.common.model.logisticscenter.WayBillInfo;
 import com.ehaoyao.logistics.common.service.ToLogisticsCenterService;
+import com.ehaoyao.logistics.common.utils.HttpUtils;
 import com.ehaoyao.logistics.common.vo.OrderExpressVo;
 import com.ehaoyao.logistics.common.vo.WayBillTransVo;
 
+/**
+ * 主要业务处理实现类
+ * @author longshanw
+ *
+ */
 @Transactional(value="transactionManagerLogisticsCenter")
 @Service(value="toLogisticsCenterService")
 public class ToLogisticsCenterServiceImpl implements ToLogisticsCenterService {
 	
 	private static final Logger logger = Logger.getLogger(ToLogisticsCenterServiceImpl.class);
+	private static ResourceBundle appConfigs = ResourceBundle.getBundle("application");
 	private static ResourceBundle bundle = ResourceBundle.getBundle("express");
 	private static ResourceBundle bundle1 = ResourceBundle.getBundle("orderCodeToKD100Code");
 	private static ResourceBundle bundle2 = ResourceBundle.getBundle("expressIDtoKD100Code");
@@ -49,11 +58,13 @@ public class ToLogisticsCenterServiceImpl implements ToLogisticsCenterService {
 	
 	/**
 	 * 将订单中心查询到的已配送的订单及运单号等信息插入物流中心
+	 * @param flag 拆单：split 正常：normal
 	 * @param orderExpressList
 	 * @return
 	 * @throws Exception
 	 */
-	public synchronized Object insertLogisticsCenter(List<OrderExpressVo> orderExpressList) throws Exception{
+	public synchronized Object insertLogisticsCenter(List<OrderExpressVo> orderExpressList,String flag) throws Exception{
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		WayBillInfo wayBillInfo;
 		WayBillDetail wayBillDetail;
 		List<WayBillInfo> wayBillInfoList ;
@@ -115,6 +126,9 @@ public class ToLogisticsCenterServiceImpl implements ToLogisticsCenterService {
 			wayBillInfo.setWaybillNumber(orderExpress.getExpressId());
 			wayBillInfo.setIsWriteback(0);
 			wayBillInfo.setWaybillStatus(WayBillInfo.WAYBILL_INFO_STATUS_INIT);
+			if(orderExpress.getStartTime()!=null){
+				wayBillInfo.setOrderTime(sdf.parse(orderExpress.getStartTime()));
+			}
 			wayBillInfo.setCreateTime(currDate);
 			wayBillInfoList.add(wayBillInfo);
 			
@@ -124,6 +138,8 @@ public class ToLogisticsCenterServiceImpl implements ToLogisticsCenterService {
 			wayBillDetail.setWaybillNumber(orderExpress.getExpressId());
 			wayBillDetail.setWaybillStatus(WayBillInfo.WAYBILL_INFO_STATUS_INIT);
 			wayBillDetail.setCreateTime(currDate);
+			wayBillDetail.setWaybillContent("正在等待快递员揽件...");
+			wayBillDetail.setWaybillTime(orderExpress.getLastTime());
 			wayBillDetailList.add(wayBillDetail);
 			
 		}
@@ -132,13 +148,21 @@ public class ToLogisticsCenterServiceImpl implements ToLogisticsCenterService {
 		if(wayBillSourceIsNull!=null && wayBillSourceIsNull.trim().length()>0){
 			logger.info("【从订单中心抓取初始订单至物流中心任务，运单来源为空或未配置的订单拼串信息："+repeatOrderNums+"】");
 		}
-		if(repeatOrderNums!=null && repeatOrderNums.trim().length()>0){
+		/*if(repeatOrderNums!=null && repeatOrderNums.trim().length()>0){
 			logger.info("【从订单中心抓取初始订单至物流中心任务，重复未插入(数据库中已存在)的订单标识-订单号-运单标识-运单号："+repeatOrderNums+"】");
-		}
+		}*/
 		
 		//5,保存结果集
 		if(wayBillInfoList!=null && !wayBillInfoList.isEmpty()){
 			insWayBillInfoCount = wayBillInfoMapper.insertWayBillInfoBatch(wayBillInfoList);
+			//向平台发送短信，调运营中心接口
+			if("split".equals(flag)){
+				try {
+					sendMsg(wayBillInfoList);
+				} catch (Exception e) {
+					logger.error("拆单-向平台发送短信失败，错误信息："+e.getMessage());
+				}
+			}
 		}
 		if(wayBillDetailList!=null && !wayBillDetailList.isEmpty()){
 			wayBillDetailMapper.insertWayBillDetailBatch(wayBillDetailList);
@@ -196,7 +220,11 @@ public class ToLogisticsCenterServiceImpl implements ToLogisticsCenterService {
 		return source;
 	}
 	
-	
+	/**
+	 * list根据运单来源及运单号去重
+	 * @param list
+	 * @return
+	 */
 	public List<WayBillTransVo> removeWayBillTransVoDuplicate(List<WayBillTransVo> list) {
 	       Set<WayBillTransVo> set = new HashSet<WayBillTransVo>();
 	       List<WayBillTransVo> newList = new ArrayList<WayBillTransVo>();
@@ -215,4 +243,24 @@ public class ToLogisticsCenterServiceImpl implements ToLogisticsCenterService {
 	       return newList;
 	   }	
 
+	/**
+	 * 拆单通知运营中心接口调用
+	 * @param wayBillInfoList
+	 */
+	public void sendMsg(List<WayBillInfo> wayBillInfoList){
+		for(WayBillInfo info : wayBillInfoList){
+			String params = "type=2&orderFlag=" + info.getOrderFlag() + "&orderNumber=" + info.getOrderNumber()
+					+ "&expressNo=" + info.getWaybillNumber() + "&expressComName=" + info.getWaybillSource();
+			String url = appConfigs.getString("smsUrl");
+			String res = HttpUtils.sendPost(url, params);
+			if(res!=null && res.trim().length()>0){
+				JSONObject json = (JSONObject) JSONObject.parse(res);
+				String code = json.getString("code");
+				if(!"1".equals(code)){
+					logger.info("拆单-向短信平台发送短信，调运营中心接口,请求url:"+url+",传递的参数：" + params+",接口返回的结果：" + res);
+					
+				}
+			}
+		}
+	}
 }

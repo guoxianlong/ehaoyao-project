@@ -4,6 +4,7 @@ import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -17,7 +18,8 @@ import com.ehaoyao.logistics.common.mapper.logisticscenter.WayBillDetailMapper;
 import com.ehaoyao.logistics.common.mapper.logisticscenter.WayBillInfoMapper;
 import com.ehaoyao.logistics.common.model.logisticscenter.WayBillDetail;
 import com.ehaoyao.logistics.common.model.logisticscenter.WayBillInfo;
-import com.ehaoyao.logistics.common.utils.DateUtil;
+import com.ehaoyao.logistics.common.utils.VersionCachePool;
+import com.ehaoyao.logistics.common.vo.LogisticsDetail;
 import com.ehaoyao.logistics.common.vo.WayBillInfoVo;
 import com.ehaoyao.logistics.yto.service.YTOLogisticsService;
 import com.ehaoyao.logistics.yto.utils.JaxbUtil;
@@ -28,6 +30,11 @@ import com.ehaoyao.logistics.yto.vo.Result;
 import com.ehaoyao.logistics.yto.vo.Ufinterface;
 import com.ehaoyao.logistics.yto.vo.WaybillProcessInfo;
 
+/**
+ * 主要业务实现类
+ * @author longshanw
+ *
+ */
 @Transactional(value="transactionManagerLogisticsCenter")
 @Service(value="ytoLogisticsService")
 public class YTOLogisticsServiceImpl implements YTOLogisticsService {
@@ -41,30 +48,27 @@ public class YTOLogisticsServiceImpl implements YTOLogisticsService {
 	@Autowired
 	WayBillDetailMapper wayBillDetailMapper;
 	
+	/**
+	 * 获取圆通未完成配送运单集合
+	 * @param wayBillInfoVo 
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
-	public List<WayBillInfo> selectYTOInitWayBills() throws Exception {
-		int orderIntervalTime = Integer.parseInt(ytoConfig.getString("normal_updLogistics_minute"));
-		Date startTime=DateUtil.getPreMinute(orderIntervalTime);//当前时间向前推迟xxx分钟
-		Date endTime=new Date();
-		ArrayList<String> waybillStatusList = new ArrayList<String>();
-		//1.1 运单状态  s00:初始 s01:揽件 s02:配送中 s03:拒收 s04:妥投'
-		waybillStatusList.add("s00");
-		waybillStatusList.add("s01");
-		waybillStatusList.add("s02");
+	public List<WayBillInfo> selectYTOInitWayBills(WayBillInfoVo wayBillInfoVo) throws Exception {
 		
-		/*2、将查询条件封装*/
-		WayBillInfoVo wayBillInfoVo = new WayBillInfoVo();
-		wayBillInfoVo.setWaybillSource(waybillsource);
-		wayBillInfoVo.setCreateTimeStart(startTime);
-		wayBillInfoVo.setCreateTimeEnd(endTime);
-		wayBillInfoVo.setWaybillStatusList(waybillStatusList);
-		
-		/*3、调用mapper获取运单号集合*/
+		/* 调用mapper获取运单号集合*/
 		List<WayBillInfo> wayBillInfoList = waybillInfoMapper.selectWayBillInfoList(wayBillInfoVo);
 		
 		return wayBillInfoList;
 	}
 
+	/**
+	 * 更新圆通运单信息
+	 * @param wayBillInfoList
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
 	public Integer updateYTOWayBills(List<WayBillInfo> wayBillInfoList) throws Exception {
 		String waybillNumber = "";
@@ -75,11 +79,15 @@ public class YTOLogisticsServiceImpl implements YTOLogisticsService {
 		List<WayBillInfo> wbnfoList = new ArrayList<WayBillInfo>();
 		String upLoadTimeNull = "";
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String putMemError = "";
 		for(int i=0;i<wayBillInfoList.size();i++){
+			/**
+			 * 用于定义运单是否有需要更新的运单，如果有则更新主表最新平台运单时间及状态,即waybill_info(last_time/waybill_status)
+			 */
+			int countIns = 0;
 			//1,	根据运单号调用圆通物流接口，获取物流信息
 			WayBillInfo wayBillInfo = wayBillInfoList.get(i);
 			waybillNumber = wayBillInfo.getWaybillNumber();
-//			logger.info("【"+Thread.currentThread().getName()+"开始抓取圆通快递单号为：" + waybillNumber + "的快递信息,当前第"+(i+1)+"条】");
 			// 截取No:字符串，校正运单号
 			if ("No:".equals(waybillNumber.substring(0, 3))) {
 				result = YTServiceNet.getExpressInfo(waybillNumber.substring(3, waybillNumber.length()).trim());
@@ -94,37 +102,67 @@ public class YTOLogisticsServiceImpl implements YTOLogisticsService {
 				continue;
 			}
 			
+			
 			//2,	根据返回物流集合更新物流中心最新物流信息
 			List<WaybillProcessInfo> infoList = expInfo.getResult().getWaybillProcessInfo();
-//			Collections.sort(infoList, new SortByUploadTime());
+			Collections.sort(infoList, new SortByUploadTime());
 			
-			for(WaybillProcessInfo expressInfo:infoList){
-				String upLoadTime = expressInfo.getUploadTime().replaceAll("/", "-");
-				if(wayBillInfo.getLastTime() != null && upLoadTime!=null && upLoadTime.trim().length()>0 && sdf.parse(upLoadTime).before(wayBillInfo.getLastTime())){
-					continue;
-				}
-				if(upLoadTime==null || upLoadTime.trim().length()<=0 || "".equals(upLoadTime)){
+			/**
+			 *	将圆通运单信息放入至缓存服务器 
+			 */
+			boolean putMemcachedFlag = putMemcached(infoList,waybillNumber);
+			if(!putMemcachedFlag){
+				putMemError+=waybillNumber+",";
+			}
+			
+			int index=0;//存放for运行终止的最新游标
+			for(int j=0;j<infoList.size();j++){
+				WaybillProcessInfo expressInfo = infoList.get(j);
+				String upLoadTime = expressInfo.getUploadTime();
+				String context=expressInfo.getProcessInfo();
+				if(upLoadTime==null || upLoadTime.trim().length()==0 ){
 					upLoadTimeNull += waybillNumber+",";
 					continue;
 				}
+				upLoadTime = upLoadTime.replaceAll("/", "-");
+				if (wayBillInfo.getLastTime() != null && (sdf.parse(upLoadTime).before(wayBillInfo.getLastTime())
+								|| sdf.parse(upLoadTime).equals(wayBillInfo.getLastTime()))) {
+					continue;
+				}
+				
+				
 				WayBillDetail wayBillDetail = new WayBillDetail();
-				String context=expressInfo.getProcessInfo();
 				wayBillDetail.setWaybillSource(waybillsource);
 				wayBillDetail.setWaybillNumber(waybillNumber);
-				wayBillDetail.setWaybillStatus(opeTitleTOWayBillStatus(context));
+				wayBillDetail.setWaybillStatus(opeTitleTOWayBillStatus(context,j,infoList.size()));
 				wayBillDetail.setWaybillContent(context);
 				wayBillDetail.setWaybillTime(sdf.parse(upLoadTime));
 				wayBillDetail.setCreateTime(currDate);
 				wbDetailList.add(wayBillDetail);
+				
+				String wayBillStatus = opeTitleTOWayBillStatus(context,j,infoList.size());
+				index = j;
+				countIns++;
+				/**
+				 * 圆通公司存在已签收、已拒收的状态之后的最新物流信息错误数据，故在此判断并跳出，不再保存已签收、已拒收之后的物流信息
+				 */
+				if(WayBillInfo.WAYBILL_INFO_STATUS_DELIVERED.equals(wayBillStatus) || WayBillInfo.WAYBILL_INFO_STATUS_REJECTION.equals(wayBillStatus)){
+					break;
+				}
 			}
 			
-			if(wbDetailList!=null && !wbDetailList.isEmpty()){
-				String waybillStatus = opeTitleTOWayBillStatus(infoList.get(infoList.size()-1).getProcessInfo());
+			if(countIns>0){
+				WaybillProcessInfo wpi = infoList.get(index);
+				String waybillStatus = opeTitleTOWayBillStatus(wpi.getProcessInfo(),index,infoList.size());
 				wayBillInfo.setWaybillStatus(waybillStatus);
-				String upLoadTime = infoList.get(infoList.size()-1).getUploadTime().replaceAll("/", "-");
-				wayBillInfo.setLastTime((upLoadTime!=null && upLoadTime.trim().length()>0)?sdf.parse(upLoadTime):new Date());
+				String upLoadTime = wpi.getUploadTime().replaceAll("/", "-");
+				wayBillInfo.setLastTime(sdf.parse(upLoadTime));
 				wbnfoList.add(wayBillInfo);
 			}
+		}
+		
+		if(putMemError.trim().length()>0){
+			logger.info("【圆通运单-放入缓存服务器失败的运单信息："+putMemError+"】");
 		}
 		
 		if(upLoadTimeNull.length()>0){
@@ -154,7 +192,7 @@ public class YTOLogisticsServiceImpl implements YTOLogisticsService {
 	private boolean checkRespons(String result, WayBillInfo wayBillInfo,Response response,Ufinterface expInfo) {
 		String waybillNumber = wayBillInfo.getWaybillNumber();
 		if (result == null || result.trim().length()<=0) {
-			logger.info("【"+Thread.currentThread().getName()+"圆通运单号：##" + waybillNumber + "##获取物流流转信息失败】");
+			logger.info("【"+Thread.currentThread().getName()+"圆通运单号：" + waybillNumber + ",获取物流流转信息失败】");
 			return false;
 		}
 		
@@ -162,7 +200,7 @@ public class YTOLogisticsServiceImpl implements YTOLogisticsService {
 		
 		if(index==-1){
 			if(null!=response){
-				logger.error(Thread.currentThread().getName()+"圆通接口请求错误,错误信息为##"+response.getReason()+"##");
+//				logger.error(Thread.currentThread().getName()+",圆通运单号：" + waybillNumber + ",返回信息为##"+response.getReason()+"##");
 				if("请求已超时".equals(response.getReason().trim())){
 					logger.info(Thread.currentThread().getName()+"圆通接口请求错误,错误信息为XML##"+result.trim() +"##");
 				}
@@ -178,7 +216,7 @@ public class YTOLogisticsServiceImpl implements YTOLogisticsService {
 		}
 		Result res=expInfo.getResult();
 		if(res == null || res.getWaybillProcessInfo()==null || res.getWaybillProcessInfo().isEmpty()){
-			logger.info(Thread.currentThread().getName()+"圆通运单号：##" + waybillNumber + "##没有返回结果信息");
+			logger.info(Thread.currentThread().getName()+"圆通运单号：" + waybillNumber + "没有返回结果信息");
 			return false;
 		}
 		return true;
@@ -187,20 +225,74 @@ public class YTOLogisticsServiceImpl implements YTOLogisticsService {
 	/**
 	 * 
 	* @Description:将opeTitle转化成状态
-	* @param @param opeTitle
+	* @param  opeTitle
+	* @param  index 游标
+	* @param size 总条数	
 	* @param @return
 	* @return String
 	* @throws
 	 */
-	public String opeTitleTOWayBillStatus (String opeTitle ){
-		if (opeTitle.contains("已收件")) {
-			return "s01";
-		}else if(opeTitle.contains("客户 签收人: 已退回")){
-			return "s03";
-		}else if(opeTitle.contains("客户 签收人:")){
-			return "s04";
+	public String opeTitleTOWayBillStatus (String opeTitle,Integer index,Integer size ){
+		if ((opeTitle.contains("已收件")||opeTitle.contains("已收入")||opeTitle.contains("已打包")) && index==0 && size>=1) {
+			return WayBillInfo.WAYBILL_INFO_STATUS_COLLECTPARCEL;
+		}else if(opeTitle.replaceAll(" ", "").contains("客户签收人:已退回")){
+			return WayBillInfo.WAYBILL_INFO_STATUS_REJECTION;
+		}else if(opeTitle.replaceAll(" ", "").contains("客户签收人:")){
+			return WayBillInfo.WAYBILL_INFO_STATUS_DELIVERED;
 		}else{
-			return "s02";
+			return WayBillInfo.WAYBILL_INFO_STATUS_DISTRIBUTION;
 		}
+	}
+	
+	/**
+	 * 获取最大的物流单号
+	 * @param wbDetailList
+	 * @return
+	 */
+	public String getLastWayBillStatus(List<WayBillDetail> wbDetailList){
+		Comparator<WayBillDetail> comp = new Comparator<WayBillDetail>() {
+
+			@Override
+			public int compare(WayBillDetail o1, WayBillDetail o2) {
+				if(o1.getWaybillStatus().compareTo(o2.getWaybillStatus())>=0){
+					return 1;
+				}else{
+					return -1;
+				}
+			}
+		};
+		WayBillDetail wb = Collections.max(wbDetailList, comp);
+		return wb.getWaybillStatus();
+	}
+	
+	/**
+	 * 将运单信息放入至缓存服务器 
+	 * @param infoList
+	 * @param waybillNumber
+	 */
+	public boolean putMemcached(List<WaybillProcessInfo> infoList,String waybillNumber) throws Exception{
+		
+		List<LogisticsDetail> logDetail = new ArrayList<LogisticsDetail>();
+		for (WaybillProcessInfo info : infoList) {
+			LogisticsDetail detail = new LogisticsDetail();
+			String date=info.getUploadTime();
+			date=date.replaceAll("/", "-");
+			detail.setReceiptTime(date);
+			detail.setReceiptAddress("");
+			detail.setContext(info.getProcessInfo());//该订单的物流实时更新内容
+			detail.setTrackingNumber(waybillNumber);//物流单号
+			logDetail.add(detail);
+		}
+		//将该订单的物流信息放入缓存服务器中
+		if(!logDetail.isEmpty()){
+			/*PutMemcachedResponse putMemcachedResponse =LogisticsServerClient.putMemcached("jd", waybillNumber,
+					logDetail);
+			if(putMemcachedResponse.get_return()!=1){
+				System.out.println("putMemcachedResponse="+JSONObject.toJSONString(putMemcachedResponse));
+			}
+			return putMemcachedResponse.get_return()==1?true:false;*/
+			return VersionCachePool.putObject(waybillsource+"_" + waybillNumber, logDetail);
+		}
+		return false;
 	}
 }

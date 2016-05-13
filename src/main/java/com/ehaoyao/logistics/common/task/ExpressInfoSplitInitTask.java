@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.ehaoyao.logistics.common.service.ExpressInfoService;
+import com.ehaoyao.logistics.common.service.ExpressInfoSplitService;
 import com.ehaoyao.logistics.common.service.ToLogisticsCenterService;
 import com.ehaoyao.logistics.common.task.thread.ExpressInfoInitThread;
 import com.ehaoyao.logistics.common.vo.OrderExpressVo;
@@ -18,11 +18,11 @@ import com.ehaoyao.logistics.common.vo.OrderExpressVo;
 /**
  * @author wls 
  * @date	2016-4-20
- * 将订单中心已配送的初始订单信息保存至物流中心
+ * 将订单中心已配送拆单的初始订单信息保存至物流中心
  */
-@Component("expressInfoInitTask")
-public class ExpressInfoInitTask {
-	private static final Logger logger = Logger.getLogger(ExpressInfoInitTask.class);
+@Component("expressInfoSplitInitTask")
+public class ExpressInfoSplitInitTask {
+	private static final Logger logger = Logger.getLogger(ExpressInfoSplitInitTask.class);
 	private static ResourceBundle appConfigs = ResourceBundle.getBundle("application");
 	
 	//属性注入
@@ -30,27 +30,27 @@ public class ExpressInfoInitTask {
 	ToLogisticsCenterService toLogisticsService;
 	
 	@Autowired
-	ExpressInfoService expressInfoService;
+	ExpressInfoSplitService expressInfoSplitService;
 	
 	/**
-	 * 将订单中心的运单写入到物流中心
+	 * 将订单中心拆单的运单写入到物流中心
 	 */
-	public void insertWayBill(){
+	public void insertWayBillSplit(){
 		long startTime = System.currentTimeMillis();
 		int fixThreadCount =Integer.parseInt(appConfigs.getString("fixThreadCount"));//每个线程处理条数
 		
 		List<OrderExpressVo>  subThreadList = null;//每个线程处理结果集
 		try {
 			long queryStartTime = System.currentTimeMillis();
-			//从订单中心获取已配送的订单信息集合
-			List<OrderExpressVo> orderExpressList = expressInfoService.selectExpressInfoList();
+			//从订单中心获取已配送的拆单订单信息集合
+			List<OrderExpressVo> orderExpressList = expressInfoSplitService.selectExpressInfoSplitList();
 			long queryEndTime = System.currentTimeMillis();
-			logger.info("【初始运单-从订单中心获取已配送的订单信息集合，共耗时："+(queryEndTime-queryStartTime)/1000+"s】");
+			logger.info("【初始化拆单-从订单中心获取已配送的订单信息集合，共耗时："+(queryEndTime-queryStartTime)/1000+"s】");
 			
 			
 			//多线程任务处理
 			int threadCount = (orderExpressList.size()-1)/fixThreadCount+1;
-			logger.info("【初始运单-本次任务共需创建："+threadCount+"个线程处理,每个线程处理"+fixThreadCount+"条,共需处理"+orderExpressList.size()+"条】");
+			logger.info("【初始化拆单-本次任务共需创建："+threadCount+"个线程处理,每个线程处理"+fixThreadCount+"条,共需处理"+orderExpressList.size()+"条】");
 
 			//创建线程池
 			ExecutorService pool = Executors.newFixedThreadPool(threadCount);
@@ -64,7 +64,7 @@ public class ExpressInfoInitTask {
 				ExpressInfoInitThread expressInitThread = new ExpressInfoInitThread();
 				expressInitThread.setToLogisticsService(toLogisticsService);
 				expressInitThread.setSubThreadList(subThreadList);
-				expressInitThread.setFlag("normal");
+				expressInitThread.setFlag("split");
 				pool.execute(expressInitThread);
 			}
 			
@@ -80,9 +80,9 @@ public class ExpressInfoInitTask {
 					e.printStackTrace();
 				}
 			}
-			logger.info("【初始运单-###pool.isTerminated()="+pool.isTerminated()+"###】");
+			logger.info("【初始化拆单-###pool.isTerminated()="+pool.isTerminated()+"###】");
 			long endTime = System.currentTimeMillis();
-			logger.info("【初始运单-将订单中心的运单写入到物流中心，已完成,共耗时："+(endTime-startTime)/1000+"s】");
+			logger.info("【初始化拆单-将订单中心的运单写入到物流中心，已完成,共耗时："+(endTime-startTime)/1000+"s】");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

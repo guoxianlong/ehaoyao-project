@@ -24,9 +24,9 @@ import com.ehaoyao.logistics.yto.task.thread.YTOLogisticsThread;
  * 更新订单采用圆通快递配送的物流信息
  * 圆通技术qq:626933286 电话：18782937014 
  */
-@Component("ytoLogisticsTask")
-public class YTOLogisticsTask {
-	private static final Logger logger = Logger.getLogger(YTOLogisticsTask.class);
+@Component("ytoLogisticsMissTask")
+public class YTOLogisticsMissTask {
+	private static final Logger logger = Logger.getLogger(YTOLogisticsMissTask.class);
 	private static ResourceBundle ytoConfig = ResourceBundle.getBundle("ytoConfig");
 	
 	//属性注入
@@ -35,7 +35,7 @@ public class YTOLogisticsTask {
 	/**
 	 * 更新订单采用圆通快递配送的物流信息
 	 */
-	public void updateYTOWayBills(){
+	public void updateYTOMissWayBills(){
 		long startTime = System.currentTimeMillis();
 		int fixThreadCount =Integer.parseInt(ytoConfig.getString("fixThreadCount"));//每个线程处理条数
 		
@@ -47,12 +47,12 @@ public class YTOLogisticsTask {
 			//获取采用圆通快递配送的物流信息集合
 			List<WayBillInfo> wayBillInfoList = ytoLogisticsService.selectYTOInitWayBills(wayBillInfoVo);
 			long queryEndTime = System.currentTimeMillis();
-			logger.info("【圆通正常更新物流-获取采用圆通快递配送的物流信息集合，共耗时："+(queryEndTime-queryStartTime)/1000+"s】");
+			logger.info("【圆通漏单-获取采用圆通快递配送的物流信息集合，共耗时："+(queryEndTime-queryStartTime)/1000+"s】");
 			
 			
 			//多线程任务处理
 			int threadCount = (wayBillInfoList.size()-1)/fixThreadCount+1;
-			logger.info("【圆通正常更新物流-本次任务共需创建："+threadCount+"个线程处理,每个线程处理"+fixThreadCount+"条,共需处理"+wayBillInfoList.size()+"条】");
+			logger.info("【圆通漏单-本次任务共需创建："+threadCount+"个线程处理,每个线程处理"+fixThreadCount+"条,共需处理"+wayBillInfoList.size()+"条】");
 
 			//创建线程池
 			ExecutorService pool = Executors.newFixedThreadPool(threadCount);
@@ -79,11 +79,11 @@ public class YTOLogisticsTask {
 						Thread.sleep(10000);
 				}
 				
-			logger.info("【圆通正常更新物流-###pool.isTerminated()="+pool.isTerminated()+"###】");
+			logger.info("【圆通漏单-###pool.isTerminated()="+pool.isTerminated()+"###】");
 			long endTime = System.currentTimeMillis();
-			logger.info("【圆通正常更新物流-采用圆通物流配送的物流信息，已完成,共耗时："+(endTime-startTime)/1000+"s】");
+			logger.info("【圆通漏单-更新物流中心-采用圆通物流配送的物流信息，已完成,共耗时："+(endTime-startTime)/1000+"s】");
 		} catch (Exception e) {
-			logger.error("【圆通正常更新物流-更新圆通物流信息出错，异常信息："+e.getMessage()+"】");
+			logger.error("【圆通漏单-更新圆通物流信息出错，异常信息："+e.getMessage()+"】");
 		}
 	}
 
@@ -93,9 +93,10 @@ public class YTOLogisticsTask {
 	 */
 	public WayBillInfoVo queryParamVo(){
 		String waybillsource = ytoConfig.getString("waybillsource");
-		int orderIntervalTime = Integer.parseInt(ytoConfig.getString("normal_updLogistics_minute"));
-		Date startTimeQuery=DateUtil.getPreMinute(orderIntervalTime);//当前时间向前推迟xxx分钟
-		Date endTimeQuery=new Date();
+		int miss_updLogistics_start = Integer.parseInt(ytoConfig.getString("miss_updLogistics_start"));
+		int miss_updLogistics_end = Integer.parseInt(ytoConfig.getString("miss_updLogistics_end"));
+		Date startTimeQuery=DateUtil.getPreMinute(miss_updLogistics_start);//当前时间向前推迟miss_updLogistics_start分钟，作为开始时间
+		Date endTimeQuery=DateUtil.getPreMinute(miss_updLogistics_end);//当前时间向前推迟miss_updLogistics_end分钟，作为结束时间
 		ArrayList<String> waybillStatusList = new ArrayList<String>();
 		//1.1 运单状态  s00:初始 s01:揽件 s02:配送中 s03:拒收 s04:妥投'
 		waybillStatusList.add(WayBillInfo.WAYBILL_INFO_STATUS_INIT);

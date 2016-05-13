@@ -1,6 +1,7 @@
 
 package com.ehaoyao.logistics.jd.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.ehaoyao.logistics.common.model.logisticscenter.WayBillInfo;
@@ -40,7 +41,7 @@ public interface JDWayBillInfoService {
 	public int updateWaybillInfoListByJD(List<WayBillInfo> wayBillInfoList ) throws Exception;
 	/**
 	 * 
-	* @Description:查询 date天内、waybillSource 、waybillStatus多个状态的运单集合
+	* @Description:查询startDate~endDate时间内、waybillSource 、waybillStatus多个状态的运单集合
 	* @param @param date
 	* @param @param waybillSource
 	* @param @param waybillStatusList
@@ -49,5 +50,5 @@ public interface JDWayBillInfoService {
 	* @return List<String>
 	* @throws
 	 */
-	public List<WayBillInfo> queryWayBillInfoList(int date,String waybillSource,List<String> waybillStatusList)throws Exception;
+	public List<WayBillInfo> queryWayBillInfoList(Date startDate,Date endDate,String waybillSource,List<String> waybillStatusList)throws Exception;
 }

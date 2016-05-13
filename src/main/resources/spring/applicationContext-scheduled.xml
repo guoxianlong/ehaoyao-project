@@ -9,15 +9,37 @@
         http://www.springframework.org/schema/context  
         http://www.springframework.org/schema/context/spring-context-4.1.xsd">  
       
-    <!--  定时器开关  开始-->  
+    <!--  定时器开关  开始-->
     <task:annotation-driven/>
     <!--  定时器开关  结束--> 
-    <task:scheduled-tasks>  
-    <!-- 正式订单调度 -->
-		<!-- <task:scheduled ref="expressInfoInitTask" method="insertWayBill" cron="0 0/3 * * * ?"/> -->
-        <!-- <task:scheduled ref="jDExpressTask" method="updateWayBillToLogisticsDB" cron="0 0 0/1 * * ?"/>
-        <task:scheduled ref="writeBackOrderCenterTask" method="writeBackOrderCenter" cron="0 0/10 * * * ?"/>-->
-        <task:scheduled  ref="ytoLogisticsTask" method="updateYTOWayBills"  initial-delay="10000"  fixed-delay="60000"/> 
-    </task:scheduled-tasks> 
+    <!-- 运单从订单中心初始化正常订单到物流中心 -->
+    <task:scheduled-tasks>
+		<task:scheduled ref="expressInfoInitTask" method="insertWayBill" initial-delay="10000" fixed-delay="3600000"/>
+    </task:scheduled-tasks>
+    <!-- 运单从订单中心初始化拆单订单到物流中心 -->
+    <task:scheduled-tasks>
+		<task:scheduled ref="expressInfoSplitInitTask" method="insertWayBillSplit" initial-delay="10000" fixed-delay="3600000"/>
+    </task:scheduled-tasks>
+    <!-- 更新京东物流 -->
+    <task:scheduled-tasks>
+		<task:scheduled ref="jDExpressTask" method="updateWayBillToLogisticsDB" initial-delay="20000" fixed-delay="600000"/>    
+    </task:scheduled-tasks>
+    <!-- 漏单-更新京东物流 -->
+    <task:scheduled-tasks>
+		<task:scheduled ref="jDExpressMissTask" method="updateMissWayBillToLogisticsDB" initial-delay="20000" fixed-delay="1800000"/>    
+    </task:scheduled-tasks>
+    <!-- 更新圆通物流 -->
+    <task:scheduled-tasks>
+        <task:scheduled  ref="ytoLogisticsTask" method="updateYTOWayBills" initial-delay="20000" fixed-delay="600000"/>
+    </task:scheduled-tasks>
+    <!-- 更新圆通物流漏单 -->
+    <task:scheduled-tasks>
+        <task:scheduled  ref="ytoLogisticsMissTask" method="updateYTOMissWayBills" initial-delay="20000" fixed-delay="1800000"/> 
+    </task:scheduled-tasks>
+    
+    <!-- 已妥投运单回写订单中心 -->
+    <task:scheduled-tasks>
+        <task:scheduled ref="writeBackOrderCenterTask" method="writeBackOrderCenter" initial-delay="60000" fixed-delay="600000"/> 
+    </task:scheduled-tasks>
     
 </beans>
