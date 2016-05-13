@@ -1,0 +1,59 @@
+[INFO ] 2016-05-12 15:35:15,904 method:org.springframework.context.support.AbstractApplicationContext.prepareRefresh(AbstractApplicationContext.java:510)
+Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@1e64a937: startup date [Thu May 12 15:35:15 CST 2016]; root of context hierarchy
+[INFO ] 2016-05-12 15:35:15,996 method:org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:315)
+Loading XML bean definitions from class path resource [config/applicationContext.xml]
+[INFO ] 2016-05-12 15:35:17,289 method:org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:315)
+Loading XML bean definitions from class path resource [config/applicationContext-job-ordercenter.xml]
+[INFO ] 2016-05-12 15:36:15,934 method:org.springframework.context.support.AbstractApplicationContext.prepareRefresh(AbstractApplicationContext.java:510)
+Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@50a498d0: startup date [Thu May 12 15:36:15 CST 2016]; root of context hierarchy
+[INFO ] 2016-05-12 15:36:16,012 method:org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:315)
+Loading XML bean definitions from class path resource [config/applicationContext.xml]
+[INFO ] 2016-05-12 15:36:16,616 method:org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:315)
+Loading XML bean definitions from class path resource [config/applicationContext-job-ordercenter.xml]
+[INFO ] 2016-05-12 15:37:02,482 method:org.springframework.context.support.AbstractApplicationContext.prepareRefresh(AbstractApplicationContext.java:510)
+Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@62a16977: startup date [Thu May 12 15:37:02 CST 2016]; root of context hierarchy
+[INFO ] 2016-05-12 15:37:02,558 method:org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:315)
+Loading XML bean definitions from class path resource [config/applicationContext.xml]
+[INFO ] 2016-05-12 15:37:03,167 method:org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:315)
+Loading XML bean definitions from class path resource [config/applicationContext-job-ordercenter.xml]
+[INFO ] 2016-05-12 15:37:04,561 method:org.springframework.core.io.support.PropertiesLoaderSupport.loadProperties(PropertiesLoaderSupport.java:172)
+Loading properties file from class path resource [config/jdbc.properties]
+[INFO ] 2016-05-12 15:37:04,680 method:org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:598)
+Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@d7cdfce: defining beans [orderCenterDaoImpl,httpClientImpl,orderCenterServiceImpl,jobGetYHDCFY_ToOrdercenter,org.springframework.context.annotation.internalConfigurationAnnotationProcessor,org.springframework.context.annotation.internalAutowiredAnnotationProcessor,org.springframework.context.annotation.internalRequiredAnnotationProcessor,org.springframework.context.annotation.internalCommonAnnotationProcessor,dataSource,propertyConfig,transactionManager,transactionTemplate,jdbcTemplate,org.springframework.aop.config.internalAutoProxyCreator,org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0,org.springframework.transaction.interceptor.TransactionInterceptor#0,org.springframework.transaction.config.internalTransactionAdvisor,org.springframework.context.annotation.internalAsyncAnnotationProcessor,org.springframework.context.annotation.internalScheduledAnnotationProcessor,org.springframework.scheduling.support.ScheduledMethodRunnable#0,org.springframework.scheduling.config.IntervalTask#0,org.springframework.scheduling.config.ContextLifecycleScheduledTaskRegistrar#0,org.springframework.context.annotation.ConfigurationClassPostProcessor.importAwareProcessor]; root of factory hierarchy
+[INFO ] 2016-05-12 15:37:15,936 method:com.ehaoyao.yhdjkg.task.JobGetYHDCFY_ToOrdercenter.saveCFYOrdersToOrdercenter(JobGetYHDCFY_ToOrdercenter.java:44)
+【获取审核通过的处方药定时任务开始】
+[INFO ] 2016-05-12 15:37:15,940 method:com.ehaoyao.yhdjkg.task.JobGetYHDCFY_ToOrdercenter.saveCFYOrders(JobGetYHDCFY_ToOrdercenter.java:61)
+分页查询，查询yhdcfy平台，第 1 页。
+[INFO ] 2016-05-12 15:37:16,024 method:com.ehaoyao.yhdjkg.utils.EncryptionUtil.generateSign(EncryptionUtil.java:70)
+调用的接口为：getAuditPassOrderInfos
+[INFO ] 2016-05-12 15:37:16,108 method:com.ehaoyao.yhdjkg.task.JobGetYHDCFY_ToOrdercenter.sendPost(JobGetYHDCFY_ToOrdercenter.java:138)
+发送运营加密前的json={"channel":"yhdcfy","paramsData":"{\"auditTimeEnd\":\"2016-05-12 15:37:15\",\"auditTimeStart\":\"2016-05-12 03:37:15\",\"pageNo\":1,\"pageSize\":50}","sign":"5d55e7e7adf26d441a57f979f317e82f7bdb28d1"}
+[INFO ] 2016-05-12 15:37:16,115 method:com.ehaoyao.yhdjkg.task.JobGetYHDCFY_ToOrdercenter.sendPost(JobGetYHDCFY_ToOrdercenter.java:140)
+发送运营加密后的json=eyJjaGFubmVsIjoieWhkY2Z5IiwicGFyYW1zRGF0YSI6IntcImF1ZGl0VGltZUVuZFwiOlwiMjAx
+Ni0wNS0xMiAxNTozNzoxNVwiLFwiYXVkaXRUaW1lU3RhcnRcIjpcIjIwMTYtMDUtMTIgMDM6Mzc6
+MTVcIixcInBhZ2VOb1wiOjEsXCJwYWdlU2l6ZVwiOjUwfSIsInNpZ24iOiI1ZDU1ZTdlN2FkZjI2
+ZDQ0MWE1N2Y5NzlmMzE3ZTgyZjdiZGIyOGQxIn0=
+[INFO ] 2016-05-12 15:37:16,201 method:com.ehaoyao.yhdjkg.http.HttpClientImpl.executePOST(HttpClientImpl.java:201)
+POST request:200
+[WARN ] 2016-05-12 15:37:16,201 method:org.apache.commons.httpclient.HttpMethodBase.getResponseBody(HttpMethodBase.java:682)
+Going to buffer response body of large or unknown size. Using getResponseBodyAsStream instead is recommended.
+[INFO ] 2016-05-12 15:37:16,249 method:com.ehaoyao.yhdjkg.task.JobGetYHDCFY_ToOrdercenter.saveOrderToOrdercenterByPage(JobGetYHDCFY_ToOrdercenter.java:86)
+运营中心返回结果：{"ifSuc":"1","code":"200","msg":"处理成功！","pageNo":"1","pageSize":"50","totalPages":"0","totalCount":"0","data":[]}
+[INFO ] 2016-05-12 15:37:16,294 method:com.ehaoyao.yhdjkg.task.JobGetYHDCFY_ToOrdercenter.saveOrderToOrdercenterByPage(JobGetYHDCFY_ToOrdercenter.java:90)
+
+[INFO ] 2016-05-12 15:37:16,294 method:com.ehaoyao.yhdjkg.task.JobGetYHDCFY_ToOrdercenter.saveOrderToOrdercenterByPage(JobGetYHDCFY_ToOrdercenter.java:104)
+调用运营中心的接口返回数据库为空
+[INFO ] 2016-05-12 15:37:16,294 method:com.ehaoyao.yhdjkg.task.JobGetYHDCFY_ToOrdercenter.saveCFYOrdersToOrdercenter(JobGetYHDCFY_ToOrdercenter.java:46)
+【获取审核通过的处方药定时任务结束】
+[INFO ] 2016-05-12 15:37:38,973 method:org.springframework.context.support.AbstractApplicationContext.prepareRefresh(AbstractApplicationContext.java:510)
+Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@2e426a3: startup date [Thu May 12 15:37:38 CST 2016]; root of context hierarchy
+[INFO ] 2016-05-12 15:37:39,098 method:org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:315)
+Loading XML bean definitions from class path resource [config/applicationContext.xml]
+[INFO ] 2016-05-12 15:37:39,752 method:org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:315)
+Loading XML bean definitions from class path resource [config/applicationContext-job-ordercenter.xml]
+[INFO ] 2016-05-12 15:37:41,151 method:org.springframework.core.io.support.PropertiesLoaderSupport.loadProperties(PropertiesLoaderSupport.java:172)
+Loading properties file from class path resource [config/jdbc.properties]
+[INFO ] 2016-05-12 15:37:41,263 method:org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:598)
+Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@404a12b8: defining beans [orderCenterDaoImpl,httpClientImpl,orderCenterServiceImpl,jobGetYHDCFY_ToOrdercenter,org.springframework.context.annotation.internalConfigurationAnnotationProcessor,org.springframework.context.annotation.internalAutowiredAnnotationProcessor,org.springframework.context.annotation.internalRequiredAnnotationProcessor,org.springframework.context.annotation.internalCommonAnnotationProcessor,dataSource,propertyConfig,transactionManager,transactionTemplate,jdbcTemplate,org.springframework.aop.config.internalAutoProxyCreator,org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0,org.springframework.transaction.interceptor.TransactionInterceptor#0,org.springframework.transaction.config.internalTransactionAdvisor,org.springframework.context.annotation.internalAsyncAnnotationProcessor,org.springframework.context.annotation.internalScheduledAnnotationProcessor,org.springframework.scheduling.support.ScheduledMethodRunnable#0,org.springframework.scheduling.config.IntervalTask#0,org.springframework.scheduling.config.ContextLifecycleScheduledTaskRegistrar#0,org.springframework.context.annotation.ConfigurationClassPostProcessor.importAwareProcessor]; root of factory hierarchy
+[INFO ] 2016-05-12 15:37:51,915 method:com.ehaoyao.yhdjkg.task.JobGetYHDCFY_ToOrdercenter.saveCFYOrdersToOrdercenter(JobGetYHDCFY_ToOrdercenter.java:44)
+【获取审核通过的处方药定时任务开始】

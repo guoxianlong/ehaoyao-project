@@ -1,0 +1,14 @@
+[ERROR] 2016-04-08 15:21:36,820 method:com.schooner.MemCached.AscIIClient.get(?:?)
+++++ exception thrown while trying to get object from cache for key: PEB003082PZP1
+[ERROR] 2016-04-08 15:21:36,821 method:com.schooner.MemCached.AscIIClient.get(?:?)
+com.haoys.order.model.db.Product
+java.io.IOException: com.haoys.order.model.db.Product
+	at com.schooner.MemCached.ObjectTransCoder.decode(Unknown Source)
+	at com.schooner.MemCached.AscIIClient.get(Unknown Source)
+	at com.schooner.MemCached.AscIIClient.get(Unknown Source)
+	at com.schooner.MemCached.AscIIClient.get(Unknown Source)
+	at com.danga.MemCached.MemCachedClient.get(Unknown Source)
+	at com.ehaoyao.yhdjkg.utils.VersionCachePool.getObject(VersionCachePool.java:86)
+	at com.ehaoyao.yhdjkg.task.StockUpdTask.run(StockUpdTask.java:76)
+	at java.util.TimerThread.mainLoop(Timer.java:555)
+	at java.util.TimerThread.run(Timer.java:505)

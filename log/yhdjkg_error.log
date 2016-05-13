@@ -1,0 +1,50 @@
+[ERROR] 2016-05-05 11:34:37,551 method:com.schooner.MemCached.AscIIClient.get(?:?)
+++++ exception thrown while trying to get object from cache for key: BWI003007C
+[ERROR] 2016-05-05 11:34:37,555 method:com.schooner.MemCached.AscIIClient.get(?:?)
+com.haoys.order.model.db.Product
+java.io.IOException: com.haoys.order.model.db.Product
+	at com.schooner.MemCached.ObjectTransCoder.decode(Unknown Source)
+	at com.schooner.MemCached.AscIIClient.get(Unknown Source)
+	at com.schooner.MemCached.AscIIClient.get(Unknown Source)
+	at com.schooner.MemCached.AscIIClient.get(Unknown Source)
+	at com.danga.MemCached.MemCachedClient.get(Unknown Source)
+	at com.ehaoyao.yhdjkg.utils.VersionCachePool.getObject(VersionCachePool.java:86)
+	at com.ehaoyao.yhdjkg.Test.main(Test.java:9)
+[ERROR] 2016-05-05 11:34:57,791 method:com.schooner.MemCached.AscIIClient.get(?:?)
+++++ exception thrown while trying to get object from cache for key: BWI003007C
+[ERROR] 2016-05-05 11:34:57,795 method:com.schooner.MemCached.AscIIClient.get(?:?)
+com.haoys.order.model.db.Product
+java.io.IOException: com.haoys.order.model.db.Product
+	at com.schooner.MemCached.ObjectTransCoder.decode(Unknown Source)
+	at com.schooner.MemCached.AscIIClient.get(Unknown Source)
+	at com.schooner.MemCached.AscIIClient.get(Unknown Source)
+	at com.schooner.MemCached.AscIIClient.get(Unknown Source)
+	at com.danga.MemCached.MemCachedClient.get(Unknown Source)
+	at com.ehaoyao.yhdjkg.utils.VersionCachePool.getObject(VersionCachePool.java:86)
+	at com.ehaoyao.yhdjkg.Test.main(Test.java:9)
+[ERROR] 2016-05-05 11:39:21,908 method:com.schooner.MemCached.AscIIClient.get(?:?)
+++++ exception thrown while trying to get object from cache for key: HYSGW_CFY
+[ERROR] 2016-05-05 11:39:21,911 method:com.schooner.MemCached.AscIIClient.get(?:?)
+com.haoys.order.model.db.Product
+java.io.IOException: com.haoys.order.model.db.Product
+	at com.schooner.MemCached.ObjectTransCoder.decode(Unknown Source)
+	at com.schooner.MemCached.AscIIClient.get(Unknown Source)
+	at com.schooner.MemCached.AscIIClient.get(Unknown Source)
+	at com.schooner.MemCached.AscIIClient.get(Unknown Source)
+	at com.danga.MemCached.MemCachedClient.get(Unknown Source)
+	at com.ehaoyao.yhdjkg.utils.VersionCachePool.getObject(VersionCachePool.java:86)
+	at com.ehaoyao.yhdjkg.task.StockUpdTask.run(StockUpdTask.java:79)
+	at java.util.TimerThread.mainLoop(Timer.java:555)
+	at java.util.TimerThread.run(Timer.java:505)
+[ERROR] 2016-05-05 11:39:55,188 method:com.schooner.MemCached.AscIIClient.get(?:?)
+++++ exception thrown while trying to get object from cache for key: HYSGW_CFY
+[ERROR] 2016-05-05 11:39:55,191 method:com.schooner.MemCached.AscIIClient.get(?:?)
+com.haoys.order.model.db.Product
+java.io.IOException: com.haoys.order.model.db.Product
+	at com.schooner.MemCached.ObjectTransCoder.decode(Unknown Source)
+	at com.schooner.MemCached.AscIIClient.get(Unknown Source)
+	at com.schooner.MemCached.AscIIClient.get(Unknown Source)
+	at com.schooner.MemCached.AscIIClient.get(Unknown Source)
+	at com.danga.MemCached.MemCachedClient.get(Unknown Source)
+	at com.ehaoyao.yhdjkg.utils.VersionCachePool.getObject(VersionCachePool.java:86)
+	at com.ehaoyao.yhdjkg.Test.main(Test.java:9)
