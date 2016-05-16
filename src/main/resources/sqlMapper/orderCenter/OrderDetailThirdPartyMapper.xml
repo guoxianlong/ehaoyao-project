@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ehaoyao.cfy.mapper.ordercenter.OrderDetailThirdPartyMapper" >
+  <resultMap id="BaseResultMap" type="com.ehaoyao.cfy.model.ordercenter.OrderDetailThirdParty" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+    <result column="order_flag" property="orderFlag" jdbcType="CHAR" />
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="count" property="count" jdbcType="INTEGER" />
+    <result column="thirdparty_total_price" property="thirdpartyTotalPrice" jdbcType="DECIMAL" />
+    <result column="thirdparty_group_price" property="thirdpartyGroupPrice" jdbcType="DECIMAL" />
+    <result column="ehaoyao_group_price" property="ehaoyaoGroupPrice" jdbcType="DECIMAL" />
+    <result column="group_name" property="groupName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, order_number, order_flag, group_id, count, thirdparty_total_price, thirdparty_group_price, 
+    ehaoyao_group_price, group_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_detail_thirdparty
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from order_detail_thirdparty
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ehaoyao.cfy.model.ordercenter.OrderDetailThirdParty" >
+    insert into order_detail_thirdparty (id, order_number, order_flag, 
+      group_id, count, thirdparty_total_price, 
+      thirdparty_group_price, ehaoyao_group_price, 
+      group_name)
+    values (#{id,jdbcType=BIGINT}, #{orderNumber,jdbcType=VARCHAR}, #{orderFlag,jdbcType=CHAR}, 
+      #{groupId,jdbcType=INTEGER}, #{count,jdbcType=INTEGER}, #{thirdpartyTotalPrice,jdbcType=DECIMAL}, 
+      #{thirdpartyGroupPrice,jdbcType=DECIMAL}, #{ehaoyaoGroupPrice,jdbcType=DECIMAL}, 
+      #{groupName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ehaoyao.cfy.model.ordercenter.OrderDetailThirdParty" >
+    insert into order_detail_thirdparty
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderNumber != null" >
+        order_number,
+      </if>
+      <if test="orderFlag != null" >
+        order_flag,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="count != null" >
+        count,
+      </if>
+      <if test="thirdpartyTotalPrice != null" >
+        thirdparty_total_price,
+      </if>
+      <if test="thirdpartyGroupPrice != null" >
+        thirdparty_group_price,
+      </if>
+      <if test="ehaoyaoGroupPrice != null" >
+        ehaoyao_group_price,
+      </if>
+      <if test="groupName != null" >
+        group_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="orderNumber != null" >
+        #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="orderFlag != null" >
+        #{orderFlag,jdbcType=CHAR},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="count != null" >
+        #{count,jdbcType=INTEGER},
+      </if>
+      <if test="thirdpartyTotalPrice != null" >
+        #{thirdpartyTotalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="thirdpartyGroupPrice != null" >
+        #{thirdpartyGroupPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="ehaoyaoGroupPrice != null" >
+        #{ehaoyaoGroupPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="groupName != null" >
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ehaoyao.cfy.model.ordercenter.OrderDetailThirdParty" >
+    update order_detail_thirdparty
+    <set >
+      <if test="orderNumber != null" >
+        order_number = #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="orderFlag != null" >
+        order_flag = #{orderFlag,jdbcType=CHAR},
+      </if>
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="count != null" >
+        count = #{count,jdbcType=INTEGER},
+      </if>
+      <if test="thirdpartyTotalPrice != null" >
+        thirdparty_total_price = #{thirdpartyTotalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="thirdpartyGroupPrice != null" >
+        thirdparty_group_price = #{thirdpartyGroupPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="ehaoyaoGroupPrice != null" >
+        ehaoyao_group_price = #{ehaoyaoGroupPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="groupName != null" >
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ehaoyao.cfy.model.ordercenter.OrderDetailThirdParty" >
+    update order_detail_thirdparty
+    set order_number = #{orderNumber,jdbcType=VARCHAR},
+      order_flag = #{orderFlag,jdbcType=CHAR},
+      group_id = #{groupId,jdbcType=INTEGER},
+      count = #{count,jdbcType=INTEGER},
+      thirdparty_total_price = #{thirdpartyTotalPrice,jdbcType=DECIMAL},
+      thirdparty_group_price = #{thirdpartyGroupPrice,jdbcType=DECIMAL},
+      ehaoyao_group_price = #{ehaoyaoGroupPrice,jdbcType=DECIMAL},
+      group_name = #{groupName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

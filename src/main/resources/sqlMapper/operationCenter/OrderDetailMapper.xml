@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ehaoyao.cfy.mapper.operationcenter.OrderDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.ehaoyao.cfy.model.operationcenter.OrderDetail" >
+    <id column="order_detail_id" property="orderDetailId" jdbcType="BIGINT" />
+    <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+    <result column="order_flag" property="orderFlag" jdbcType="VARCHAR" />
+    <result column="merchant_id" property="merchantId" jdbcType="VARCHAR" />
+    <result column="product_id" property="productId" jdbcType="VARCHAR" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
+    <result column="product_spec" property="productSpec" jdbcType="VARCHAR" />
+    <result column="product_brand" property="productBrand" jdbcType="VARCHAR" />
+    <result column="pack_count" property="packCount" jdbcType="INTEGER" />
+    <result column="count" property="count" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="gift_flag" property="giftFlag" jdbcType="CHAR" />
+    <result column="prescription_type" property="prescriptionType" jdbcType="CHAR" />
+    <result column="product_license_no" property="productLicenseNo" jdbcType="VARCHAR" />
+    <result column="pharmacy_company" property="pharmacyCompany" jdbcType="VARCHAR" />
+    <result column="discount_amount" property="discountAmount" jdbcType="DECIMAL" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="last_time" property="lastTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    order_detail_id, order_number, order_flag, merchant_id, product_id, product_name, 
+    total_price, product_spec, product_brand, pack_count, count, price, unit, gift_flag, 
+    prescription_type, product_license_no, pharmacy_company, discount_amount, create_time, 
+    last_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_detail
+    where order_detail_id = #{orderDetailId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from order_detail
+    where order_detail_id = #{orderDetailId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ehaoyao.cfy.model.operationcenter.OrderDetail" >
+    insert into order_detail (order_detail_id, order_number, order_flag, 
+      merchant_id, product_id, product_name, 
+      total_price, product_spec, product_brand, 
+      pack_count, count, price, 
+      unit, gift_flag, prescription_type, 
+      product_license_no, pharmacy_company, discount_amount, 
+      create_time, last_time)
+    values (#{orderDetailId,jdbcType=BIGINT}, #{orderNumber,jdbcType=VARCHAR}, #{orderFlag,jdbcType=VARCHAR}, 
+      #{merchantId,jdbcType=VARCHAR}, #{productId,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR}, 
+      #{totalPrice,jdbcType=DECIMAL}, #{productSpec,jdbcType=VARCHAR}, #{productBrand,jdbcType=VARCHAR}, 
+      #{packCount,jdbcType=INTEGER}, #{count,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, 
+      #{unit,jdbcType=VARCHAR}, #{giftFlag,jdbcType=CHAR}, #{prescriptionType,jdbcType=CHAR}, 
+      #{productLicenseNo,jdbcType=VARCHAR}, #{pharmacyCompany,jdbcType=VARCHAR}, #{discountAmount,jdbcType=DECIMAL}, 
+      #{createTime,jdbcType=VARCHAR}, #{lastTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ehaoyao.cfy.model.operationcenter.OrderDetail" >
+    insert into order_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderDetailId != null" >
+        order_detail_id,
+      </if>
+      <if test="orderNumber != null" >
+        order_number,
+      </if>
+      <if test="orderFlag != null" >
+        order_flag,
+      </if>
+      <if test="merchantId != null" >
+        merchant_id,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="productName != null" >
+        product_name,
+      </if>
+      <if test="totalPrice != null" >
+        total_price,
+      </if>
+      <if test="productSpec != null" >
+        product_spec,
+      </if>
+      <if test="productBrand != null" >
+        product_brand,
+      </if>
+      <if test="packCount != null" >
+        pack_count,
+      </if>
+      <if test="count != null" >
+        count,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="giftFlag != null" >
+        gift_flag,
+      </if>
+      <if test="prescriptionType != null" >
+        prescription_type,
+      </if>
+      <if test="productLicenseNo != null" >
+        product_license_no,
+      </if>
+      <if test="pharmacyCompany != null" >
+        pharmacy_company,
+      </if>
+      <if test="discountAmount != null" >
+        discount_amount,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastTime != null" >
+        last_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderDetailId != null" >
+        #{orderDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="orderNumber != null" >
+        #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="orderFlag != null" >
+        #{orderFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantId != null" >
+        #{merchantId,jdbcType=VARCHAR},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="totalPrice != null" >
+        #{totalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="productSpec != null" >
+        #{productSpec,jdbcType=VARCHAR},
+      </if>
+      <if test="productBrand != null" >
+        #{productBrand,jdbcType=VARCHAR},
+      </if>
+      <if test="packCount != null" >
+        #{packCount,jdbcType=INTEGER},
+      </if>
+      <if test="count != null" >
+        #{count,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="giftFlag != null" >
+        #{giftFlag,jdbcType=CHAR},
+      </if>
+      <if test="prescriptionType != null" >
+        #{prescriptionType,jdbcType=CHAR},
+      </if>
+      <if test="productLicenseNo != null" >
+        #{productLicenseNo,jdbcType=VARCHAR},
+      </if>
+      <if test="pharmacyCompany != null" >
+        #{pharmacyCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="discountAmount != null" >
+        #{discountAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="lastTime != null" >
+        #{lastTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ehaoyao.cfy.model.operationcenter.OrderDetail" >
+    update order_detail
+    <set >
+      <if test="orderNumber != null" >
+        order_number = #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="orderFlag != null" >
+        order_flag = #{orderFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantId != null" >
+        merchant_id = #{merchantId,jdbcType=VARCHAR},
+      </if>
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="totalPrice != null" >
+        total_price = #{totalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="productSpec != null" >
+        product_spec = #{productSpec,jdbcType=VARCHAR},
+      </if>
+      <if test="productBrand != null" >
+        product_brand = #{productBrand,jdbcType=VARCHAR},
+      </if>
+      <if test="packCount != null" >
+        pack_count = #{packCount,jdbcType=INTEGER},
+      </if>
+      <if test="count != null" >
+        count = #{count,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="unit != null" >
+        unit = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="giftFlag != null" >
+        gift_flag = #{giftFlag,jdbcType=CHAR},
+      </if>
+      <if test="prescriptionType != null" >
+        prescription_type = #{prescriptionType,jdbcType=CHAR},
+      </if>
+      <if test="productLicenseNo != null" >
+        product_license_no = #{productLicenseNo,jdbcType=VARCHAR},
+      </if>
+      <if test="pharmacyCompany != null" >
+        pharmacy_company = #{pharmacyCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="discountAmount != null" >
+        discount_amount = #{discountAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="lastTime != null" >
+        last_time = #{lastTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where order_detail_id = #{orderDetailId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ehaoyao.cfy.model.operationcenter.OrderDetail" >
+    update order_detail
+    set order_number = #{orderNumber,jdbcType=VARCHAR},
+      order_flag = #{orderFlag,jdbcType=VARCHAR},
+      merchant_id = #{merchantId,jdbcType=VARCHAR},
+      product_id = #{productId,jdbcType=VARCHAR},
+      product_name = #{productName,jdbcType=VARCHAR},
+      total_price = #{totalPrice,jdbcType=DECIMAL},
+      product_spec = #{productSpec,jdbcType=VARCHAR},
+      product_brand = #{productBrand,jdbcType=VARCHAR},
+      pack_count = #{packCount,jdbcType=INTEGER},
+      count = #{count,jdbcType=INTEGER},
+      price = #{price,jdbcType=DECIMAL},
+      unit = #{unit,jdbcType=VARCHAR},
+      gift_flag = #{giftFlag,jdbcType=CHAR},
+      prescription_type = #{prescriptionType,jdbcType=CHAR},
+      product_license_no = #{productLicenseNo,jdbcType=VARCHAR},
+      pharmacy_company = #{pharmacyCompany,jdbcType=VARCHAR},
+      discount_amount = #{discountAmount,jdbcType=DECIMAL},
+      create_time = #{createTime,jdbcType=VARCHAR},
+      last_time = #{lastTime,jdbcType=VARCHAR}
+    where order_detail_id = #{orderDetailId,jdbcType=BIGINT}
+  </update>
+</mapper>

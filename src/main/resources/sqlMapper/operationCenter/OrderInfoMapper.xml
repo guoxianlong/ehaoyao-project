@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ehaoyao.cfy.mapper.operationcenter.OrderInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.ehaoyao.cfy.model.operationcenter.OrderInfo" >
+    <id column="order_id" property="orderId" jdbcType="BIGINT" />
+    <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+    <result column="order_flag" property="orderFlag" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="user_code" property="userCode" jdbcType="VARCHAR" />
+    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="prescription_type" property="prescriptionType" jdbcType="CHAR" />
+    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+    <result column="audit_status" property="auditStatus" jdbcType="VARCHAR" />
+    <result column="invoice_status" property="invoiceStatus" jdbcType="VARCHAR" />
+    <result column="pay_status" property="payStatus" jdbcType="VARCHAR" />
+    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+    <result column="order_time" property="orderTime" jdbcType="VARCHAR" />
+    <result column="receiver" property="receiver" jdbcType="VARCHAR" />
+    <result column="patient_name" property="patientName" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="age" property="age" jdbcType="INTEGER" />
+    <result column="pregnant_flag" property="pregnantFlag" jdbcType="CHAR" />
+    <result column="decoct_flag" property="decoctFlag" jdbcType="CHAR" />
+    <result column="dose" property="dose" jdbcType="VARCHAR" />
+    <result column="small_pic_link" property="smallPicLink" jdbcType="VARCHAR" />
+    <result column="big_pic_link" property="bigPicLink" jdbcType="VARCHAR" />
+    <result column="payment_time" property="paymentTime" jdbcType="VARCHAR" />
+    <result column="delivery_date" property="deliveryDate" jdbcType="VARCHAR" />
+    <result column="hospital_presc_date" property="hospitalPrescDate" jdbcType="VARCHAR" />
+    <result column="address_detail" property="addressDetail" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="VARCHAR" />
+    <result column="country" property="country" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="order_price" property="orderPrice" jdbcType="DECIMAL" />
+    <result column="discount_amount" property="discountAmount" jdbcType="DECIMAL" />
+    <result column="over_return_free" property="overReturnFree" jdbcType="DECIMAL" />
+    <result column="express_price" property="expressPrice" jdbcType="DECIMAL" />
+    <result column="plat_pay_price" property="platPayPrice" jdbcType="DECIMAL" />
+    <result column="instructions" property="instructions" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="fee_type" property="feeType" jdbcType="VARCHAR" />
+    <result column="last_time" property="lastTime" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="shipping_type" property="shippingType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    order_id, order_number, order_flag, user_id, user_code, nick_name, user_name, prescription_type, 
+    order_status, audit_status, invoice_status, pay_status, order_type, pay_type, order_time, 
+    receiver, patient_name, sex, age, pregnant_flag, decoct_flag, dose, small_pic_link, 
+    big_pic_link, payment_time, delivery_date, hospital_presc_date, address_detail, mobile, 
+    telephone, province, city, area, country, price, order_price, discount_amount, over_return_free, 
+    express_price, plat_pay_price, instructions, remark, fee_type, last_time, create_time, 
+    shipping_type
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_info
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from order_info
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ehaoyao.cfy.model.operationcenter.OrderInfo" >
+    insert into order_info (order_id, order_number, order_flag, 
+      user_id, user_code, nick_name, 
+      user_name, prescription_type, order_status, 
+      audit_status, invoice_status, pay_status, 
+      order_type, pay_type, order_time, 
+      receiver, patient_name, sex, 
+      age, pregnant_flag, decoct_flag, 
+      dose, small_pic_link, big_pic_link, 
+      payment_time, delivery_date, hospital_presc_date, 
+      address_detail, mobile, telephone, 
+      province, city, area, 
+      country, price, order_price, 
+      discount_amount, over_return_free, express_price, 
+      plat_pay_price, instructions, remark, 
+      fee_type, last_time, create_time, 
+      shipping_type)
+    values (#{orderId,jdbcType=BIGINT}, #{orderNumber,jdbcType=VARCHAR}, #{orderFlag,jdbcType=VARCHAR}, 
+      #{userId,jdbcType=VARCHAR}, #{userCode,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, 
+      #{userName,jdbcType=VARCHAR}, #{prescriptionType,jdbcType=CHAR}, #{orderStatus,jdbcType=VARCHAR}, 
+      #{auditStatus,jdbcType=VARCHAR}, #{invoiceStatus,jdbcType=VARCHAR}, #{payStatus,jdbcType=VARCHAR}, 
+      #{orderType,jdbcType=VARCHAR}, #{payType,jdbcType=VARCHAR}, #{orderTime,jdbcType=VARCHAR}, 
+      #{receiver,jdbcType=VARCHAR}, #{patientName,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, 
+      #{age,jdbcType=INTEGER}, #{pregnantFlag,jdbcType=CHAR}, #{decoctFlag,jdbcType=CHAR}, 
+      #{dose,jdbcType=VARCHAR}, #{smallPicLink,jdbcType=VARCHAR}, #{bigPicLink,jdbcType=VARCHAR}, 
+      #{paymentTime,jdbcType=VARCHAR}, #{deliveryDate,jdbcType=VARCHAR}, #{hospitalPrescDate,jdbcType=VARCHAR}, 
+      #{addressDetail,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, 
+      #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, 
+      #{country,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{orderPrice,jdbcType=DECIMAL}, 
+      #{discountAmount,jdbcType=DECIMAL}, #{overReturnFree,jdbcType=DECIMAL}, #{expressPrice,jdbcType=DECIMAL}, 
+      #{platPayPrice,jdbcType=DECIMAL}, #{instructions,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{feeType,jdbcType=VARCHAR}, #{lastTime,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, 
+      #{shippingType,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ehaoyao.cfy.model.operationcenter.OrderInfo" >
+    insert into order_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="orderNumber != null" >
+        order_number,
+      </if>
+      <if test="orderFlag != null" >
+        order_flag,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userCode != null" >
+        user_code,
+      </if>
+      <if test="nickName != null" >
+        nick_name,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="prescriptionType != null" >
+        prescription_type,
+      </if>
+      <if test="orderStatus != null" >
+        order_status,
+      </if>
+      <if test="auditStatus != null" >
+        audit_status,
+      </if>
+      <if test="invoiceStatus != null" >
+        invoice_status,
+      </if>
+      <if test="payStatus != null" >
+        pay_status,
+      </if>
+      <if test="orderType != null" >
+        order_type,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="orderTime != null" >
+        order_time,
+      </if>
+      <if test="receiver != null" >
+        receiver,
+      </if>
+      <if test="patientName != null" >
+        patient_name,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="age != null" >
+        age,
+      </if>
+      <if test="pregnantFlag != null" >
+        pregnant_flag,
+      </if>
+      <if test="decoctFlag != null" >
+        decoct_flag,
+      </if>
+      <if test="dose != null" >
+        dose,
+      </if>
+      <if test="smallPicLink != null" >
+        small_pic_link,
+      </if>
+      <if test="bigPicLink != null" >
+        big_pic_link,
+      </if>
+      <if test="paymentTime != null" >
+        payment_time,
+      </if>
+      <if test="deliveryDate != null" >
+        delivery_date,
+      </if>
+      <if test="hospitalPrescDate != null" >
+        hospital_presc_date,
+      </if>
+      <if test="addressDetail != null" >
+        address_detail,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="telephone != null" >
+        telephone,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="area != null" >
+        area,
+      </if>
+      <if test="country != null" >
+        country,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="orderPrice != null" >
+        order_price,
+      </if>
+      <if test="discountAmount != null" >
+        discount_amount,
+      </if>
+      <if test="overReturnFree != null" >
+        over_return_free,
+      </if>
+      <if test="expressPrice != null" >
+        express_price,
+      </if>
+      <if test="platPayPrice != null" >
+        plat_pay_price,
+      </if>
+      <if test="instructions != null" >
+        instructions,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="feeType != null" >
+        fee_type,
+      </if>
+      <if test="lastTime != null" >
+        last_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="shippingType != null" >
+        shipping_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="orderNumber != null" >
+        #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="orderFlag != null" >
+        #{orderFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null" >
+        #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="prescriptionType != null" >
+        #{prescriptionType,jdbcType=CHAR},
+      </if>
+      <if test="orderStatus != null" >
+        #{orderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="auditStatus != null" >
+        #{auditStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceStatus != null" >
+        #{invoiceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="payStatus != null" >
+        #{payStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderTime != null" >
+        #{orderTime,jdbcType=VARCHAR},
+      </if>
+      <if test="receiver != null" >
+        #{receiver,jdbcType=VARCHAR},
+      </if>
+      <if test="patientName != null" >
+        #{patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null" >
+        #{age,jdbcType=INTEGER},
+      </if>
+      <if test="pregnantFlag != null" >
+        #{pregnantFlag,jdbcType=CHAR},
+      </if>
+      <if test="decoctFlag != null" >
+        #{decoctFlag,jdbcType=CHAR},
+      </if>
+      <if test="dose != null" >
+        #{dose,jdbcType=VARCHAR},
+      </if>
+      <if test="smallPicLink != null" >
+        #{smallPicLink,jdbcType=VARCHAR},
+      </if>
+      <if test="bigPicLink != null" >
+        #{bigPicLink,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentTime != null" >
+        #{paymentTime,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryDate != null" >
+        #{deliveryDate,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalPrescDate != null" >
+        #{hospitalPrescDate,jdbcType=VARCHAR},
+      </if>
+      <if test="addressDetail != null" >
+        #{addressDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="orderPrice != null" >
+        #{orderPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="discountAmount != null" >
+        #{discountAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="overReturnFree != null" >
+        #{overReturnFree,jdbcType=DECIMAL},
+      </if>
+      <if test="expressPrice != null" >
+        #{expressPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="platPayPrice != null" >
+        #{platPayPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="instructions != null" >
+        #{instructions,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="feeType != null" >
+        #{feeType,jdbcType=VARCHAR},
+      </if>
+      <if test="lastTime != null" >
+        #{lastTime,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="shippingType != null" >
+        #{shippingType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ehaoyao.cfy.model.operationcenter.OrderInfo" >
+    update order_info
+    <set >
+      <if test="orderNumber != null" >
+        order_number = #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="orderFlag != null" >
+        order_flag = #{orderFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null" >
+        user_code = #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="prescriptionType != null" >
+        prescription_type = #{prescriptionType,jdbcType=CHAR},
+      </if>
+      <if test="orderStatus != null" >
+        order_status = #{orderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="auditStatus != null" >
+        audit_status = #{auditStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceStatus != null" >
+        invoice_status = #{invoiceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="payStatus != null" >
+        pay_status = #{payStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        order_type = #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderTime != null" >
+        order_time = #{orderTime,jdbcType=VARCHAR},
+      </if>
+      <if test="receiver != null" >
+        receiver = #{receiver,jdbcType=VARCHAR},
+      </if>
+      <if test="patientName != null" >
+        patient_name = #{patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null" >
+        age = #{age,jdbcType=INTEGER},
+      </if>
+      <if test="pregnantFlag != null" >
+        pregnant_flag = #{pregnantFlag,jdbcType=CHAR},
+      </if>
+      <if test="decoctFlag != null" >
+        decoct_flag = #{decoctFlag,jdbcType=CHAR},
+      </if>
+      <if test="dose != null" >
+        dose = #{dose,jdbcType=VARCHAR},
+      </if>
+      <if test="smallPicLink != null" >
+        small_pic_link = #{smallPicLink,jdbcType=VARCHAR},
+      </if>
+      <if test="bigPicLink != null" >
+        big_pic_link = #{bigPicLink,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentTime != null" >
+        payment_time = #{paymentTime,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryDate != null" >
+        delivery_date = #{deliveryDate,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalPrescDate != null" >
+        hospital_presc_date = #{hospitalPrescDate,jdbcType=VARCHAR},
+      </if>
+      <if test="addressDetail != null" >
+        address_detail = #{addressDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        area = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="orderPrice != null" >
+        order_price = #{orderPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="discountAmount != null" >
+        discount_amount = #{discountAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="overReturnFree != null" >
+        over_return_free = #{overReturnFree,jdbcType=DECIMAL},
+      </if>
+      <if test="expressPrice != null" >
+        express_price = #{expressPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="platPayPrice != null" >
+        plat_pay_price = #{platPayPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="instructions != null" >
+        instructions = #{instructions,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="feeType != null" >
+        fee_type = #{feeType,jdbcType=VARCHAR},
+      </if>
+      <if test="lastTime != null" >
+        last_time = #{lastTime,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="shippingType != null" >
+        shipping_type = #{shippingType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ehaoyao.cfy.model.operationcenter.OrderInfo" >
+    update order_info
+    set order_number = #{orderNumber,jdbcType=VARCHAR},
+      order_flag = #{orderFlag,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      user_code = #{userCode,jdbcType=VARCHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      prescription_type = #{prescriptionType,jdbcType=CHAR},
+      order_status = #{orderStatus,jdbcType=VARCHAR},
+      audit_status = #{auditStatus,jdbcType=VARCHAR},
+      invoice_status = #{invoiceStatus,jdbcType=VARCHAR},
+      pay_status = #{payStatus,jdbcType=VARCHAR},
+      order_type = #{orderType,jdbcType=VARCHAR},
+      pay_type = #{payType,jdbcType=VARCHAR},
+      order_time = #{orderTime,jdbcType=VARCHAR},
+      receiver = #{receiver,jdbcType=VARCHAR},
+      patient_name = #{patientName,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      age = #{age,jdbcType=INTEGER},
+      pregnant_flag = #{pregnantFlag,jdbcType=CHAR},
+      decoct_flag = #{decoctFlag,jdbcType=CHAR},
+      dose = #{dose,jdbcType=VARCHAR},
+      small_pic_link = #{smallPicLink,jdbcType=VARCHAR},
+      big_pic_link = #{bigPicLink,jdbcType=VARCHAR},
+      payment_time = #{paymentTime,jdbcType=VARCHAR},
+      delivery_date = #{deliveryDate,jdbcType=VARCHAR},
+      hospital_presc_date = #{hospitalPrescDate,jdbcType=VARCHAR},
+      address_detail = #{addressDetail,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
+      country = #{country,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      order_price = #{orderPrice,jdbcType=DECIMAL},
+      discount_amount = #{discountAmount,jdbcType=DECIMAL},
+      over_return_free = #{overReturnFree,jdbcType=DECIMAL},
+      express_price = #{expressPrice,jdbcType=DECIMAL},
+      plat_pay_price = #{platPayPrice,jdbcType=DECIMAL},
+      instructions = #{instructions,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      fee_type = #{feeType,jdbcType=VARCHAR},
+      last_time = #{lastTime,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=VARCHAR},
+      shipping_type = #{shippingType,jdbcType=VARCHAR}
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+</mapper>

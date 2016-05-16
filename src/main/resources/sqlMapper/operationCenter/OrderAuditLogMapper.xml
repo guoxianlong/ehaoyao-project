@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ehaoyao.cfy.mapper.operationcenter.OrderAuditLogMapper" >
+  <resultMap id="BaseResultMap" type="com.ehaoyao.cfy.model.operationcenter.OrderAuditLog" >
+    <id column="order_audit_log_id" property="orderAuditLogId" jdbcType="BIGINT" />
+    <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+    <result column="order_flag" property="orderFlag" jdbcType="VARCHAR" />
+    <result column="kf_account" property="kfAccount" jdbcType="VARCHAR" />
+    <result column="audit_user" property="auditUser" jdbcType="VARCHAR" />
+    <result column="audit_status" property="auditStatus" jdbcType="VARCHAR" />
+    <result column="audit_description" property="auditDescription" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    order_audit_log_id, order_number, order_flag, kf_account, audit_user, audit_status, 
+    audit_description, remark, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_audit_log
+    where order_audit_log_id = #{orderAuditLogId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from order_audit_log
+    where order_audit_log_id = #{orderAuditLogId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ehaoyao.cfy.model.operationcenter.OrderAuditLog" >
+    insert into order_audit_log (order_audit_log_id, order_number, order_flag, 
+      kf_account, audit_user, audit_status, 
+      audit_description, remark, create_time
+      )
+    values (#{orderAuditLogId,jdbcType=BIGINT}, #{orderNumber,jdbcType=VARCHAR}, #{orderFlag,jdbcType=VARCHAR}, 
+      #{kfAccount,jdbcType=VARCHAR}, #{auditUser,jdbcType=VARCHAR}, #{auditStatus,jdbcType=VARCHAR}, 
+      #{auditDescription,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ehaoyao.cfy.model.operationcenter.OrderAuditLog" >
+    insert into order_audit_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderAuditLogId != null" >
+        order_audit_log_id,
+      </if>
+      <if test="orderNumber != null" >
+        order_number,
+      </if>
+      <if test="orderFlag != null" >
+        order_flag,
+      </if>
+      <if test="kfAccount != null" >
+        kf_account,
+      </if>
+      <if test="auditUser != null" >
+        audit_user,
+      </if>
+      <if test="auditStatus != null" >
+        audit_status,
+      </if>
+      <if test="auditDescription != null" >
+        audit_description,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderAuditLogId != null" >
+        #{orderAuditLogId,jdbcType=BIGINT},
+      </if>
+      <if test="orderNumber != null" >
+        #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="orderFlag != null" >
+        #{orderFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="kfAccount != null" >
+        #{kfAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="auditUser != null" >
+        #{auditUser,jdbcType=VARCHAR},
+      </if>
+      <if test="auditStatus != null" >
+        #{auditStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="auditDescription != null" >
+        #{auditDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ehaoyao.cfy.model.operationcenter.OrderAuditLog" >
+    update order_audit_log
+    <set >
+      <if test="orderNumber != null" >
+        order_number = #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="orderFlag != null" >
+        order_flag = #{orderFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="kfAccount != null" >
+        kf_account = #{kfAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="auditUser != null" >
+        audit_user = #{auditUser,jdbcType=VARCHAR},
+      </if>
+      <if test="auditStatus != null" >
+        audit_status = #{auditStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="auditDescription != null" >
+        audit_description = #{auditDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where order_audit_log_id = #{orderAuditLogId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ehaoyao.cfy.model.operationcenter.OrderAuditLog" >
+    update order_audit_log
+    set order_number = #{orderNumber,jdbcType=VARCHAR},
+      order_flag = #{orderFlag,jdbcType=VARCHAR},
+      kf_account = #{kfAccount,jdbcType=VARCHAR},
+      audit_user = #{auditUser,jdbcType=VARCHAR},
+      audit_status = #{auditStatus,jdbcType=VARCHAR},
+      audit_description = #{auditDescription,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=VARCHAR}
+    where order_audit_log_id = #{orderAuditLogId,jdbcType=BIGINT}
+  </update>
+</mapper>

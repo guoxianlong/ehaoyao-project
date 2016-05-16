@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ehaoyao.cfy.mapper.operationcenter.TbPartnerMapper" >
+  <resultMap id="BaseResultMap" type="com.ehaoyao.cfy.model.operationcenter.TbPartner" >
+    <id column="tb_partner_id" property="tbPartnerId" jdbcType="BIGINT" />
+    <result column="fd_uuid" property="fdUuid" jdbcType="VARCHAR" />
+    <result column="partner_key" property="partnerKey" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    tb_partner_id, fd_uuid, partner_key, status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_partner
+    where tb_partner_id = #{tbPartnerId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_partner
+    where tb_partner_id = #{tbPartnerId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ehaoyao.cfy.model.operationcenter.TbPartner" >
+    insert into tb_partner (tb_partner_id, fd_uuid, partner_key, 
+      status)
+    values (#{tbPartnerId,jdbcType=BIGINT}, #{fdUuid,jdbcType=VARCHAR}, #{partnerKey,jdbcType=VARCHAR}, 
+      #{status,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ehaoyao.cfy.model.operationcenter.TbPartner" >
+    insert into tb_partner
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tbPartnerId != null" >
+        tb_partner_id,
+      </if>
+      <if test="fdUuid != null" >
+        fd_uuid,
+      </if>
+      <if test="partnerKey != null" >
+        partner_key,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tbPartnerId != null" >
+        #{tbPartnerId,jdbcType=BIGINT},
+      </if>
+      <if test="fdUuid != null" >
+        #{fdUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="partnerKey != null" >
+        #{partnerKey,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ehaoyao.cfy.model.operationcenter.TbPartner" >
+    update tb_partner
+    <set >
+      <if test="fdUuid != null" >
+        fd_uuid = #{fdUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="partnerKey != null" >
+        partner_key = #{partnerKey,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=CHAR},
+      </if>
+    </set>
+    where tb_partner_id = #{tbPartnerId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ehaoyao.cfy.model.operationcenter.TbPartner" >
+    update tb_partner
+    set fd_uuid = #{fdUuid,jdbcType=VARCHAR},
+      partner_key = #{partnerKey,jdbcType=VARCHAR},
+      status = #{status,jdbcType=CHAR}
+    where tb_partner_id = #{tbPartnerId,jdbcType=BIGINT}
+  </update>
+</mapper>
