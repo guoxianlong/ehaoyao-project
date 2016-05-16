@@ -1,12 +1,27 @@
 package com.ehaoyao.opertioncenter;
 
 public class Test {
+	
 
-	public static void main(String[] args) {
-		String test = "1234567";
-		String result = test!=null&&test.length()>4?test.substring(0, test.length()-4)+"****":"";
-		System.out.println(result);
+	public static void main(String[] args){
+		try {
+			
+			for(int i=0;i<10;i++){
+				try {
+					if(i==4){
+						throw new RuntimeException("异常。。。");
+					}
+				} catch (Exception e) {
+					continue;
+				}
+				System.out.println(i);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 
 	}
 
+	
+	
 }

@@ -3,8 +3,10 @@ package com.ehaoyao.opertioncenter.thirdOrderAudit.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ehaoyao.opertioncenter.common.CommonUtils;
 import com.ehaoyao.opertioncenter.common.PageModel;
+import com.ehaoyao.opertioncenter.common.PropertiesUtil;
 import com.ehaoyao.opertioncenter.thirdOrderAudit.dao.IThirdOrderAuditDao;
 import com.ehaoyao.opertioncenter.thirdOrderAudit.model.InvoiceInfo;
 import com.ehaoyao.opertioncenter.thirdOrderAudit.model.OrderAuditLog;
@@ -26,6 +29,10 @@ import com.ehaoyao.opertioncenter.thirdOrderAudit.model.OrderInfo;
 import com.ehaoyao.opertioncenter.thirdOrderAudit.service.IThirdOrderAuditService;
 import com.ehaoyao.opertioncenter.thirdOrderAudit.vo.OrderMainInfo;
 import com.ehaoyao.opertioncenter.thirdOrderAudit.vo.ThirdOrderAuditVO;
+import com.galaxy.pop.api.client.DefaultPopApiClient;
+import com.galaxy.pop.api.client.PopApiClient;
+import com.galaxy.pop.api.client.request.PrescriptionAuditRequest;
+import com.galaxy.pop.api.client.response.PrescriptionAuditResponse;
 import com.haoyao.goods.dao.UserDao;
 import com.haoyao.goods.model.User;
 import com.pajk.openapi.codec.client.RequestEncoder;
@@ -36,6 +43,7 @@ import com.pajk.openapi.codec.client.ResponseDecoder;
 public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 	
 	private static final Logger logger = Logger.getLogger(ThirdOrderAuditServiceImpl.class);
+	private Properties thirdPlatCFYConf = PropertiesUtil.getPropertiesFile("thirdPlatCFYConf.properties");
 	private RestTemplate restTemplate = new RestTemplate();
 	
 	@Autowired
@@ -109,11 +117,12 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 					
 					orderInfo.setAuditStatus(auditStatus);
 					orderInfo.setLastTime(currDate);
+					//客服可更改订单备注及发票信息
 					if(OrderInfo.ORDER_AUDIT_STATUS_PRESUCC.equals(auditStatus)){
 						orderInfo.setInvoiceStatus(vo.getInvoiceStatus());
 						orderInfo.setRemark(remark);
 					}
-					orderInfoList.add(orderInfo);
+					
 					
 					//订单审核轨迹记录
 					orderAuditLog = new OrderAuditLog();
@@ -129,7 +138,13 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 					}else{
 						orderAuditLog.setRemark(orderInfo.getRemark());
 					}
-					orderAuditLogList.add(orderAuditLog);
+					
+					/**
+					 * 通知并回写三方平台审核状态及审核说明
+					 */
+					String retStr = writeBackThirdPlatAuditInfo(orderAuditLog);
+					logger.error("【运营中心-回写三方平台审核信息！返回信息："+retStr+"】");
+					
 					
 					//更新发票表信息
 					if(invoiceStatus.length()>0 && OrderInfo.ORDER_AUDIT_STATUS_PRESUCC.equals(vo.getAuditStatus())){
@@ -146,6 +161,9 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 						}
 						invoiceInfoList.add(invoiceInfo);
 					}
+					
+					orderInfoList.add(orderInfo);
+					orderAuditLogList.add(orderAuditLog);
 			}
 			
 			if(!orderInfoList.isEmpty()){
@@ -164,6 +182,130 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 		return "订单："+orderNumber+"，审批成功！";
 	}
 	
+	/**
+	 * 通知并回写三方平台审核状态及审核说明
+	 * @param orderAuditLogList
+	 */
+	public String writeBackThirdPlatAuditInfo(OrderAuditLog orderAuditLog) throws Exception{
+		String retStr = "";
+		String orderFlag;
+		orderFlag = orderAuditLog.getOrderFlag();
+		if(OrderInfo.ORDER_ORDER_FLAG_360CFY.equals(orderFlag)){
+			PrescriptionAuditResponse res = writeBack360CFY(orderAuditLog);
+			retStr = res.getMsg();
+		}
+		if(OrderInfo.ORDER_ORDER_FLAG_PA.equals(orderAuditLog.getOrderFlag())){
+			retStr = writeBackPACFY(orderAuditLog);
+		}
+		return retStr;
+	}
+
+	private String writeBackPACFY(OrderAuditLog orderAuditLog) throws Exception {
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("orderNumber", orderAuditLog.getOrderNumber());
+		map.put("auditStatus", OrderInfo.ORDER_AUDIT_STATUS_SUCC);
+		map.put("auditDescription", "医师审核通过");
+		String resultMsg = this.auditPAOrder(map);
+		logger.info("【运营中心-医师二级审核-调用并回写平安订单审核接口，订单号："+orderAuditLog.getOrderNumber()+"，返回信息：】"+resultMsg);
+		return resultMsg;
+	}
+
+	/**
+	 * 回写360处方药审核状态
+	 * @param orderAuditLog
+	 * @throws Exception 
+	 */
+	private PrescriptionAuditResponse writeBack360CFY(OrderAuditLog orderAuditLog) throws Exception {
+		String auditStatus = orderAuditLog.getAuditStatus()!=null?orderAuditLog.getAuditStatus().trim():"";
+		if(auditStatus.length()==0){
+			return null;
+		}
+		/**
+		 * 如果审核状态为客服审核通过或者药师审核驳回的话，则不调用360健康接口，即不回写审核状态；
+		 * 只在客服审核驳回和药师审核通过才进行回写审核状态(药师审核驳回，客服可更改后再次提交药师审核)
+		 */
+		if(OrderInfo.ORDER_AUDIT_STATUS_PRESUCC.equals(auditStatus)||OrderInfo.ORDER_AUDIT_STATUS_RETURN.equals(auditStatus)){
+			return null;
+		}
+		
+		/**
+		 * 请求地址url
+		 */
+		String url = thirdPlatCFYConf.getProperty("360cfy_url");
+		/**
+		 * 商家key
+		 */
+		String appId = thirdPlatCFYConf.getProperty("360jkc.appId");
+		/**
+		 * 商家密钥
+		 */
+		String appkey = thirdPlatCFYConf.getProperty("360jkc.appkey");
+		/**
+		 * 处方药审核状态：0 审核不通过  1 审核通过（必填）
+		 */
+		int state = 0;
+		ThirdOrderAuditVO vo = new ThirdOrderAuditVO();
+		vo.setOrderFlag(orderAuditLog.getOrderFlag());
+		vo.setOrderNumber(orderAuditLog.getOrderNumber());
+		
+		
+		PopApiClient client = new DefaultPopApiClient(url,  appId,appkey);
+		PrescriptionAuditRequest request =  new PrescriptionAuditRequest();
+		if(OrderInfo.ORDER_AUDIT_STATUS_PRERETURN.equals(auditStatus)){
+			state = 0;
+			request.setReason(getReason(orderAuditLog.getAuditDescription()));
+		}
+		if(OrderInfo.ORDER_AUDIT_STATUS_SUCC.equals(auditStatus)){
+			state = 1;
+		}
+		request.setTid(orderAuditLog.getOrderNumber());
+		request.setState(state);
+		PrescriptionAuditResponse response = client.execute(request);
+		System.out.println("Body is : " + response.getBody());
+		System.out.println("Error is : " + response.getErrorCode());
+		return response;
+	}
+
+	/**
+	 * 匹配360健康并获取获取审核描述
+	 * @param auditDescription
+	 * @return
+	 */
+	private String getReason(String auditDescription) {
+		if(auditDescription==null || auditDescription.length()==0){
+			return null;
+		}
+		String reason = auditDescription;
+		if(auditDescription.contains("配送不到")){
+			reason = "F1E";
+		}
+		if(auditDescription.contains("价格贵")){
+			reason = "F1F";
+		}
+		if(auditDescription.contains("顾客买错")){
+			reason = "F1G";
+		}
+		if(auditDescription.contains("无货")){
+			reason = "F1H";
+		}
+		if(auditDescription.contains("无处方单")){
+			reason = "F1I";
+		}
+		if(auditDescription.contains("价格错误")){
+			reason = "F1J";
+		}
+		if(auditDescription.contains("文描错误")){
+			reason = "F1K";
+		}
+		if(auditDescription.contains("电话不通")){
+			reason = "F1L";
+		}
+		if(auditDescription.contains("付款方式")){
+			reason = "F1M";
+		}
+		return reason;
+	}
+
 	/**
 	 * 获取当前用户
 	 * @return User 

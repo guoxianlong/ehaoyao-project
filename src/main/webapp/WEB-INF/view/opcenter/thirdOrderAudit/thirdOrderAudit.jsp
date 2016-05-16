@@ -75,6 +75,7 @@
 				      <option value="-1" ${vo.orderFlag==''?"selected":''}  >请选择</option>
 				      <option value="TMCFY" ${vo.orderFlag=='TMCFY'?"selected":''}>天猫处方药</option>
 				      <option value="yhdcfy" ${vo.orderFlag=='yhdcfy'?"selected":''}>1号店处方药</option>
+				      <option value="SLLCFY" ${vo.orderFlag=='SLLCFY'?"selected":''}>360健康处方药</option>
 				      <%-- <option value="PACFY" ${vo.orderFlag=='PACFY'?"selected":''}>平安处方药</option>
 				      <option value="ZSTY" ${vo.orderFlag=='ZSTY'?"selected":''}>掌上糖医</option> --%>
 				  </select>
@@ -136,6 +137,7 @@
 									<td style="vertical-align: middle;">
 										<c:if test="${items.orderFlag=='TMCFY'}">天猫处方药</c:if>
 										<c:if test="${items.orderFlag=='yhdcfy'}">1号店处方药</c:if>
+										<c:if test="${items.orderFlag=='SLLCFY'}">360健康处方药</c:if>
 										<%-- <c:if test="${items.orderFlag=='PACFY'}">平安处方药</c:if>  
 										<c:if test="${items.orderFlag=='ZSTY'}">掌上糖医</c:if> --%>  
 									</td>

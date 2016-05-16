@@ -78,6 +78,7 @@
 				      <option value="yhdcfy" ${vo.orderFlag=='yhdcfy'?"selected":''}>1号店处方药</option>
 				      <option value="KYW" ${vo.orderFlag=='KYW'?"selected":''}>快药处方药</option>
 				      <option value="ZSTY" ${vo.orderFlag=='ZSTY'?"selected":''}>掌上糖医</option>
+				      <option value="SLLCFY" ${vo.orderFlag=='SLLCFY'?"selected":''}>360健康处方药</option>
 				  </select>
 				  
 				<label><span>审核状态:</span></label>
@@ -137,7 +138,8 @@
 										<c:if test="${items.orderFlag=='PACFY'}">平安处方药</c:if>
 										<c:if test="${items.orderFlag=='yhdcfy'}">1号店处方药</c:if>
 										<c:if test="${items.orderFlag=='KYW'}">快药处方药</c:if>
-										<c:if test="${items.orderFlag=='ZSTY'}">掌上糖医</c:if>    
+										<c:if test="${items.orderFlag=='ZSTY'}">掌上糖医</c:if>
+										<c:if test="${items.orderFlag=='SLLCFY'}">360健康处方药</c:if>    
 									</td>
 									<td style="vertical-align: middle;">${items.orderTime}</td>
 									<td style="vertical-align: middle;">${items.receiver}</td>

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ehaoyao.opertioncenter.common.PageModel;
+import com.ehaoyao.opertioncenter.thirdOrderAudit.model.OrderAuditLog;
 import com.ehaoyao.opertioncenter.thirdOrderAudit.model.OrderDetail;
 import com.ehaoyao.opertioncenter.thirdOrderAudit.vo.OrderMainInfo;
 import com.ehaoyao.opertioncenter.thirdOrderAudit.vo.ThirdOrderAuditVO;
@@ -59,4 +60,12 @@ public interface IThirdOrderAuditService {
 	 * @return
 	 */
 	public String auditPAOrder(Map<String, Object> map) throws Exception;
+
+	/**
+	 * 回写三方审核状态
+	 * @param orderAuditLogList
+	 * @return
+	 * @throws Exception
+	 */
+	public String writeBackThirdPlatAuditInfo(OrderAuditLog orderAuditLog) throws Exception;
 }

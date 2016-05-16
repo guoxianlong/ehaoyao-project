@@ -299,7 +299,7 @@ function getOrderDetailPage(orderNumber,orderFlag){
 			$("#doctorAuditDescriptionDetailPage").attr("disabled",true); 
 			
 			//若渠道不是天猫处方药，则暂时关闭修改发票信息功能
-			if(orderMainInfo.orderFlag!="TMCFY" && orderMainInfo.orderFlag!="yhdcfy"){
+			if(orderMainInfo.orderFlag!="TMCFY" && orderMainInfo.orderFlag!="yhdcfy" && orderMainInfo.orderFlag!="SLLCFY"){
 				$("#kfInvoiceFieldSet").hide();
 				$("#kfRemarkDiv").hide();
 			}

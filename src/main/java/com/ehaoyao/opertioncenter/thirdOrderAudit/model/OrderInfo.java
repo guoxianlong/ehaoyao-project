@@ -122,6 +122,11 @@ public class OrderInfo implements java.io.Serializable {
 	 */
 	public static final String ORDER_ORDER_FLAG_ZSTY = "ZSTY";
 	
+	/**
+	 * 360处方药
+	 */
+	public static final String ORDER_ORDER_FLAG_360CFY = "SLLCFY";
+	
 	
 	
 	
