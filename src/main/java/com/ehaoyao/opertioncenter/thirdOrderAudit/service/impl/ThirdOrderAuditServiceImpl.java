@@ -256,6 +256,7 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 		 * 请求地址url
 		 */
 		String url = thirdPlatCFYConf.getProperty("360cfy_url");
+		String venderId = thirdPlatCFYConf.getProperty("360jkc.venderId");
 		/**
 		 * 商家key
 		 */
@@ -282,6 +283,7 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 		if(OrderInfo.ORDER_AUDIT_STATUS_SUCC.equals(auditStatus)){
 			state = 1;
 		}
+		request.setVenderId(venderId);
 		request.setTid(orderAuditLog.getOrderNumber());
 		request.setState(state);
 		PrescriptionAuditResponse response = client.execute(request);
