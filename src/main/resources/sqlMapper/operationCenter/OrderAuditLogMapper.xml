@@ -16,12 +16,183 @@
     order_audit_log_id, order_number, order_flag, kf_account, audit_user, audit_status, 
     audit_description, remark, create_time
   </sql>
+  
+  
+  <!-- order_info/order_audit_log/invoice_info 返回三张表所有字段结果集 -->
+  <resultMap id="CompositeResultMap" type="com.ehaoyao.operationapi.vo.OrderMainInfo" >
+    <id column="order_audit_log_id" property="orderAuditLogId" jdbcType="BIGINT" />
+    <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+    <result column="order_flag" property="orderFlag" jdbcType="VARCHAR" />
+    <result column="kf_account" property="kfAccount" jdbcType="VARCHAR" />
+    <result column="audit_user" property="auditUser" jdbcType="VARCHAR" />
+    <result column="audit_status" property="auditStatus" jdbcType="VARCHAR" />
+    <result column="audit_description" property="auditDescription" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    
+    <result column="order_id" property="orderId" jdbcType="BIGINT" />
+    <result column="info_order_number" property="infoOrderNumber" jdbcType="VARCHAR" />
+    <result column="info_order_flag" property="infoOrderFlag" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="user_code" property="userCode" jdbcType="VARCHAR" />
+    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="prescription_type" property="prescriptionType" jdbcType="CHAR" />
+    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+    <result column="info_audit_status" property="infoAuditStatus" jdbcType="VARCHAR" />
+    <result column="invoice_status" property="invoiceStatus" jdbcType="VARCHAR" />
+    <result column="pay_status" property="payStatus" jdbcType="VARCHAR" />
+    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+    <result column="order_time" property="orderTime" jdbcType="VARCHAR" />
+    <result column="receiver" property="receiver" jdbcType="VARCHAR" />
+    <result column="patient_name" property="patientName" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="age" property="age" jdbcType="INTEGER" />
+    <result column="pregnant_flag" property="pregnantFlag" jdbcType="CHAR" />
+    <result column="decoct_flag" property="decoctFlag" jdbcType="CHAR" />
+    <result column="dose" property="dose" jdbcType="VARCHAR" />
+    <result column="small_pic_link" property="smallPicLink" jdbcType="VARCHAR" />
+    <result column="big_pic_link" property="bigPicLink" jdbcType="VARCHAR" />
+    <result column="payment_time" property="paymentTime" jdbcType="VARCHAR" />
+    <result column="delivery_date" property="deliveryDate" jdbcType="VARCHAR" />
+    <result column="hospital_presc_date" property="hospitalPrescDate" jdbcType="VARCHAR" />
+    <result column="address_detail" property="addressDetail" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="VARCHAR" />
+    <result column="country" property="country" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="order_price" property="orderPrice" jdbcType="DECIMAL" />
+    <result column="discount_amount" property="discountAmount" jdbcType="DECIMAL" />
+    <result column="over_return_free" property="overReturnFree" jdbcType="DECIMAL" />
+    <result column="express_price" property="expressPrice" jdbcType="DECIMAL" />
+    <result column="plat_pay_price" property="platPayPrice" jdbcType="DECIMAL" />
+    <result column="instructions" property="instructions" jdbcType="VARCHAR" />
+    <result column="info_remark" property="infoRemark" jdbcType="VARCHAR" />
+    <result column="fee_type" property="feeType" jdbcType="VARCHAR" />
+    <result column="last_time" property="lastTime" jdbcType="VARCHAR" />
+    <result column="info_create_time" property="infoCreateTime" jdbcType="VARCHAR" />
+    <result column="shipping_type" property="shippingType" jdbcType="VARCHAR" />
+    
+    
+    <result column="invoice_id" property="invoiceId" jdbcType="BIGINT" />
+    <result column="invoice_order_number" property="invoiceOrderNumber" jdbcType="VARCHAR" />
+    <result column="invoice_order_flag" property="invoiceOrderFlag" jdbcType="VARCHAR" />
+    <result column="invoice_kf_account" property="invoiceKfAccount" jdbcType="VARCHAR" />
+    <result column="invoice_invoice_status" property="invoiceInvoiceStatus" jdbcType="VARCHAR" />
+    <result column="invoice_type" property="invoiceType" jdbcType="VARCHAR" />
+    <result column="invoice_title" property="invoiceTitle" jdbcType="VARCHAR" />
+    <result column="invoice_content" property="invoiceContent" jdbcType="VARCHAR" />
+    <result column="invoice_remark" property="invoiceRemark" jdbcType="VARCHAR" />
+    <result column="invoice_last_time" property="invoiceLastTime" jdbcType="VARCHAR" />
+    <result column="invoice_create_time" property="invoiceCreateTime" jdbcType="VARCHAR" />
+    
+  </resultMap>
+  <!-- order_info/order_audit_log/invoice_info 返回三张表所有字段结果集 -->
+  <sql id="Composite_Column_List" >
+    g.order_audit_log_id, g.order_number, g.order_flag, g.kf_account, g.audit_user, g.audit_status, 
+    g.audit_description, g.remark, g.create_time,
+    f.order_id, f.order_number as info_order_number, f.order_flag as info_order_flag, f.user_id, f.user_code, f.nick_name, f.user_name, f.prescription_type, 
+    f.order_status, f.audit_status as info_audit_status,f.invoice_status, f.pay_status, f.order_type, f.pay_type, f.order_time, f.receiver, 
+    f.patient_name, f.sex, f.age, f.pregnant_flag, f.decoct_flag, f.dose, f.small_pic_link, f.big_pic_link, 
+    f.payment_time, f.delivery_date, f.hospital_presc_date, f.address_detail, f.mobile, f.telephone, 
+    f.province, f.city, f.area, f.country, f.price, f.order_price, f.discount_amount, f.over_return_free, f.express_price, 
+    f.plat_pay_price, f.instructions, f.remark as info_remark, f.fee_type, f.last_time, f.create_time as info_create_time,f.shipping_type,
+    i.invoice_id, i.order_number as invoice_order_number, i.order_flag as invoice_order_flag,i.kf_account as invoice_kf_account,i.invoice_status as invoice_invoice_status, i.invoice_type, i.invoice_title, i.invoice_content, 
+    i.remark as invoice_remark, i.create_time as invoice_create_time
+  </sql>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from order_audit_log
     where order_audit_log_id = #{orderAuditLogId,jdbcType=BIGINT}
   </select>
+  
+  <!-- 根据条件查询 -->
+  <select id="selectByConditionMap" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_audit_log
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+	    <if test="orderNumber !=null and orderNumber !='' ">
+			<!-- and order_number like CONCAT('%','${orderNumber}','%' ) -->
+			and order_number = #{orderNumber,jdbcType=VARCHAR}
+		</if>
+		<if test="orderFlag !=null and orderFlag !='' ">
+			and order_flag = #{orderFlag,jdbcType=VARCHAR}
+		</if>
+		<if test="auditStatus !=null and auditStatus !='' ">
+			and audit_status = #{auditStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="auditTimeStart !=null and auditTimeStart !='' ">
+			and create_time &gt;= #{auditTimeStart,jdbcType=VARCHAR}
+		</if>
+		<if test="auditTimeEnd !=null and auditTimeEnd !='' ">
+			and create_time &lt;= #{auditTimeEnd,jdbcType=VARCHAR}
+		</if>
+		 order by create_time desc ,order_number desc
+    </trim>
+  </select>
+  
+    <!-- 根据条件查询 -->
+  <select id="selectByLastAudit" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_audit_log
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+	    <if test="orderNumber !=null and orderNumber !='' ">
+			and order_number = #{orderNumber,jdbcType=VARCHAR}
+		</if>
+		<if test="orderFlag !=null and orderFlag !='' ">
+			and order_flag = #{orderFlag,jdbcType=VARCHAR}
+		</if>
+		<if test="auditStatus !=null and auditStatus !='' ">
+			and audit_status = #{auditStatus,jdbcType=VARCHAR}
+		</if>
+		 order by create_time desc limit 0,1 
+    </trim>
+  </select>
+  
+   <!-- order_info/order_audit_log/invoice_info 返回三张表所有字段结果集 -->
+  <select id="selectAllFieldsByConditionMapPage" resultMap="CompositeResultMap" parameterType="com.ehaoyao.cfy.vo.operationcenter.OrderInfoVo" >
+    select 
+    <include refid="Composite_Column_List" />
+    from ((order_audit_log g JOIN order_info f ON g.order_number = f.order_number AND g.order_flag = f.order_flag ) 
+     left join (select o.* from invoice_info o join 
+     (select v.order_number,v.order_flag,max(v.create_time) as create_time from invoice_info v group by v.order_number,v.order_flag) d 
+     on o.order_number=d.order_number and o.order_flag=d.order_flag and o.create_time=d.create_time ) i 
+     on i.order_number=g.order_number and i.order_flag=g.order_flag)
+     JOIN ( SELECT g.order_number, g.order_flag, max(g.create_time) AS create_time FROM order_audit_log g
+     GROUP BY g.order_number, g.order_flag ) k ON g.order_number = k.order_number
+     AND g.order_flag = k.order_flag AND g.create_time = k.create_time  
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+	    <if test="orderNumber !=null and orderNumber !='' ">
+			<!-- and order_number like CONCAT('%','${orderNumber}','%' ) -->
+			and g.order_number = #{orderNumber,jdbcType=VARCHAR}
+		</if>
+		<if test="orderFlag !=null and orderFlag !='' ">
+			and g.order_flag = #{orderFlag,jdbcType=VARCHAR}
+		</if>
+		<if test="auditStatus !=null and auditStatus !='' ">
+			and g.audit_status = #{auditStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="auditTimeStart !=null and auditTimeStart !='' ">
+			and g.create_time &gt;= #{auditTimeStart,jdbcType=VARCHAR}
+		</if>
+		<if test="auditTimeEnd !=null and auditTimeEnd !='' ">
+			and g.create_time &lt;= #{auditTimeEnd,jdbcType=VARCHAR}
+		</if>
+		 order by g.create_time desc ,g.order_number desc  
+		<if test="count !=null and pageSize !=null ">
+			limit #{count,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+		</if>
+    </trim>
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from order_audit_log
     where order_audit_log_id = #{orderAuditLogId,jdbcType=BIGINT}

@@ -3,6 +3,150 @@ package com.ehaoyao.cfy.model.operationcenter;
 import java.math.BigDecimal;
 
 public class OrderInfo {
+	
+	/**------------------------渠道标识定义----------------------------*/
+	/**
+	 * 天猫处方药
+	 */
+	public static final String ORDER_ORDER_FLAG_TMCFY = "TMCFY";
+	/**
+	 * 1号店处方药
+	 */
+	public static final String ORDER_ORDER_FLAG_yhdcfy = "yhdcfy";
+	/**
+	 * 平安处方药
+	 */
+	public static final String ORDER_ORDER_FLAG_PACFY = "PACFY";
+	
+	
+	/**------------------------订单审核状态码----------------------------*/
+	/**
+	 * 等待客服审核
+	 */
+	public static final String ORDER_AUDIT_STATUS_WAIT = "WAIT";
+	
+	/**
+	 * 客服审核通过
+	 */
+	public static final String ORDER_AUDIT_STATUS_PRESUCC = "PRESUCC"; 
+	/**
+	 * 客服审核驳回
+	 */
+	public static final String ORDER_AUDIT_STATUS_PRERETURN = "PRERETURN";
+	
+	/**
+	 * 医师审核通过
+	 */
+	public static final String ORDER_AUDIT_STATUS_SUCC = "SUCC"; 
+	/**
+	 * 医师审核驳回
+	 */
+	public static final String ORDER_AUDIT_STATUS_RETURN = "RETURN";
+	/**
+	 * 作废
+	 */
+	public static final String ORDER_AUDIT_STATUS_VOID = "VOID";
+	/**
+	 * 取消审核
+	 */
+	public static final String ORDER_AUDIT_STATUS_CANCEL = "CANCEL"; 
+	
+	/**------------------------订单状态码----------------------------*/
+	/**
+	 * 未处理
+	 */
+	public static final String ORDER_STATUS_UNTREATED = "UNTREATED";
+	/**
+	 * 处理完成
+	 */
+	public static final String ORDER_STATUS_FINISH = "FINISH"; 
+	
+	/**------------------------付款状态枚举----------------------------*/
+	/**
+	 * 未付款
+	 */
+	public static final String ORDER_PAY_STATUS_NOPAY = "NOPAY";
+	/**
+	 * 已付款
+	 */
+	public static final String ORDER_PAY_STATUS_PAID = "PAID";
+	
+	/**------------------------支付方式枚举----------------------------*/
+	/**
+	 * COD:货到付款  
+	 */
+	public static final String ORDER_PAY_TYPE_COD = "COD";
+	/**
+	 * ONLINEPAY:网上支付
+	 */
+	public static final String ORDER_PAY_TYPE_ONLINEPAY = "ONLINEPAY";
+	/**
+	 * 账户支付
+	 */
+	public static final String ORDER_PAY_TYPE_ACCOUNTPAY = "ACCOUNTPAY";
+	/**
+	 * 邮局汇款
+	 */
+	public static final String ORDER_PAY_TYPE_POSTREMITTANCE = "POSTREMITTANCE";
+	/**
+	 * 银行转账
+	 */
+	public static final String ORDER_PAY_TYPE_BANKTRANSFER = "BANKTRANSFER";
+	/**
+	 * pos机
+	 */
+	public static final String ORDER_PAY_TYPE_POSPAY = "POSPAY";
+	/**
+	 * 万里通
+	 */
+	public static final String ORDER_PAY_TYPE_WALITO = "WALITO";
+	/**
+	 * 分期付款
+	 */
+	public static final String ORDER_PAY_TYPE_INSTALLMENTPAYMENT = "INSTALLMENTPAYMENT";
+	/**
+	 * 合同账期
+	 */
+	public static final String ORDER_PAY_TYPE_CONTRACTPERIOD = "CONTRACTPERIOD";
+	/**
+	 * 货到转账
+	 */
+	public static final String ORDER_PAY_TYPE_ARRIVALTRANSFER = "ARRIVALTRANSFER";
+	/**
+	 * 货到付支票
+	 */
+	public static final String ORDER_PAY_TYPE_ARRIVALPAYCHECK = "ARRIVALPAYCHECK";
+	/**
+	 * 货到刷支付宝
+	 */
+	public static final String ORDER_PAY_TYPE_ARRIVALBRUSHALIPAY = "ARRIVALBRUSHALIPAY";
+	
+	
+	
+	/**------------------------开票状态枚举----------------------------*/
+	/**
+	 * 开发票
+	 */
+	public static final String ORDER_INVOICE_STATUS_YES = "1";
+	/**
+	 * 不开发票
+	 */
+	public static final String ORDER_INVOICE_STATUS_NO = "0";
+
+	/**------------------------发票类型枚举----------------------------*/
+	/**
+	 * 普通发票
+	 */
+	public static final String ORDER_INVOICE_TYPE_PLAIN = "PLAIN";
+	/**
+	 * 电子发票
+	 */
+	public static final String ORDER_INVOICE_TYPE_ELECTRONIC = "ELECTRONIC";
+	/**
+	 * 增值税发票
+	 */
+	public static final String ORDER_INVOICE_TYPE_VAT = "VAT";
+	
     private Long orderId;
 
     private String orderNumber;
@@ -461,5 +605,101 @@ public class OrderInfo {
 
     public void setShippingType(String shippingType) {
         this.shippingType = shippingType == null ? null : shippingType.trim();
+    }
+    
+    /**
+     * 获取审核状态描述
+     * @return
+     */
+    public String getAuditStatusDesc(){
+    	String auditStatusDesc = null;
+    	if(auditStatus!=null && auditStatus.length()>0){
+    		if(ORDER_AUDIT_STATUS_WAIT.equals(this.auditStatus)){
+    			auditStatusDesc = "等待客服审核";
+    		}
+    		if(ORDER_AUDIT_STATUS_PRESUCC.equals(this.auditStatus)){
+    			auditStatusDesc = "客服审核通过";
+    		}
+    		if(ORDER_AUDIT_STATUS_PRERETURN.equals(this.auditStatus)){
+    			auditStatusDesc = "客服审核驳回";
+    		}
+    		if(ORDER_AUDIT_STATUS_SUCC.equals(this.auditStatus)){
+    			auditStatusDesc = "医师审核通过";
+    		}
+    		if(ORDER_AUDIT_STATUS_RETURN.equals(this.auditStatus)){
+    			auditStatusDesc = "医师审核驳回";
+    		}
+    		if(ORDER_AUDIT_STATUS_VOID.equals(this.auditStatus)){
+    			auditStatusDesc = "作废";
+    		}
+    		if(ORDER_AUDIT_STATUS_CANCEL.equals(this.auditStatus)){
+    			auditStatusDesc = "取消";
+    		}
+    	}
+    	return auditStatusDesc;
+    }
+    
+    /**
+     * 获取支付方式描述
+     * @return
+     */
+    public String getPayTypeDesc(){
+    	String payTypeDesc = null;
+    	if(this.payType!=null && this.payType.length()>0){
+    		if(ORDER_PAY_TYPE_COD.equals(this.payType)){
+    			payTypeDesc = "货到付款";
+    		}
+    		if(ORDER_PAY_TYPE_ONLINEPAY.equals(this.payType)){
+    			payTypeDesc = "网上支付";
+    		}
+    		if(ORDER_PAY_TYPE_ACCOUNTPAY.equals(this.payType)){
+    			payTypeDesc = "账户支付";
+    		}
+    		if(ORDER_PAY_TYPE_POSTREMITTANCE.equals(this.payType)){
+    			payTypeDesc = "邮局汇款";
+    		}
+    		if(ORDER_PAY_TYPE_BANKTRANSFER.equals(this.payType)){
+    			payTypeDesc = "银行转账";
+    		}
+    		if(ORDER_PAY_TYPE_POSPAY.equals(this.payType)){
+    			payTypeDesc = "pos机";
+    		}
+    		if(ORDER_PAY_TYPE_WALITO.equals(this.payType)){
+    			payTypeDesc = "万里通";
+    		}
+    		if(ORDER_PAY_TYPE_INSTALLMENTPAYMENT.equals(this.payType)){
+    			payTypeDesc = "分期付款";
+    		}
+    		if(ORDER_PAY_TYPE_CONTRACTPERIOD.equals(this.payType)){
+    			payTypeDesc = "合同账期";
+    		}
+    		if(ORDER_PAY_TYPE_ARRIVALTRANSFER.equals(this.payType)){
+    			payTypeDesc = "货到转账";
+    		}
+    		if(ORDER_PAY_TYPE_ARRIVALPAYCHECK.equals(this.payType)){
+    			payTypeDesc = "货到付支票";
+    		}
+    		if(ORDER_PAY_TYPE_ARRIVALBRUSHALIPAY.equals(this.payType)){
+    			payTypeDesc = "货到刷支付宝";
+    		}
+    	}
+    	return payTypeDesc;
+    }
+    
+    /**
+     * 获取发票状态描述
+     * @return
+     */
+    public String getInvoiceStatusDesc(){
+    	String invoiceStatusDesc = null;
+    	if(this.invoiceStatus!=null && this.invoiceStatus.length()>0){
+    		if(ORDER_INVOICE_STATUS_YES.equals(this.invoiceStatus)){
+    			invoiceStatusDesc = "开票";
+    		}
+    		if(ORDER_INVOICE_STATUS_NO.equals(this.invoiceStatus)){
+    			invoiceStatusDesc = "不开票";
+    		}
+    	}
+    	return invoiceStatusDesc;
     }
 }

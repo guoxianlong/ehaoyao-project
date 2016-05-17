@@ -25,7 +25,7 @@
      http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
 	
-	<!-- ***********************************物流中心数据源配置     开始************************************************ -->
+	<!-- ***********************************运营中心数据源配置     开始************************************************ -->
 	<!-- 配置数据源，使用的是alibaba的Druid(德鲁伊)数据源 -->
 	<bean name="dataSourceOperationCenter" class="com.alibaba.druid.pool.DruidDataSource"
 		init-method="init" destroy-method="close">
@@ -76,7 +76,7 @@
 	</bean>  
 	
     <bean id="mapperScannerOperationCenter" class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
-        <property name="basePackage" value="com.ehaoyao.cfy.**.mapper.OperationCenter" />  
+        <property name="basePackage" value="com.ehaoyao.cfy.**.mapper.operationcenter" />  
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryOperationCenter"/>  
         <property name="sqlSessionTemplateBeanName" value="sqlSessionTemplateOperationCenter" />
     </bean>
@@ -124,7 +124,7 @@
 	</aop:config>  
 	
 	
-	<!-- ***********************************物流中心数据源配置     结束************************************************ -->
+	<!-- ***********************************运营中心数据源配置     结束************************************************ -->
    
 
 
