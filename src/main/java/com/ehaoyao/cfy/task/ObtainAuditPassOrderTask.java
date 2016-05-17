@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.ehaoyao.cfy.model.operationcenter.OrderInfo;
-import com.ehaoyao.cfy.service.CfyToOrderCenterService;
 import com.ehaoyao.cfy.service.OperationCenterService;
 import com.ehaoyao.cfy.vo.operationcenter.OrderInfoVo;
 
@@ -14,8 +13,8 @@ public class ObtainAuditPassOrderTask {
 	@Autowired
 	OperationCenterService operationCenterService;
 	
-	@Autowired
-	CfyToOrderCenterService cfyToOrderCenterService;
+//	@Autowired
+//	CfyToOrderCenterService cfyToOrderCenterService;
 	
 	
 	public void dealLogic(){
@@ -35,7 +34,7 @@ public class ObtainAuditPassOrderTask {
 	public OrderInfoVo queryParam(){
 		OrderInfoVo orderInfoVo = new OrderInfoVo();
 		orderInfoVo.setAuditStatus(OrderInfo.ORDER_AUDIT_STATUS_SUCC);
-		orderInfoVo.setAuditTimeStart("2016-05-17 20:00:00");
+		orderInfoVo.setAuditTimeStart("2016-05-17 12:00:00");
 		orderInfoVo.setAuditTimeEnd("2016-05-17 23:00:00");
 		return orderInfoVo;
 	}

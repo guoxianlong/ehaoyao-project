@@ -2,7 +2,7 @@ package com.ehaoyao.cfy.mapper.operationcenter;
 
 import com.ehaoyao.cfy.model.operationcenter.InvoiceInfo;
 
-public interface InvoiceInfoMapper {
+public interface OperationInvoiceInfoMapper {
     int deleteByPrimaryKey(Long invoiceId);
 
     int insert(InvoiceInfo record);

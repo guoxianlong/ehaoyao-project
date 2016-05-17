@@ -2,7 +2,7 @@ package com.ehaoyao.cfy.mapper.operationcenter;
 
 import com.ehaoyao.cfy.model.operationcenter.OrderDetail;
 
-public interface OrderDetailMapper {
+public interface OperationOrderDetailMapper {
     int deleteByPrimaryKey(Long orderDetailId);
 
     int insert(OrderDetail record);

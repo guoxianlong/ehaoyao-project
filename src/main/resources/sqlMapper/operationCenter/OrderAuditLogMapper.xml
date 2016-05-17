@@ -19,7 +19,7 @@
   
   
   <!-- order_info/order_audit_log/invoice_info 返回三张表所有字段结果集 -->
-  <resultMap id="CompositeResultMap" type="com.ehaoyao.operationapi.vo.OrderMainInfo" >
+  <resultMap id="CompositeResultMap" type="com.ehaoyao.cfy.vo.operationcenter.OrderMainInfo" >
     <id column="order_audit_log_id" property="orderAuditLogId" jdbcType="BIGINT" />
     <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
     <result column="order_flag" property="orderFlag" jdbcType="VARCHAR" />
