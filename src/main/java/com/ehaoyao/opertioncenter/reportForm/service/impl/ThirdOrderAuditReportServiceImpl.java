@@ -59,7 +59,7 @@ public class ThirdOrderAuditReportServiceImpl implements IThirdOrderAuditReportS
 		HSSFCellStyle contentStyle = ExcelUtil.getContentCellStyle(workbook2003);
 		
 		//合并单元格
-		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 29));
+		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 31));
 
 		HSSFRow row = null;
 		
@@ -136,9 +136,11 @@ public class ThirdOrderAuditReportServiceImpl implements IThirdOrderAuditReportS
 					row.createCell(t++).setCellValue(orderMainInfo.getRemark());
 					row.createCell(t++).setCellValue(orderMainInfo.getKfAuditUser());
 					row.createCell(t++).setCellValue(orderMainInfo.getKfAuditTime());
+					row.createCell(t++).setCellValue(vo.getRejectTypeDesc(orderMainInfo.getKfRejectType()));
 					row.createCell(t++).setCellValue(orderMainInfo.getKfAuditDescription());
 					row.createCell(t++).setCellValue(orderMainInfo.getDoctorAuditUser());
 					row.createCell(t++).setCellValue(orderMainInfo.getDoctorAuditTime());
+					row.createCell(t++).setCellValue(vo.getRejectTypeDesc(orderMainInfo.getDoctorRejectType()));
 					row.createCell(t++).setCellValue(orderMainInfo.getDoctorAuditDescription());
 					k += 1;
 					//订单内容设置样式
@@ -180,9 +182,11 @@ public class ThirdOrderAuditReportServiceImpl implements IThirdOrderAuditReportS
 		row.createCell(i++).setCellValue("备注");
 		row.createCell(i++).setCellValue("一级审核人");
 		row.createCell(i++).setCellValue("一级审核时间");
+		row.createCell(i++).setCellValue("一级审核驳回类型");
 		row.createCell(i++).setCellValue("一级审核说明");
 		row.createCell(i++).setCellValue("二级审核人");
 		row.createCell(i++).setCellValue("二级审核时间");
+		row.createCell(i++).setCellValue("二级审核驳回类型");
 		row.createCell(i++).setCellValue("二级审核说明");
 		//订单列表标题设置样式
 		for(int j=0;j<i;j++){
@@ -194,8 +198,8 @@ public class ThirdOrderAuditReportServiceImpl implements IThirdOrderAuditReportS
 		HSSFCell contentTitleCell = null;
 		row = sheet.createRow(2);
 		row.setHeight((short)500);//目的是想把行高设置成500px
-		sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 29));//合并单元格
-		for(int i=0;i<30;i++){
+		sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 31));//合并单元格
+		for(int i=0;i<32;i++){
 			contentTitleCell = row.createCell(i);
 			if(i==0){
 				contentTitleCell.setCellValue("订单列表");
@@ -208,7 +212,7 @@ public class ThirdOrderAuditReportServiceImpl implements IThirdOrderAuditReportS
 		HSSFCell titleCell = null;
 		row = sheet.createRow(0);
 		row.setHeight((short)500);//目的是想把行高设置成500px
-		for(int i=0;i<30;i++){
+		for(int i=0;i<32;i++){
 			sheet.setColumnWidth(i, 20*256);
 			titleCell = row.createCell(i);
 			if(i==0){
@@ -242,19 +246,33 @@ public class ThirdOrderAuditReportServiceImpl implements IThirdOrderAuditReportS
 		conditionCell001.setCellValue(date);
 		conditionCell001.setCellStyle(titleStyle);
 		
-		HSSFCell conditionCell100 = row.createCell(2);
+		HSSFCell conditionCell00 = row.createCell(2);
+		conditionCell00.setCellValue("订单号：");
+		conditionCell00.setCellStyle(titleStyle);
+		HSSFCell conditionCell01 = row.createCell(3);
+		conditionCell01.setCellValue(vo.getOrderNumber());
+		conditionCell01.setCellStyle(titleStyle);
+		
+		HSSFCell conditionCell100 = row.createCell(4);
 		conditionCell100.setCellValue("渠道：");
 		conditionCell100.setCellStyle(titleStyle);
-		HSSFCell conditionCell101 = row.createCell(3);
+		HSSFCell conditionCell101 = row.createCell(5);
 		conditionCell101.setCellValue(vo.getOrderFlagDesc(vo.getOrderFlag()));
 		conditionCell101.setCellStyle(titleStyle);
 		
-		HSSFCell conditionCell200 = row.createCell(4);
+		HSSFCell conditionCell200 = row.createCell(6);
 		conditionCell200.setCellValue("审核状态：");
 		conditionCell200.setCellStyle(titleStyle);
-		HSSFCell conditionCell201 = row.createCell(5);
+		HSSFCell conditionCell201 = row.createCell(7);
 		conditionCell201.setCellValue(vo.getAuditStatusDesc(vo.getAuditStatus()));
 		conditionCell201.setCellStyle(titleStyle);
+		
+		HSSFCell conditionCell300 = row.createCell(8);
+		conditionCell300.setCellValue("驳回类型：");
+		conditionCell300.setCellStyle(titleStyle);
+		HSSFCell conditionCell301 = row.createCell(9);
+		conditionCell301.setCellValue(vo.getRejectTypeDesc(vo.getRejectType()));
+		conditionCell301.setCellStyle(titleStyle);
 	}
 
 }

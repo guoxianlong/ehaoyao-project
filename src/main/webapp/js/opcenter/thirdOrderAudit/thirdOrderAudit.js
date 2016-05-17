@@ -278,7 +278,8 @@ function getOrderDetailPage(orderNumber,orderFlag){
 				$("#kfInvoiceTitleDetailPage").attr("disabled",false); 
 				$("#kfInvoiceContentDetailPage").attr("disabled",false);
 				$("#kfRemarkDetailPage").attr("disabled",false);
-				$("#kfAuditDescriptionDetailPage").attr("disabled",false); 
+				$("#kfAuditDescriptionDetailPage").attr("disabled",false);
+				$("#kfRejectTypeSelect").attr("disabled",false);
 			}else{
 				$("#auditUserLabel").show();
 				$("#succBtn").attr("disabled",true);
@@ -289,6 +290,7 @@ function getOrderDetailPage(orderNumber,orderFlag){
 				$("#kfInvoiceContentDetailPage").attr("disabled",true);
 				$("#kfRemarkDetailPage").attr("disabled",true);
 				$("#kfAuditDescriptionDetailPage").attr("disabled",true);
+				$("#kfRejectTypeSelect").attr("disabled",true);
 			}
 			
 			//判断是否需要展示药师审核信息
@@ -296,10 +298,12 @@ function getOrderDetailPage(orderNumber,orderFlag){
 				$("#doctorFieldSet").show();
 			}
 			//灰化药师审核信息
+			$("#doctorRejectTypeSelect").attr("disabled",true); 
 			$("#doctorAuditDescriptionDetailPage").attr("disabled",true); 
 			
 			//若渠道不是天猫处方药，则暂时关闭修改发票信息功能
-			if(orderMainInfo.orderFlag!="TMCFY" && orderMainInfo.orderFlag!="yhdcfy" && orderMainInfo.orderFlag!="SLLCFY"){
+//			if(orderMainInfo.orderFlag!="TMCFY" && orderMainInfo.orderFlag!="yhdcfy" && orderMainInfo.orderFlag!="SLLCFY"){
+			if(!orderMainInfo.secondAuditFlag){
 				$("#kfInvoiceFieldSet").hide();
 				$("#kfRemarkDiv").hide();
 			}
@@ -329,6 +333,8 @@ function getOrderDetailPage(orderNumber,orderFlag){
 			$("#kfInvoiceTitleDetailPage").attr("value",orderMainInfo.invoiceTitle);
 			$("#kfInvoiceContentDetailPage").attr("value",orderMainInfo.invoiceContent);
 			$("#kfRemarkDetailPage").attr("value",orderMainInfo.remark);
+			$("#kfRejectTypeSelect option[value='"+(orderMainInfo.kfRejectType==undefined?'-1':orderMainInfo.kfRejectType)+"']").attr("selected",true);
+			$("#doctorRejectTypeSelect option[value='"+(orderMainInfo.doctorRejectType==undefined?'-1':orderMainInfo.doctorRejectType)+"']").attr("selected",true);
 			
 			if(orderMainInfo.invoiceStatus=="1"){
 				$("#kfInvoiceTypeLabel").show();
@@ -435,6 +441,7 @@ function auditFunc(flag){
 	var invoiceTitle =  $("#kfInvoiceTitleDetailPage").val();
 	var invoiceContent =  $("#kfInvoiceContentDetailPage").val();
 	var remark =  $("#kfRemarkDetailPage").val();
+	var kfRejectType = $("#kfRejectTypeSelect").val();
 	
 	
 	
@@ -444,8 +451,8 @@ function auditFunc(flag){
 	}
 	if(flag=='PRERETURN'){
 		auditStatusDesc = '驳回';
-		if(auditDescription == ''){
-			$.messager.alert("错误提示", "请输入驳回原因！");
+		if(kfRejectType == '-1'){
+			$.messager.alert("错误提示", "请选择驳回类型！");
 			return;
 		}
 	}
@@ -479,7 +486,8 @@ function auditFunc(flag){
 	        	invoiceType:invoiceType,
 	        	invoiceTitle:invoiceTitle,
 	        	invoiceContent:invoiceContent,
-	        	remark:remark
+	        	remark:remark,
+	        	rejectType:kfRejectType
 	        	},
 	        success: function(data){
 	        	alert(data);

@@ -3,9 +3,7 @@ package com.ehaoyao.opertioncenter.thirdOrderSecondAudit.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +75,7 @@ public class ThirdOrderSecondAuditServiceImpl implements IThirdOrderSecondAuditS
 		String auditStatus = vo.getAuditStatus()!=null?vo.getAuditStatus().trim():"";
 		String orderNumber = vo.getOrderNumber()!=null?vo.getOrderNumber().trim():"";
 		String auditDescription = vo.getAuditDescription()!=null?vo.getAuditDescription().trim():"";
-		String orderFlag = vo.getOrderFlag()!=null?vo.getOrderFlag().trim():"";
+		String rejectType = vo.getRejectType()!=null?vo.getRejectType().trim():"";
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String currDate = sdf.format(new Date());
 		OrderInfo orderInfo = null;
@@ -97,14 +95,14 @@ public class ThirdOrderSecondAuditServiceImpl implements IThirdOrderSecondAuditS
 				
 
 				//调用平安接口，回写药师审核信息
-				if(orderFlag.length()>0 && OrderInfo.ORDER_ORDER_FLAG_PA.equals(orderFlag)){
+				/*if(orderFlag.length()>0 && OrderInfo.ORDER_ORDER_FLAG_PA.equals(orderFlag)){
 					Map<String,Object> map = new HashMap<String,Object>();
 					map.put("orderNumber", orderNumber);
 					map.put("auditStatus", auditStatus);
 					map.put("auditDescription", auditDescription);
 					String resultMsg = iThirdOrderAuditService.auditPAOrder(map);
 					logger.info("【运营中心-医师二级审核-调用并回写平安订单审核接口，订单号："+orderNumber+"，返回信息：】"+resultMsg);
-				}
+				}*/
 				
 				//订单审核轨迹记录
 				orderAuditLog = new OrderAuditLog();
@@ -113,6 +111,7 @@ public class ThirdOrderSecondAuditServiceImpl implements IThirdOrderSecondAuditS
 				orderAuditLog.setAuditUser(user.getName());
 				orderAuditLog.setKfAccount(user.getUserName());
 				orderAuditLog.setAuditStatus(auditStatus);
+				orderAuditLog.setRejectType(rejectType);
 				orderAuditLog.setAuditDescription(auditDescription);
 				orderAuditLog.setCreateTime(currDate);
 				

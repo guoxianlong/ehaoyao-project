@@ -95,6 +95,7 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 		String orderNumber = vo.getOrderNumber()!=null&&vo.getOrderNumber().trim().length()>0?vo.getOrderNumber().trim():"";
 		String auditDescription = vo.getAuditDescription()!=null&&vo.getAuditDescription().trim().length()>0?vo.getAuditDescription().trim():"";
 		String invoiceStatus = vo.getInvoiceStatus()!=null&&vo.getInvoiceStatus().trim().length()>0?vo.getInvoiceStatus().trim():"";
+		String rejectType = vo.getRejectType()!=null?vo.getRejectType().trim():"";
 		String remark = vo.getRemark()!=null&&vo.getRemark().trim().length()>0?vo.getRemark().trim():"";
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String currDate = sdf.format(new Date());
@@ -131,6 +132,7 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 					orderAuditLog.setAuditUser(user.getName());
 					orderAuditLog.setKfAccount(user.getUserName());
 					orderAuditLog.setAuditStatus(auditStatus);
+					orderAuditLog.setRejectType(rejectType);
 					orderAuditLog.setAuditDescription(auditDescription);
 					orderAuditLog.setCreateTime(currDate);
 					if(OrderInfo.ORDER_AUDIT_STATUS_PRESUCC.equals(auditStatus)){
@@ -143,7 +145,7 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 					 * 通知并回写三方平台审核状态及审核说明
 					 */
 					String retStr = writeBackThirdPlatAuditInfo(orderAuditLog);
-					logger.error("【运营中心-回写三方平台审核信息！返回信息："+retStr+"】");
+					logger.info("【运营中心-回写三方平台审核信息！返回信息："+retStr+"】");
 					
 					
 					//更新发票表信息
@@ -190,10 +192,19 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 		String retStr = "";
 		String orderFlag;
 		orderFlag = orderAuditLog.getOrderFlag();
+		/**
+		 * 回写360健康审核信息，同天猫处方药一样，需客服/药师，二级审核。
+		 */
 		if(OrderInfo.ORDER_ORDER_FLAG_360CFY.equals(orderFlag)){
 			PrescriptionAuditResponse res = writeBack360CFY(orderAuditLog);
-			retStr = res.getMsg();
+			if(res!=null){
+				retStr = res.getMsg();
+			}
 		}
+		/**
+		 * 平安处方药，业务规定只需二级药师审核
+		 * 平安处方药接口限制：审核信息不能为空
+		 */
 		if(OrderInfo.ORDER_ORDER_FLAG_PA.equals(orderAuditLog.getOrderFlag())){
 			retStr = writeBackPACFY(orderAuditLog);
 		}
@@ -201,12 +212,25 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 	}
 
 	private String writeBackPACFY(OrderAuditLog orderAuditLog) throws Exception {
+		String remark = "";//审核说明
+		String auditDescription = orderAuditLog.getAuditDescription()!=null?orderAuditLog.getAuditDescription().trim():"";
+		String rejectType = orderAuditLog.getRejectType()!=null?orderAuditLog.getRejectType().trim():"";
+		String auditStatus = orderAuditLog.getAuditStatus()!=null?orderAuditLog.getAuditStatus().trim():"";
+		if(OrderInfo.ORDER_AUDIT_STATUS_RETURN.equals(auditStatus)){
+			remark = getRejectReason(rejectType);
+		}
+		if(OrderInfo.ORDER_AUDIT_STATUS_SUCC.equals(auditStatus)){
+			if(auditDescription.length()>0){
+				remark = auditDescription;
+			}else{
+				remark = "药师审核通过";
+			}
+		}
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("orderNumber", orderAuditLog.getOrderNumber());
-		map.put("auditStatus", OrderInfo.ORDER_AUDIT_STATUS_SUCC);
-		map.put("auditDescription", "医师审核通过");
+		map.put("auditStatus", orderAuditLog.getAuditStatus());
+		map.put("auditDescription", remark);
 		String resultMsg = this.auditPAOrder(map);
-		logger.info("【运营中心-医师二级审核-调用并回写平安订单审核接口，订单号："+orderAuditLog.getOrderNumber()+"，返回信息：】"+resultMsg);
 		return resultMsg;
 	}
 
@@ -253,7 +277,7 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 		PrescriptionAuditRequest request =  new PrescriptionAuditRequest();
 		if(OrderInfo.ORDER_AUDIT_STATUS_PRERETURN.equals(auditStatus)){
 			state = 0;
-			request.setReason(getReason(orderAuditLog.getAuditDescription()));
+			request.setReason(orderAuditLog.getRejectType());
 		}
 		if(OrderInfo.ORDER_AUDIT_STATUS_SUCC.equals(auditStatus)){
 			state = 1;
@@ -267,41 +291,41 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 	}
 
 	/**
-	 * 匹配360健康并获取获取审核描述
-	 * @param auditDescription
+	 * 匹配并获取获取审核驳回描述
+	 * @param rejectType
 	 * @return
 	 */
-	private String getReason(String auditDescription) {
-		if(auditDescription==null || auditDescription.length()==0){
+	private String getRejectReason(String rejectType) {
+		if(rejectType==null || rejectType.length()==0){
 			return null;
 		}
-		String reason = auditDescription;
-		if(auditDescription.contains("配送不到")){
-			reason = "F1E";
+		String reason = rejectType;
+		if("F1E".equals(rejectType)){
+			reason = "配送不到";
 		}
-		if(auditDescription.contains("价格贵")){
-			reason = "F1F";
+		if("F1F".equals(rejectType)){
+			reason = "价格贵";
 		}
-		if(auditDescription.contains("顾客买错")){
-			reason = "F1G";
+		if("F1G".equals(rejectType)){
+			reason = "顾客买错";
 		}
-		if(auditDescription.contains("无货")){
-			reason = "F1H";
+		if("F1H".equals(rejectType)){
+			reason = "无货";
 		}
-		if(auditDescription.contains("无处方单")){
-			reason = "F1I";
+		if("F1I".equals(rejectType)){
+			reason = "无处方单";
 		}
-		if(auditDescription.contains("价格错误")){
-			reason = "F1J";
+		if("F1J".equals(rejectType)){
+			reason = "价格错误";
 		}
-		if(auditDescription.contains("文描错误")){
-			reason = "F1K";
+		if("F1K".equals(rejectType)){
+			reason = "文描错误";
 		}
-		if(auditDescription.contains("电话不通")){
-			reason = "F1L";
+		if("F1L".equals(rejectType)){
+			reason = "电话不通";
 		}
-		if(auditDescription.contains("付款方式")){
-			reason = "F1M";
+		if("F1M".equals(rejectType)){
+			reason = "付款方式";
 		}
 		return reason;
 	}

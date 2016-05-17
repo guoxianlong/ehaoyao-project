@@ -70,8 +70,8 @@
         <!-- 退出   logout-url 退出后验证url  logout-success-url 退出后跳转页面 -->
 	<!-- 	<logout logout-url="/logout"    logout-success-url="http://124.202.152.34:8081/sso/logout" /> -->
 		<!-- 测试test -->
-		<logout logout-url="/logout"    logout-success-url="http://124.193.221.90:9991/sso/logout" />
-		<!-- <logout logout-url="/logout"    logout-success-url="http://localhost:8080/sso/logout" /> -->
+		<!-- <logout logout-url="/logout"    logout-success-url="http://124.193.221.90:9991/sso/logout" /> -->
+		<logout logout-url="/logout"    logout-success-url="http://localhost:8080/sso/logout" />
 		<!-- 1、注释此过滤器，不再验证是否有访问权限(访问所有资源不再判断是否具有权限)
 			 2、注释此过滤器，并更改max-sessions="9999",可用一个账号登陆9999次,并且不再验证是否有访问权限(访问所有资源不再判断是否具有权限) -->
 		 <custom-filter  ref="casAuthenticationFilter" position="CAS_FILTER"/>
@@ -92,8 +92,8 @@
 			<beans:bean class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
 <!-- 			<beans:constructor-arg index="0" value="http://124.202.152.34:8081/sso" />  -->
 			<!-- 测试test -->
-			<beans:constructor-arg index="0" value="http://124.193.221.90:9991/sso" /> 
-			<!-- <beans:constructor-arg index="0" value="http://localhost:8080/sso" />  -->
+			<!-- <beans:constructor-arg index="0" value="http://124.193.221.90:9991/sso" />  -->
+			<beans:constructor-arg index="0" value="http://localhost:8080/sso" /> 
 			</beans:bean>
 		</beans:property>
 		<beans:property name="key" value="cas"></beans:property>
@@ -101,15 +101,15 @@
 	<beans:bean id="serviceProperties" class="org.springframework.security.cas.ServiceProperties">
 	<!-- 	<beans:property name="service" value="http://oc.ehaoyao.com/operation_center/j_spring_cas_security_check"></beans:property> -->
 			<!-- 测试test -->
-		<beans:property name="service" value="http://124.193.221.90:9991/operation_center/j_spring_cas_security_check"></beans:property>
-		<!-- <beans:property name="service" value="http://localhost:8080/operation_center/j_spring_cas_security_check"></beans:property> -->
+		<!-- <beans:property name="service" value="http://124.193.221.90:9991/operation_center/j_spring_cas_security_check"></beans:property> -->
+		<beans:property name="service" value="http://localhost:8080/operation_center/j_spring_cas_security_check"></beans:property>
 		<beans:property name="sendRenew" value="false"></beans:property>
 	</beans:bean>
 	<beans:bean id="casAuthenticationEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
 		<!-- <beans:property name="loginUrl" value="http://124.202.152.34:8081/sso/login"></beans:property>  -->
 		<!-- 测试test -->
-		<beans:property name="loginUrl" value="http://124.193.221.90:9991/sso/login"></beans:property> 
-		<!-- <beans:property name="loginUrl" value="http://localhost:8080/sso/login"></beans:property>  -->
+		<!-- <beans:property name="loginUrl" value="http://124.193.221.90:9991/sso/login"></beans:property>  -->
+		<beans:property name="loginUrl" value="http://localhost:8080/sso/login"></beans:property> 
 		<beans:property name="serviceProperties" ref="serviceProperties"></beans:property>
 	</beans:bean>
 

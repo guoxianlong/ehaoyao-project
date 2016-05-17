@@ -75,6 +75,16 @@ public class OrderMainInfo {
      */
     private String doctorAuditDescription;
     
+    /**
+     * 客服驳回类型
+     */
+    private String kfRejectType;
+    
+    /**
+     * 药师驳回类型
+     */
+    private String doctorRejectType;
+    
     /*********************************************订单表 **************************************************/
     
     
@@ -485,6 +495,23 @@ public class OrderMainInfo {
 
 	public void setDoctorAuditDescription(String doctorAuditDescription) {
 		this.doctorAuditDescription = doctorAuditDescription;
+	}
+	
+
+	public String getKfRejectType() {
+		return kfRejectType;
+	}
+
+	public void setKfRejectType(String kfRejectType) {
+		this.kfRejectType = kfRejectType;
+	}
+
+	public String getDoctorRejectType() {
+		return doctorRejectType;
+	}
+
+	public void setDoctorRejectType(String doctorRejectType) {
+		this.doctorRejectType = doctorRejectType;
 	}
 
 	public Long getOrderId() {

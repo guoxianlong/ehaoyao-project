@@ -29,6 +29,10 @@ public class OrderAuditLog implements java.io.Serializable {
 	private String auditDescription;
     private String remark;
 	private String createTime;
+	/**
+	 * 驳回类型  F1E(配送不到) F1F(价格贵) F1G(顾客买错) F1H(无货) F1I(无处方单) F1J(价格错误) F1K(文描错误) F1L(电话不通) F1M(付款方式)
+	 */
+	private String rejectType;
 
 	public OrderAuditLog() {
 	}
@@ -122,5 +126,16 @@ public class OrderAuditLog implements java.io.Serializable {
 	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
 	}
+	
+	@Column(name = "reject_type", length = 10)
+	public String getRejectType() {
+		return rejectType;
+	}
+
+	public void setRejectType(String rejectType) {
+		this.rejectType = rejectType;
+	}
+	
+	
 
 }

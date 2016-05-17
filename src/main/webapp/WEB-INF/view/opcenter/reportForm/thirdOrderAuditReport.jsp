@@ -40,7 +40,6 @@
 		<script src="<%=request.getContextPath()%>/js/bootstrap/jquery.mCustomScrollbar.concat.min.js" ></script>
 		<script src="<%=request.getContextPath()%>/js/bootstrap/bootstrap-lightbox.min.js"></script>
 		<script src="<%=request.getContextPath()%>/js/opcenter/thirdOrderAuditReport/thirdOrderAuditReport.js"></script>
-		
 	</head>
 	
 	<body style="min-height: 680px;">
@@ -86,7 +85,20 @@
 				      <option value="RETURN" ${vo.auditStatus=='RETURN'?"selected":''} >药师审核驳回</option>
 				    <!-- </optgroup> -->
 				  </select>
-				<br>
+				  <br>
+			    <label><span>驳回类型:</span></label>
+				<select id="kfRejectSelectForm" name="rejectType" class="selectpicker" style="width: 129px !important;margin-top: 20px;" data-hide-disabled="true" data-live-search="false">
+				      <option value="-1" ${vo.rejectType==''?"selected":''}  >请选择</option>
+				      <option value="F1E" ${vo.rejectType=='F1E'?"selected":''}>配送不到</option>
+				      <option value="F1F" ${vo.rejectType=='F1F'?"selected":''}>价格贵</option>
+				      <option value="F1G" ${vo.rejectType=='F1G'?"selected":''}>顾客买错</option>
+				      <option value="F1H" ${vo.rejectType=='F1H'?"selected":''}>无货</option>
+				      <option value="F1I" ${vo.rejectType=='F1I'?"selected":''}>无处方单</option>
+				      <option value="F1J" ${vo.rejectType=='F1J'?"selected":''}>价格错误</option>
+				      <option value="F1K" ${vo.rejectType=='F1K'?"selected":''}>文描错误</option>
+				      <option value="F1L" ${vo.rejectType=='F1L'?"selected":''}>电话不通</option>
+				      <option value="F1M" ${vo.rejectType=='F1M'?"selected":''}>付款方式</option>
+				  </select>
 				<button id="exportBtn" class="button" type="button" >导出</button>
 				<button id="queryBtn" class="button" type="button" >查询</button>
 			</fieldset>
@@ -117,9 +129,11 @@
 				 			<th>备注</th>
 				 			<th class="sortTh" id="kf_audit_user">一级审核人</th>
 				 			<th class="sortTh" id="kf_audit_time">一级审核时间</th>
+				 			<th>一级审核驳回类型</th>
 				 			<th>一级审核说明</th>
 				 			<th class="sortTh" id="doctor_audit_user">二级审核人</th>
 				 			<th class="sortTh" id="doctor_audit_time">二级审核时间</th>
+				 			<th>二级审核驳回类型</th>
 				 			<th>二级审核说明</th>
 		 				</tr>
 		 			</thead>
@@ -175,15 +189,37 @@
 									<td style="vertical-align: middle;">${items.remark}</td>
 									<td style="vertical-align: middle;">${items.kfAuditUser}</td>
 									<td style="vertical-align: middle;">${items.kfAuditTime}</td>
+									<td style="vertical-align: middle;">
+										<c:if test="${items.kfRejectType == 'F1E'}">配送不到</c:if>
+										<c:if test="${items.kfRejectType == 'F1F'}">价格贵</c:if> 
+										<c:if test="${items.kfRejectType == 'F1G'}">顾客买错</c:if> 
+										<c:if test="${items.kfRejectType == 'F1H'}">无货</c:if> 
+										<c:if test="${items.kfRejectType == 'F1I'}">无处方单</c:if> 
+										<c:if test="${items.kfRejectType == 'F1J'}">价格错误</c:if> 
+										<c:if test="${items.kfRejectType == 'F1K'}">文描错误</c:if> 
+										<c:if test="${items.kfRejectType == 'F1L'}">电话不通</c:if>
+										<c:if test="${items.kfRejectType == 'F1M'}">付款方式</c:if>
+									</td>
 									<td style="vertical-align: middle;">${items.kfAuditDescription}</td>
 									<td style="vertical-align: middle;">${items.doctorAuditUser}</td>
 									<td style="vertical-align: middle;">${items.doctorAuditTime}</td>
+									<td style="vertical-align: middle;">
+										<c:if test="${items.doctorRejectType == 'F1E'}">配送不到</c:if>
+										<c:if test="${items.doctorRejectType == 'F1F'}">价格贵</c:if> 
+										<c:if test="${items.doctorRejectType == 'F1G'}">顾客买错</c:if> 
+										<c:if test="${items.doctorRejectType == 'F1H'}">无货</c:if> 
+										<c:if test="${items.doctorRejectType == 'F1I'}">无处方单</c:if> 
+										<c:if test="${items.doctorRejectType == 'F1J'}">价格错误</c:if> 
+										<c:if test="${items.doctorRejectType == 'F1K'}">文描错误</c:if> 
+										<c:if test="${items.doctorRejectType == 'F1L'}">电话不通</c:if>
+										<c:if test="${items.doctorRejectType == 'F1M'}">付款方式</c:if>  
+									</td>
 									<td style="vertical-align: middle;">${items.doctorAuditDescription}</td>
 								</tr>
 							</c:forEach>
 						</c:if>
 						<c:if test="${orderList == null or fn:length(orderList)<=0}">
-						    <tr><th colspan="23" style="background-color:#ccc;font-size: 14px;color: #fa0;">暂无数据...</th></tr>
+						    <tr><th colspan="25" style="background-color:#ccc;font-size: 14px;color: #fa0;">暂无数据...</th></tr>
 						</c:if>
 					</tbody>
 		 		</table>

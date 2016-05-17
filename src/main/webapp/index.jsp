@@ -110,9 +110,9 @@
 											<sec:authorize ifAnyGranted="/callerScreen2.do,/callerScreen2.do?method=goOfficialOrder">
 												<div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span> <a href="<%=request.getContextPath()%>/callerScreen2.do?method=goOfficialOrder" target="right">官网订单管理</a></div>
 											</sec:authorize>
-											<sec:authorize ifAnyGranted="/auditPAOrder.do,/auditPAOrder.do?method=goPAOrder">
+											<%-- <sec:authorize ifAnyGranted="/auditPAOrder.do,/auditPAOrder.do?method=goPAOrder">
 												<div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span> <a href="<%=request.getContextPath()%>/auditPAOrder.do?method=goPAOrder" target="right">三方平台订单审核</a></div>
-											</sec:authorize>
+											</sec:authorize> --%>
 											<sec:authorize ifAnyGranted="/orderInfo.do,/orderInfo.do?method=getInfo">
 												<script type="text/javascript" src="<%=request.getContextPath()%>/js/opcenter/jsdMsg.js"></script>
 												<div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span> <a href="<%=request.getContextPath()%>/orderInfo.do?method=getInfo" target="right">极速达订单</a></div>
@@ -129,19 +129,19 @@
 											<sec:authorize ifAnyGranted="/thirdOrderSecondAudit.do,/thirdOrderSecondAudit.do?method=showOrderInfos">
 												<div class="left_menu_a" ><span class="glyphicon glyphicon-play small"></span> <a href="<%=request.getContextPath()%>/thirdOrderSecondAudit.do?method=showOrderInfos" target="right">药师二级审核</a></div>
 											</sec:authorize>
-											<sec:authorize ifAnyGranted="/decoctOrder.do,/decoctOrder.do?method=showOrderInfos">
+											<%-- <sec:authorize ifAnyGranted="/decoctOrder.do,/decoctOrder.do?method=showOrderInfos">
 												<div class="left_menu_a" ><span class="glyphicon glyphicon-play small"></span> <a href="<%=request.getContextPath()%>/decoctOrder.do?method=showOrderInfos" target="right">煎药处订单管理</a></div>
-											</sec:authorize>
+											</sec:authorize> --%>
 											
 											<sec:authorize ifAnyGranted="/payOrder.do,/payOrder.do?method=showOrderPay">
 												<div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span> <a href="<%=request.getContextPath()%>/payOrder.do?method=showOrderPay" target="right">订单查询</a></div>
 											</sec:authorize>
-											<sec:authorize ifAnyGranted="/CMOrderAudit.do,/CMOrderAudit.do?method=showOrderInfos">
+											<%-- <sec:authorize ifAnyGranted="/CMOrderAudit.do,/CMOrderAudit.do?method=showOrderInfos">
 												<div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span> <a href="<%=request.getContextPath()%>/CMOrderAudit.do?method=showOrderInfos" target="right">中药订单审核管理</a></div>
 											</sec:authorize>
 											<sec:authorize ifAnyGranted="/CMReplaceOrder.do,/CMReplaceOrder.do?method=showOrderInfos">
 												<div class="left_menu_a"><span class="glyphicon glyphicon-play small"></span> <a href="<%=request.getContextPath()%>/CMReplaceOrder.do?method=showOrderInfos" target="right">中药代下单管理</a></div>
-											</sec:authorize>
+											</sec:authorize> --%>
 											<div class="clears"></div>
 										</div>
 									</li>

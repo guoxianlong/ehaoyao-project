@@ -50,66 +50,7 @@ public class ThirdOrderSecondAuditDaoImpl implements IThirdOrderSecondAuditDao {
 	@Override
 	public List<OrderMainInfo> getOrderInfos(PageModel<OrderMainInfo> pm, ThirdOrderAuditVO vo) throws Exception{
 		StringBuffer sql = new StringBuffer();
-		sql.append(" SELECT ( CASE WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_WAIT
-				+ "' THEN 1 WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_PRESUCC
-				+ "' THEN 2 WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_PRERETURN
-				+ "' THEN 3 WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_SUCC
-				+ "' THEN 4 WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_RETURN + "' THEN 5 END) AS seqno,"
-				+ " (CASE WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_WAIT
-				+ "' THEN '' WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_PRESUCC + "' || g.audit_status = '"
-				+ OrderInfo.ORDER_AUDIT_STATUS_PRERETURN + "' THEN g.audit_user  " + " WHEN g.audit_status = '"
-				+ OrderInfo.ORDER_AUDIT_STATUS_SUCC + "' ||g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_RETURN
-				+ "' THEN (select gg.audit_user from order_audit_log gg where gg.order_number=g.order_number and gg.order_flag=g.order_flag "
-				+ " and gg.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_PRESUCC
-				+ "' order by gg.create_time desc limit 1 ) END ) AS kf_audit_user," + " (CASE WHEN g.audit_status = '"
-				+ OrderInfo.ORDER_AUDIT_STATUS_WAIT + "' THEN '' WHEN g.audit_status = '"
-				+ OrderInfo.ORDER_AUDIT_STATUS_PRESUCC + "' || g.audit_status = '"
-				+ OrderInfo.ORDER_AUDIT_STATUS_PRERETURN + "' THEN g.create_time " + " WHEN g.audit_status = '"
-				+ OrderInfo.ORDER_AUDIT_STATUS_SUCC + "' ||g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_RETURN
-				+ "' THEN (select gg.create_time from order_audit_log gg where gg.order_number=g.order_number and gg.order_flag=g.order_flag "
-				+ "  and gg.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_PRESUCC
-				+ "' order by gg.create_time desc limit 1 )  END ) AS kf_audit_time," + " (CASE WHEN g.audit_status = '"
-				+ OrderInfo.ORDER_AUDIT_STATUS_WAIT + "' THEN '' WHEN g.audit_status = '"
-				+ OrderInfo.ORDER_AUDIT_STATUS_PRESUCC + "' || g.audit_status = '"
-				+ OrderInfo.ORDER_AUDIT_STATUS_PRERETURN + "' THEN g.audit_description " + " WHEN g.audit_status = '"
-				+ OrderInfo.ORDER_AUDIT_STATUS_SUCC + "' ||g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_RETURN
-				+ "' THEN "
-				+ " (select gg.audit_description from order_audit_log gg where gg.order_number=g.order_number and gg.order_flag=g.order_flag  and gg.audit_status = '"
-				+ OrderInfo.ORDER_AUDIT_STATUS_PRESUCC
-				+ "' order by gg.create_time desc limit 1 ) END ) AS kf_audit_description,"
-				+ " (CASE WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_WAIT + "'  || g.audit_status = '"
-				+ OrderInfo.ORDER_AUDIT_STATUS_PRESUCC + "' || g.audit_status = '"
-				+ OrderInfo.ORDER_AUDIT_STATUS_PRERETURN + "' THEN '' WHEN g.audit_status = '"
-				+ OrderInfo.ORDER_AUDIT_STATUS_SUCC + "' ||g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_RETURN
-				+ "' THEN g.audit_user END ) AS doctor_audit_user," + " (CASE WHEN g.audit_status = '"
-				+ OrderInfo.ORDER_AUDIT_STATUS_WAIT + "' || g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_PRESUCC
-				+ "' || g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_PRERETURN
-				+ "' THEN '' WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_SUCC + "' ||g.audit_status = '"
-				+ OrderInfo.ORDER_AUDIT_STATUS_RETURN + "' THEN g.create_time END ) AS doctor_audit_time,"
-				+ " (CASE WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_WAIT + "' || g.audit_status = '"
-				+ OrderInfo.ORDER_AUDIT_STATUS_PRESUCC + "' || g.audit_status = '"
-				+ OrderInfo.ORDER_AUDIT_STATUS_PRERETURN + "' THEN '' WHEN g.audit_status = '"
-				+ OrderInfo.ORDER_AUDIT_STATUS_SUCC + "' ||g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_RETURN
-				+ "' THEN g.audit_description END ) AS doctor_audit_description, "
-				+ "g.order_audit_log_id, g.order_number, g.order_flag, g.kf_account, g.audit_user, g.audit_status,"
-				+ "g.audit_description, g.create_time,"
-				+ "f.order_id, f.order_number as info_order_number, f.order_flag as info_order_flag, f.user_id, f.user_code, f.nick_name, "
-				+ "f.user_name, f.prescription_type,f.order_status, f.audit_status as info_audit_status,f.invoice_status, f.pay_status, "
-				+ "f.order_type, f.pay_type, f.order_time, f.receiver,f.patient_name, f.sex, f.age, f.pregnant_flag, f.decoct_flag, "
-				+ "f.dose, f.small_pic_link, f.big_pic_link,f.payment_time, f.delivery_date, f.hospital_presc_date, f.address_detail, "
-				+ "f.mobile, f.telephone,f.province, f.city, f.area, f.country, f.price, f.order_price, f.discount_amount, f.over_return_free, f.express_price, "
-				+ "f.plat_pay_price, f.instructions, f.remark, f.fee_type, f.last_time, f.create_time as info_create_time,"
-				+ "i.invoice_id, i.order_number as invoice_order_number, i.order_flag as invoice_order_flag, i.invoice_type,i.invoice_title, "
-				+ "i.invoice_content,i.remark as invoice_remark, i.create_time as invoice_create_time "
-				+ " FROM ((order_audit_log g JOIN order_info f ON g.order_number = f.order_number AND g.order_flag = f.order_flag )  "
-				+ " left join (select o.* from invoice_info o join "
-				+ " (select v.order_number,v.order_flag,max(v.create_time) as create_time from invoice_info v group by v.order_number,v.order_flag) d "
-				+ " on o.order_number=d.order_number and o.order_flag=d.order_flag and o.create_time=d.create_time ) i "
-				+ " on i.order_number=g.order_number and i.order_flag=g.order_flag)"
-				+ " JOIN ( SELECT g.order_number, g.order_flag, max(g.create_time) AS create_time FROM order_audit_log g"
-				+ " GROUP BY g.order_number, g.order_flag ) k ON g.order_number = k.order_number"
-				+ " AND g.order_flag = k.order_flag AND g.create_time = k.create_time  "
-				+ " WHERE f.prescription_type='1' and g.audit_status in ('"+OrderInfo.ORDER_AUDIT_STATUS_PRESUCC+"','"+OrderInfo.ORDER_AUDIT_STATUS_SUCC+"','"+OrderInfo.ORDER_AUDIT_STATUS_RETURN+"')");
+		sql.append(commonSql()+" and g.audit_status in ('"+OrderInfo.ORDER_AUDIT_STATUS_PRESUCC+"','"+OrderInfo.ORDER_AUDIT_STATUS_SUCC+"','"+OrderInfo.ORDER_AUDIT_STATUS_RETURN+"')");
 		List<OrderMainInfo> list = null;
 		sql.append(getOrderDataSql(vo));
 		if(vo.getOrderBy()!=null&&vo.getOrderBy().trim().length()>0&&vo.getSort()!=null&&vo.getSort().trim().length()>0){
@@ -282,8 +223,8 @@ public class ThirdOrderSecondAuditDaoImpl implements IThirdOrderSecondAuditDao {
 	@Override
 	public Object addOrderAuditLogBatch(final List<OrderAuditLog> orderAuditLogList) throws Exception {
 		String sql = "INSERT INTO order_audit_log "
-				+ "(order_number, order_flag, kf_account, audit_user, audit_status, audit_description, create_time) VALUES"
-				+ " (?,?,?,?,?,?,?) ";
+				+ "(order_number, order_flag, kf_account, audit_user, audit_status, audit_description, create_time, reject_type) VALUES"
+				+ " (?,?,?,?,?,?,?,?) ";
 		return jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			
 			@Override
@@ -297,6 +238,7 @@ public class ThirdOrderSecondAuditDaoImpl implements IThirdOrderSecondAuditDao {
 				ps.setString(j++, orderAuditLog.getAuditStatus());
 				ps.setString(j++, orderAuditLog.getAuditDescription());
 				ps.setString(j++, orderAuditLog.getCreateTime());
+				ps.setString(j++, orderAuditLog.getRejectType());
 			}
 			
 			@Override
@@ -311,66 +253,7 @@ public class ThirdOrderSecondAuditDaoImpl implements IThirdOrderSecondAuditDao {
 	public OrderMainInfo getOrderMainInfo(ThirdOrderAuditVO vo) throws Exception {
 		OrderMainInfo orderMainInfo = null;
 		StringBuffer sql = new StringBuffer();
-				sql.append(" SELECT ( CASE WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_WAIT
-						+ "' THEN 1 WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_PRESUCC
-						+ "' THEN 2 WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_PRERETURN
-						+ "' THEN 3 WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_SUCC
-						+ "' THEN 4 WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_RETURN + "' THEN 5 END) AS seqno,"
-						+ " (CASE WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_WAIT
-						+ "' THEN '' WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_PRESUCC + "' || g.audit_status = '"
-						+ OrderInfo.ORDER_AUDIT_STATUS_PRERETURN + "' THEN g.audit_user  " + " WHEN g.audit_status = '"
-						+ OrderInfo.ORDER_AUDIT_STATUS_SUCC + "' ||g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_RETURN
-						+ "' THEN (select gg.audit_user from order_audit_log gg where gg.order_number=g.order_number and gg.order_flag=g.order_flag "
-						+ " and gg.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_PRESUCC
-						+ "' order by gg.create_time desc limit 1 ) END ) AS kf_audit_user," + " (CASE WHEN g.audit_status = '"
-						+ OrderInfo.ORDER_AUDIT_STATUS_WAIT + "' THEN '' WHEN g.audit_status = '"
-						+ OrderInfo.ORDER_AUDIT_STATUS_PRESUCC + "' || g.audit_status = '"
-						+ OrderInfo.ORDER_AUDIT_STATUS_PRERETURN + "' THEN g.create_time " + " WHEN g.audit_status = '"
-						+ OrderInfo.ORDER_AUDIT_STATUS_SUCC + "' ||g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_RETURN
-						+ "' THEN (select gg.create_time from order_audit_log gg where gg.order_number=g.order_number and gg.order_flag=g.order_flag "
-						+ "  and gg.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_PRESUCC
-						+ "' order by gg.create_time desc limit 1 )  END ) AS kf_audit_time," + " (CASE WHEN g.audit_status = '"
-						+ OrderInfo.ORDER_AUDIT_STATUS_WAIT + "' THEN '' WHEN g.audit_status = '"
-						+ OrderInfo.ORDER_AUDIT_STATUS_PRESUCC + "' || g.audit_status = '"
-						+ OrderInfo.ORDER_AUDIT_STATUS_PRERETURN + "' THEN g.audit_description " + " WHEN g.audit_status = '"
-						+ OrderInfo.ORDER_AUDIT_STATUS_SUCC + "' ||g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_RETURN
-						+ "' THEN "
-						+ " (select gg.audit_description from order_audit_log gg where gg.order_number=g.order_number and gg.order_flag=g.order_flag  and gg.audit_status = '"
-						+ OrderInfo.ORDER_AUDIT_STATUS_PRESUCC
-						+ "' order by gg.create_time desc limit 1 ) END ) AS kf_audit_description,"
-						+ " (CASE WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_WAIT + "'  || g.audit_status = '"
-						+ OrderInfo.ORDER_AUDIT_STATUS_PRESUCC + "' || g.audit_status = '"
-						+ OrderInfo.ORDER_AUDIT_STATUS_PRERETURN + "' THEN '' WHEN g.audit_status = '"
-						+ OrderInfo.ORDER_AUDIT_STATUS_SUCC + "' ||g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_RETURN
-						+ "' THEN g.audit_user END ) AS doctor_audit_user," + " (CASE WHEN g.audit_status = '"
-						+ OrderInfo.ORDER_AUDIT_STATUS_WAIT + "' || g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_PRESUCC
-						+ "' || g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_PRERETURN
-						+ "' THEN '' WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_SUCC + "' ||g.audit_status = '"
-						+ OrderInfo.ORDER_AUDIT_STATUS_RETURN + "' THEN g.create_time END ) AS doctor_audit_time,"
-						+ " (CASE WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_WAIT + "' || g.audit_status = '"
-						+ OrderInfo.ORDER_AUDIT_STATUS_PRESUCC + "' || g.audit_status = '"
-						+ OrderInfo.ORDER_AUDIT_STATUS_PRERETURN + "' THEN '' WHEN g.audit_status = '"
-						+ OrderInfo.ORDER_AUDIT_STATUS_SUCC + "' ||g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_RETURN
-						+ "' THEN g.audit_description END ) AS doctor_audit_description, "
-						+ "g.order_audit_log_id, g.order_number, g.order_flag, g.kf_account, g.audit_user, g.audit_status,"
-						+ "g.audit_description, g.create_time,"
-						+ "f.order_id, f.order_number as info_order_number, f.order_flag as info_order_flag, f.user_id, f.user_code, f.nick_name, "
-						+ "f.user_name, f.prescription_type,f.order_status, f.audit_status as info_audit_status,f.invoice_status, f.pay_status, "
-						+ "f.order_type, f.pay_type, f.order_time, f.receiver,f.patient_name, f.sex, f.age, f.pregnant_flag, f.decoct_flag, "
-						+ "f.dose, f.small_pic_link, f.big_pic_link,f.payment_time, f.delivery_date, f.hospital_presc_date, f.address_detail, "
-						+ "f.mobile, f.telephone,f.province, f.city, f.area, f.country, f.price, f.order_price, f.discount_amount, f.over_return_free, f.express_price, "
-						+ "f.plat_pay_price, f.instructions, f.remark, f.fee_type, f.last_time, f.create_time as info_create_time,"
-						+ "i.invoice_id, i.order_number as invoice_order_number, i.order_flag as invoice_order_flag, i.invoice_type,i.invoice_title, "
-						+ "i.invoice_content,i.remark as invoice_remark, i.create_time as invoice_create_time "
-						+ " FROM ((order_audit_log g JOIN order_info f ON g.order_number = f.order_number AND g.order_flag = f.order_flag )  "
-						+ " left join (select o.* from invoice_info o join "
-						+ " (select v.order_number,v.order_flag,max(v.create_time) as create_time from invoice_info v group by v.order_number,v.order_flag) d "
-						+ " on o.order_number=d.order_number and o.order_flag=d.order_flag and o.create_time=d.create_time ) i "
-						+ " on i.order_number=g.order_number and i.order_flag=g.order_flag)"
-						+ " JOIN ( SELECT g.order_number, g.order_flag, max(g.create_time) AS create_time FROM order_audit_log g"
-						+ " GROUP BY g.order_number, g.order_flag ) k ON g.order_number = k.order_number"
-						+ " AND g.order_flag = k.order_flag AND g.create_time = k.create_time  "
-						+ " WHERE f.prescription_type='1' and g.audit_status in ('"+OrderInfo.ORDER_AUDIT_STATUS_PRESUCC+"','"+OrderInfo.ORDER_AUDIT_STATUS_SUCC+"','"+OrderInfo.ORDER_AUDIT_STATUS_RETURN+"') ");
+				sql.append(commonSql()+" and g.audit_status in ('"+OrderInfo.ORDER_AUDIT_STATUS_PRESUCC+"','"+OrderInfo.ORDER_AUDIT_STATUS_SUCC+"','"+OrderInfo.ORDER_AUDIT_STATUS_RETURN+"') ");
 		String orderNumber = vo.getOrderNumber()!=null && vo.getOrderNumber().length()>0 ? vo.getOrderNumber().trim() : "";
 		String orderFlag = vo.getOrderFlag()!=null && vo.getOrderFlag().length()>0 ? vo.getOrderFlag().trim() : "";
 		if(orderNumber.length()>0 && orderFlag.length()>0){
@@ -409,5 +292,75 @@ public class ThirdOrderSecondAuditDaoImpl implements IThirdOrderSecondAuditDao {
 			}
 		}
 		return flag;
+	}
+	
+	
+	
+	public String commonSql(){
+		return " SELECT ( CASE WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_WAIT
+				+ "' THEN 1 WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_PRESUCC
+				+ "' THEN 2 WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_PRERETURN
+				+ "' THEN 3 WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_SUCC
+				+ "' THEN 4 WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_RETURN + "' THEN 5 END) AS seqno,"
+				+ " (CASE WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_WAIT
+				+ "' THEN '' WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_PRESUCC + "' || g.audit_status = '"
+				+ OrderInfo.ORDER_AUDIT_STATUS_PRERETURN + "' THEN g.audit_user  " + " WHEN g.audit_status = '"
+				+ OrderInfo.ORDER_AUDIT_STATUS_SUCC + "' ||g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_RETURN
+				+ "' THEN (select gg.audit_user from order_audit_log gg where gg.order_number=g.order_number and gg.order_flag=g.order_flag "
+				+ " and gg.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_PRESUCC
+				+ "' order by gg.create_time desc limit 1 ) END ) AS kf_audit_user," + " (CASE WHEN g.audit_status = '"
+				+ OrderInfo.ORDER_AUDIT_STATUS_WAIT + "' THEN '' WHEN g.audit_status = '"
+				+ OrderInfo.ORDER_AUDIT_STATUS_PRESUCC + "' || g.audit_status = '"
+				+ OrderInfo.ORDER_AUDIT_STATUS_PRERETURN + "' THEN g.create_time " + " WHEN g.audit_status = '"
+				+ OrderInfo.ORDER_AUDIT_STATUS_SUCC + "' ||g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_RETURN
+				+ "' THEN (select gg.create_time from order_audit_log gg where gg.order_number=g.order_number and gg.order_flag=g.order_flag "
+				+ "  and gg.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_PRESUCC
+				+ "' order by gg.create_time desc limit 1 )  END ) AS kf_audit_time," + " (CASE WHEN g.audit_status = '"
+				+ OrderInfo.ORDER_AUDIT_STATUS_WAIT + "' THEN '' WHEN g.audit_status = '"
+				+ OrderInfo.ORDER_AUDIT_STATUS_PRESUCC + "' || g.audit_status = '"
+				+ OrderInfo.ORDER_AUDIT_STATUS_PRERETURN + "' THEN g.audit_description " + " WHEN g.audit_status = '"
+				+ OrderInfo.ORDER_AUDIT_STATUS_SUCC + "' ||g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_RETURN
+				+ "' THEN "
+				+ " (select gg.audit_description from order_audit_log gg where gg.order_number=g.order_number and gg.order_flag=g.order_flag  and gg.audit_status = '"
+				+ OrderInfo.ORDER_AUDIT_STATUS_PRESUCC
+				+ "' order by gg.create_time desc limit 1 ) END ) AS kf_audit_description,"
+				+ "(CASE WHEN g.audit_status = 'PRERETURN' THEN g.reject_type END ) AS kf_reject_type,"
+				+ " (CASE WHEN g.audit_status = '"+ OrderInfo.ORDER_AUDIT_STATUS_PRERETURN + "' THEN "
+				+ "(SELECT gg.audit_user FROM order_audit_log gg WHERE gg.order_number = g.order_number AND gg.order_flag = g.order_flag"
+				+ " AND gg.audit_status = '"+OrderInfo.ORDER_AUDIT_STATUS_RETURN+"' ORDER BY gg.create_time DESC LIMIT 1 ) "
+				+ " WHEN g.audit_status = '"+ OrderInfo.ORDER_AUDIT_STATUS_SUCC + "' ||g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_RETURN
+				+ "' THEN g.audit_user END ) AS doctor_audit_user,"
+				+ " (CASE WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_PRERETURN+ "' THEN "
+				+ "(SELECT gg.create_time FROM order_audit_log gg WHERE gg.order_number = g.order_number AND gg.order_flag = g.order_flag"
+				+ " AND gg.audit_status = '"+OrderInfo.ORDER_AUDIT_STATUS_RETURN+"' ORDER BY gg.create_time DESC LIMIT 1 ) "
+				+ " WHEN g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_SUCC + "' ||g.audit_status = '"
+				+ OrderInfo.ORDER_AUDIT_STATUS_RETURN + "' THEN g.create_time END ) AS doctor_audit_time,"
+				+ " (CASE WHEN g.audit_status = '"+ OrderInfo.ORDER_AUDIT_STATUS_PRERETURN + "' THEN "
+				+ "(SELECT gg.audit_description FROM order_audit_log gg WHERE gg.order_number = g.order_number AND gg.order_flag = g.order_flag"
+				+ " AND gg.audit_status = '"+OrderInfo.ORDER_AUDIT_STATUS_RETURN+"' ORDER BY gg.create_time DESC LIMIT 1 ) "
+				+ " WHEN g.audit_status = '"+ OrderInfo.ORDER_AUDIT_STATUS_SUCC + "' ||g.audit_status = '" + OrderInfo.ORDER_AUDIT_STATUS_RETURN
+				+ "' THEN g.audit_description END ) AS doctor_audit_description, "
+				+ " (CASE WHEN g.audit_status = 'PRERETURN' THEN ( SELECT gg.reject_type FROM order_audit_log gg WHERE gg.order_number = g.order_number"
+				+ " AND gg.order_flag = g.order_flag AND gg.audit_status = 'RETURN' ORDER BY gg.create_time DESC LIMIT 1)"
+				+ " WHEN g.audit_status = 'RETURN' THEN g.reject_type END ) AS doctor_reject_type,"
+				+ "g.order_audit_log_id, g.order_number, g.order_flag, g.kf_account, g.audit_user, g.audit_status,"
+				+ "g.audit_description, g.create_time,"
+				+ "f.order_id, f.order_number as info_order_number, f.order_flag as info_order_flag, f.user_id, f.user_code, f.nick_name, "
+				+ "f.user_name, f.prescription_type,f.order_status, f.audit_status as info_audit_status,f.invoice_status, f.pay_status, "
+				+ "f.order_type, f.pay_type, f.order_time, f.receiver,f.patient_name, f.sex, f.age, f.pregnant_flag, f.decoct_flag, "
+				+ "f.dose, f.small_pic_link, f.big_pic_link,f.payment_time, f.delivery_date, f.hospital_presc_date, f.address_detail, "
+				+ "f.mobile, f.telephone,f.province, f.city, f.area, f.country, f.price, f.order_price, f.discount_amount, f.over_return_free, f.express_price, "
+				+ "f.plat_pay_price, f.instructions, f.remark, f.fee_type, f.last_time, f.create_time as info_create_time,"
+				+ "i.invoice_id, i.order_number as invoice_order_number, i.order_flag as invoice_order_flag, i.invoice_type,i.invoice_title, "
+				+ "i.invoice_content,i.remark as invoice_remark, i.create_time as invoice_create_time "
+				+ " FROM ((order_audit_log g JOIN order_info f ON g.order_number = f.order_number AND g.order_flag = f.order_flag )  "
+				+ " left join (select o.* from invoice_info o join "
+				+ " (select v.order_number,v.order_flag,max(v.create_time) as create_time from invoice_info v group by v.order_number,v.order_flag) d "
+				+ " on o.order_number=d.order_number and o.order_flag=d.order_flag and o.create_time=d.create_time ) i "
+				+ " on i.order_number=g.order_number and i.order_flag=g.order_flag)"
+				+ " JOIN ( SELECT g.order_number, g.order_flag, max(g.create_time) AS create_time FROM order_audit_log g"
+				+ " GROUP BY g.order_number, g.order_flag ) k ON g.order_number = k.order_number"
+				+ " AND g.order_flag = k.order_flag AND g.create_time = k.create_time  "
+				+ " WHERE f.prescription_type='1' ";
 	}
 }

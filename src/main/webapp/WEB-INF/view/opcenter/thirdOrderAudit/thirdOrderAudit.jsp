@@ -226,7 +226,7 @@
 				</div>
 					<div class="modal-body" style="10px">
 							<label class="label">订单号：<span id="orderNumberDetailPage"></span></label>
-							<label class="label" style="display: none;">渠道：<span id="orderFlagDetailPage"></span></label>
+							<label class="label" >渠道：<span id="orderFlagDetailPage"></span></label>
 							<label class="label">提交日期：<span id="orderTimeDetailPage"></span></label>
 							<label class="label">订单总金额：<span id="orderPriceDetailPage"></span></label>
 						<fieldset class="fieldset-small">
@@ -293,6 +293,21 @@
 								<span style="color: #66CC99;">✦✦✦✦✦客户订单备注✦✦✦✦✦</span>
 								<textarea class="form-control" style="margin-top: 5px;" id="kfRemarkDetailPage" name="remark" placeholder="录入并更改用户订单备注..." rows="1"></textarea>
 							</div>
+							<div class="form-group" style="margin:10px 0px 0px 3px;clear: both;" id="rejectTypeDiv">
+								<label><font style="color: #66CCFF;margin: 0px 10px;">驳回类型:</font></label>
+								<select id="kfRejectTypeSelect" name="rejectType" >
+								      <option value="-1"  >请选择</option>
+								      <option value="F1E" >配送不到</option>
+								      <option value="F1F">价格贵</option>
+								      <option value="F1G">顾客买错</option>
+								      <option value="F1H">无货</option>
+								      <option value="F1I">无处方单</option>
+								      <option value="F1J">价格错误</option>
+								      <option value="F1K">文描错误</option>
+								      <option value="F1L">电话不通</option>
+								      <option value="F1M">付款方式</option>
+								  </select>
+							</div>
 							<div class="form-group" style="margin:10px 0px 0px 3px;clear: both;">
 								<span style="color: #66CC99;">✦✦✦✦✦客服审核说明✦✦✦✦✦</span>
 								<textarea class="form-control" style="margin-top: 5px;" id="kfAuditDescriptionDetailPage" name="auditDescription" placeholder="请输入审核说明..." rows="2"></textarea>
@@ -301,6 +316,21 @@
 						
 						<fieldset class="fieldset-small" id="doctorFieldSet">
 							<legend class="legend-small">药师审核信息</legend>
+							<div class="form-group" style="margin:10px 0px 0px 3px;clear: both;">
+								<label><span style="color: #66CCFF;margin: 0px 10px;">驳回类型:</span></label>
+								<select id="doctorRejectTypeSelect" name="rejectTypeDoctor" >
+								      <option value="-1"  >请选择</option>
+								      <option value="F1E" >配送不到</option>
+								      <option value="F1F">价格贵</option>
+								      <option value="F1G">顾客买错</option>
+								      <option value="F1H">无货</option>
+								      <option value="F1I">无处方单</option>
+								      <option value="F1J">价格错误</option>
+								      <option value="F1K">文描错误</option>
+								      <option value="F1L">电话不通</option>
+								      <option value="F1M">付款方式</option>
+								  </select>
+							</div>
 							<div class="form-group" style="margin:10px 0px 0px 3px;clear: both;">
 								<span style="color: #66CC99;">✦✦✦✦✦药师审核说明✦✦✦✦✦</span>
 								<textarea class="form-control" style="margin-top: 5px;" id="doctorAuditDescriptionDetailPage" name="doctorAuditDescriptionDetailPage" placeholder="请输入审核说明..." rows="2"></textarea>

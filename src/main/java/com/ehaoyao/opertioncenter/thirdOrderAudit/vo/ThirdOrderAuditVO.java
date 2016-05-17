@@ -124,6 +124,11 @@ public class ThirdOrderAuditVO {
      * 备注
      */
     private String remark;
+    
+    /**
+	 * 驳回类型  F1E(配送不到) F1F(价格贵) F1G(顾客买错) F1H(无货) F1I(无处方单) F1J(价格错误) F1K(文描错误) F1L(电话不通) F1M(付款方式)
+	 */
+	private String rejectType;
 	
 
 	public int getSeq() {
@@ -340,8 +345,16 @@ public class ThirdOrderAuditVO {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-
 	
+	public String getRejectType() {
+		return rejectType;
+	}
+
+	public void setRejectType(String rejectType) {
+		this.rejectType = rejectType;
+	}
+
+
 	/**
      * 获取审核状态描述
      * @return
@@ -388,6 +401,40 @@ public class ThirdOrderAuditVO {
     		}
     	}
     	return prescriptionTypeDesc;
+    }
+	
+	public String getRejectTypeDesc(String rejectType){
+    	String rejectTypeDesc = null;
+    	if(rejectType!=null && rejectType.length()>0){
+    		if("F1E".equals(rejectType)){
+    			rejectTypeDesc = "配送不到";
+    		}
+    		if("F1F".equals(rejectType)){
+    			rejectTypeDesc = "价格贵";
+    		}
+    		if("F1G".equals(rejectType)){
+    			rejectTypeDesc = "顾客买错";
+    		}
+    		if("F1H".equals(rejectType)){
+    			rejectTypeDesc = "无货";
+    		}
+    		if("F1I".equals(rejectType)){
+    			rejectTypeDesc = "无处方单";
+    		}
+    		if("F1J".equals(rejectType)){
+    			rejectTypeDesc = "价格错误";
+    		}
+    		if("F1K".equals(rejectType)){
+    			rejectTypeDesc = "文描错误";
+    		}
+    		if("F1L".equals(rejectType)){
+    			rejectTypeDesc = "电话不通";
+    		}
+    		if("F1M".equals(rejectType)){
+    			rejectTypeDesc = "付款方式";
+    		}
+    	}
+    	return rejectTypeDesc;
     }
 
 	public String getOrderFlagDesc(String orderFlag) {

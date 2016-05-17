@@ -277,6 +277,7 @@ function getOrderDetailPage(orderNumber,orderFlag){
 				$("#succBtn").attr("disabled",true);
 				$("#retnBtn").attr("disabled",true);
 				$("#doctorAuditDescriptionDetailPage").attr("disabled",true);
+				$("#doctorRejectTypeSelect").attr("disabled",true);
 			}
 			
 			if(!orderMainInfo.secondAuditFlag){
@@ -289,7 +290,8 @@ function getOrderDetailPage(orderNumber,orderFlag){
 				$("#kfInvoiceTitleDetailPage").attr("disabled",true); 
 				$("#kfInvoiceContentDetailPage").attr("disabled",true);
 				$("#kfRemarkDetailPage").attr("disabled",true);
-				$("#kfAuditDescriptionDetailPage").attr("disabled",true); 
+				$("#kfAuditDescriptionDetailPage").attr("disabled",true);
+				$("#kfRejectTypeSelect").attr("disabled",true); 
 			}
 			
 			
@@ -323,6 +325,8 @@ function getOrderDetailPage(orderNumber,orderFlag){
 			$("#kfInvoiceContentDetailPage").val(orderMainInfo.invoiceContent);
 			$("#kfAuditDescriptionDetailPage").val(orderMainInfo.kfAuditDescription);
 			$("#kfRemarkDetailPage").val(orderMainInfo.remark);
+			$("#kfRejectTypeSelect option[value='"+(orderMainInfo.kfRejectType==undefined?'-1':orderMainInfo.kfRejectType)+"']").attr("selected",true);
+			$("#doctorRejectTypeSelect option[value='"+(orderMainInfo.doctorRejectType==undefined?'-1':orderMainInfo.doctorRejectType)+"']").attr("selected",true);
 					
 			if(orderMainInfo.invoiceStatus=="1"){
 				$("#kfInvoiceTypeLabel").show();
@@ -426,6 +430,7 @@ function auditFunc(flag){
 	var auditDescription =  $("#doctorAuditDescriptionDetailPage")[0].value;
 	var invoiceStatus =  $("#doctorInvoiceStatusDetailPage").val();
 	var invoiceTitle =  $("#doctorInvoiceTitleDetailPage").val();
+	var doctorRejectType = $("#doctorRejectTypeSelect").val();
 	
 	if(auditDescription.length>2000){
 		$.messager.alert("错误提示", "审核说明太长，请保持在2000字符以内！");
@@ -433,8 +438,8 @@ function auditFunc(flag){
 	}
 	if(flag=='RETURN'){
 		auditStatusDesc = '驳回';
-		if(auditDescription == ''){
-			$.messager.alert("错误提示", "请输入驳回原因！");
+		if(doctorRejectType == '-1'){
+			$.messager.alert("错误提示", "请选择驳回类型！");
 			return;
 		}
 	}
@@ -451,7 +456,8 @@ function auditFunc(flag){
 	        	orderFlag:orderFlag,
 	        	auditDescription:auditDescription,
 	        	invoiceStatus:invoiceStatus,
-	        	invoiceTitle:invoiceTitle
+	        	invoiceTitle:invoiceTitle,
+	        	rejectType:doctorRejectType
 	        	},
 	        success: function(data){
 	        	alert(data);
