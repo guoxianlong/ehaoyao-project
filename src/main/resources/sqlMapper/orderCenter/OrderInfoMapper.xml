@@ -49,7 +49,7 @@
     where id = #{id,jdbcType=BIGINT}
   </select>
   
-  <select id="selectByCondition" resultType="com.ehaoyao.cfy.model.ordercenter.OrderInfo" parameterType="com.ehaoyao.cfy.vo.operationcenter.OrderInfoVo">
+  <select id="selectByCondition" resultMap="BaseResultMap" parameterType="com.ehaoyao.cfy.vo.operationcenter.OrderInfoVo">
       select
      <include refid="Base_Column_List" />
     from order_info 
@@ -102,9 +102,9 @@
       country, order_price, discount_amount, 
       express_price, order_flag, over_return_free, 
       nick_name, address_alias, app_signature, 
-      order_status, fee_type, to_erp, 
-      payment_time, to_ordercenter_time, to_erp_time, 
-      last_time, kf_account)
+      order_status, fee_type,  
+      payment_time, to_erp_time, 
+       kf_account)
     values
     <foreach collection="list" item="item" index="index" separator="," > 
     ( #{item.originalId,jdbcType=VARCHAR}, #{item.orderNumber,jdbcType=VARCHAR}, 
@@ -115,9 +115,9 @@
       #{item.country,jdbcType=VARCHAR}, #{item.orderPrice,jdbcType=DOUBLE}, #{item.discountAmount,jdbcType=DOUBLE}, 
       #{item.expressPrice,jdbcType=DOUBLE}, #{item.orderFlag,jdbcType=VARCHAR}, #{item.overReturnFree,jdbcType=VARCHAR}, 
       #{item.nickName,jdbcType=VARCHAR}, #{item.addressAlias,jdbcType=VARCHAR}, #{item.appSignature,jdbcType=VARCHAR}, 
-      #{item.orderStatus,jdbcType=VARCHAR}, #{item.feeType,jdbcType=VARCHAR}, #{item.toErp,jdbcType=VARCHAR}, 
-      #{item.paymentTime,jdbcType=VARCHAR}, #{item.toOrdercenterTime,jdbcType=TIMESTAMP}, #{item.toErpTime,jdbcType=VARCHAR}, 
-      #{item.lastTime,jdbcType=TIMESTAMP}, #{item.kfAccount,jdbcType=VARCHAR})
+      #{item.orderStatus,jdbcType=VARCHAR}, #{item.feeType,jdbcType=VARCHAR}, 
+      #{item.paymentTime,jdbcType=VARCHAR}, #{item.toErpTime,jdbcType=VARCHAR}, 
+      #{item.kfAccount,jdbcType=VARCHAR})
       </foreach>
   </insert>
       

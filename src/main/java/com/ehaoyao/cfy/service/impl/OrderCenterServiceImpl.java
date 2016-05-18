@@ -174,7 +174,7 @@ public class OrderCenterServiceImpl implements OrderCenterService {
 			productCount+=orderDetailOperation.getCount();
 			orderDetail.setCount(orderDetailOperation.getCount()!=null?orderDetailOperation.getCount().doubleValue():null);
 			orderDetail.setDiscountAmount(orderDetailOperation.getDiscountAmount()+"");
-			orderDetail.setMerchantId(orderDetailOperation.getMerchantId());
+			orderDetail.setMerchantId(orderDetailOperation.getMerchantId()==null?"":orderDetailOperation.getMerchantId());
 			orderDetail.setOrderFlag(orderDetailOperation.getOrderFlag());
 			orderDetail.setOrderNumber(orderDetailOperation.getOrderNumber());
 			orderDetail.setPrice(orderDetailOperation.getPrice().doubleValue());
@@ -218,7 +218,7 @@ public class OrderCenterServiceImpl implements OrderCenterService {
 		orderInfo.setRemark(orderInfoOperation.getRemark());
 		orderInfo.setStartTime(orderInfoOperation.getOrderTime());
 		orderInfo.setTelephone(orderInfoOperation.getTelephone());
-		orderInfo.setToErp("0");
+//		orderInfo.setToErp("0");
 		return orderInfo;
 	}
 
