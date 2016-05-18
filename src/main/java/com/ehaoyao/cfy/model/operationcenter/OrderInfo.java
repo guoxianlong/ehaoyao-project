@@ -238,6 +238,11 @@ public class OrderInfo {
     private String createTime;
 
     private String shippingType;
+    
+    /**
+     * 商品的总个数
+     */
+    private Integer productCount;
 
     public Long getOrderId() {
         return orderId;
@@ -607,7 +612,15 @@ public class OrderInfo {
         this.shippingType = shippingType == null ? null : shippingType.trim();
     }
     
-    /**
+    public Integer getProductCount() {
+		return productCount;
+	}
+
+	public void setProductCount(Integer productCount) {
+		this.productCount = productCount;
+	}
+
+	/**
      * 获取审核状态描述
      * @return
      */
@@ -643,48 +656,49 @@ public class OrderInfo {
      * 获取支付方式描述
      * @return
      */
-    public String getPayTypeDesc(){
+    public static String getPayTypeDesc(String payType){
     	String payTypeDesc = null;
-    	if(this.payType!=null && this.payType.length()>0){
-    		if(ORDER_PAY_TYPE_COD.equals(this.payType)){
+    	if(payType!=null && payType.length()>0){
+    		if(ORDER_PAY_TYPE_COD.equals(payType)){
     			payTypeDesc = "货到付款";
     		}
-    		if(ORDER_PAY_TYPE_ONLINEPAY.equals(this.payType)){
+    		if(ORDER_PAY_TYPE_ONLINEPAY.equals(payType)){
     			payTypeDesc = "网上支付";
     		}
-    		if(ORDER_PAY_TYPE_ACCOUNTPAY.equals(this.payType)){
+    		if(ORDER_PAY_TYPE_ACCOUNTPAY.equals(payType)){
     			payTypeDesc = "账户支付";
     		}
-    		if(ORDER_PAY_TYPE_POSTREMITTANCE.equals(this.payType)){
+    		if(ORDER_PAY_TYPE_POSTREMITTANCE.equals(payType)){
     			payTypeDesc = "邮局汇款";
     		}
-    		if(ORDER_PAY_TYPE_BANKTRANSFER.equals(this.payType)){
+    		if(ORDER_PAY_TYPE_BANKTRANSFER.equals(payType)){
     			payTypeDesc = "银行转账";
     		}
-    		if(ORDER_PAY_TYPE_POSPAY.equals(this.payType)){
+    		if(ORDER_PAY_TYPE_POSPAY.equals(payType)){
     			payTypeDesc = "pos机";
     		}
-    		if(ORDER_PAY_TYPE_WALITO.equals(this.payType)){
+    		if(ORDER_PAY_TYPE_WALITO.equals(payType)){
     			payTypeDesc = "万里通";
     		}
-    		if(ORDER_PAY_TYPE_INSTALLMENTPAYMENT.equals(this.payType)){
+    		if(ORDER_PAY_TYPE_INSTALLMENTPAYMENT.equals(payType)){
     			payTypeDesc = "分期付款";
     		}
-    		if(ORDER_PAY_TYPE_CONTRACTPERIOD.equals(this.payType)){
+    		if(ORDER_PAY_TYPE_CONTRACTPERIOD.equals(payType)){
     			payTypeDesc = "合同账期";
     		}
-    		if(ORDER_PAY_TYPE_ARRIVALTRANSFER.equals(this.payType)){
+    		if(ORDER_PAY_TYPE_ARRIVALTRANSFER.equals(payType)){
     			payTypeDesc = "货到转账";
     		}
-    		if(ORDER_PAY_TYPE_ARRIVALPAYCHECK.equals(this.payType)){
+    		if(ORDER_PAY_TYPE_ARRIVALPAYCHECK.equals(payType)){
     			payTypeDesc = "货到付支票";
     		}
-    		if(ORDER_PAY_TYPE_ARRIVALBRUSHALIPAY.equals(this.payType)){
+    		if(ORDER_PAY_TYPE_ARRIVALBRUSHALIPAY.equals(payType)){
     			payTypeDesc = "货到刷支付宝";
     		}
     	}
     	return payTypeDesc;
     }
+    
     
     /**
      * 获取发票状态描述

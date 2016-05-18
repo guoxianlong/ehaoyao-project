@@ -1,5 +1,7 @@
 package com.ehaoyao.cfy.mapper.ordercenter;
 
+import java.util.List;
+
 import com.ehaoyao.cfy.model.ordercenter.OrderInfo;
 
 public interface OrderInfoMapper {
@@ -14,4 +16,11 @@ public interface OrderInfoMapper {
     int updateByPrimaryKeySelective(OrderInfo record);
 
     int updateByPrimaryKey(OrderInfo record);
+    
+    /**
+     * 批量保存订单信息
+     * @param orderInfoList
+     * @return
+     */
+    int insertOrderInfoBatch(List<OrderInfo> orderInfoList);
 }

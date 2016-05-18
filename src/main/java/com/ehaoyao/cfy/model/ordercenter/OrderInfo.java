@@ -3,6 +3,15 @@ package com.ehaoyao.cfy.model.ordercenter;
 import java.util.Date;
 
 public class OrderInfo {
+	
+	public static final String ORDER_INFO_ORDER_STATUS_INIT = "s00";
+	
+	public static final String ORDER_INFO_ORDER_STATUS_HASSHIP = "s01";
+	
+	public static final String ORDER_INFO_ORDER_STATUS_NOTICEPLAT = "s02";
+	
+	public static final String ORDER_INFO_ORDER_STATUS_FINISH = "s03";
+	
     private Long id;
 
     private String originalId;

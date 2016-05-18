@@ -76,6 +76,36 @@
       #{paymentTime,jdbcType=VARCHAR}, #{toOrdercenterTime,jdbcType=TIMESTAMP}, #{toErpTime,jdbcType=VARCHAR}, 
       #{lastTime,jdbcType=TIMESTAMP}, #{kfAccount,jdbcType=VARCHAR})
   </insert>
+  
+  <!-- 批量insert -->
+  <insert id="insertOrderInfoBatch" parameterType="java.util.List" >
+      insert into order_info (original_id, order_number, 
+      start_time, expire_time, remark, 
+      pay_type, price, receiver, 
+      address_detail, mobile, telephone, 
+      delivery_date, province, city, 
+      country, order_price, discount_amount, 
+      express_price, order_flag, over_return_free, 
+      nick_name, address_alias, app_signature, 
+      order_status, fee_type, to_erp, 
+      payment_time, to_ordercenter_time, to_erp_time, 
+      last_time, kf_account)
+    values
+    <foreach collection="list" item="item" index="index" separator="," > 
+    ( #{item.originalId,jdbcType=VARCHAR}, #{item.orderNumber,jdbcType=VARCHAR}, 
+      #{item.startTime,jdbcType=VARCHAR}, #{item.expireTime,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR}, 
+      #{item.payType,jdbcType=VARCHAR}, #{item.price,jdbcType=DOUBLE}, #{item.receiver,jdbcType=VARCHAR}, 
+      #{item.addressDetail,jdbcType=VARCHAR}, #{item.mobile,jdbcType=VARCHAR}, #{item.telephone,jdbcType=VARCHAR}, 
+      #{item.deliveryDate,jdbcType=VARCHAR}, #{item.province,jdbcType=VARCHAR}, #{item.city,jdbcType=VARCHAR}, 
+      #{item.country,jdbcType=VARCHAR}, #{item.orderPrice,jdbcType=DOUBLE}, #{item.discountAmount,jdbcType=DOUBLE}, 
+      #{item.expressPrice,jdbcType=DOUBLE}, #{item.orderFlag,jdbcType=VARCHAR}, #{item.overReturnFree,jdbcType=VARCHAR}, 
+      #{item.nickName,jdbcType=VARCHAR}, #{item.addressAlias,jdbcType=VARCHAR}, #{item.appSignature,jdbcType=VARCHAR}, 
+      #{item.orderStatus,jdbcType=VARCHAR}, #{item.feeType,jdbcType=VARCHAR}, #{item.toErp,jdbcType=VARCHAR}, 
+      #{item.paymentTime,jdbcType=VARCHAR}, #{item.toOrdercenterTime,jdbcType=TIMESTAMP}, #{item.toErpTime,jdbcType=VARCHAR}, 
+      #{item.lastTime,jdbcType=TIMESTAMP}, #{item.kfAccount,jdbcType=VARCHAR})
+      </foreach>
+  </insert>
+      
   <insert id="insertSelective" parameterType="com.ehaoyao.cfy.model.ordercenter.OrderInfo" >
     insert into order_info
     <trim prefix="(" suffix=")" suffixOverrides="," >

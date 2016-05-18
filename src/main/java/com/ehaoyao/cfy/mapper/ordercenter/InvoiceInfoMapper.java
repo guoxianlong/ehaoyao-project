@@ -1,5 +1,7 @@
 package com.ehaoyao.cfy.mapper.ordercenter;
 
+import java.util.List;
+
 import com.ehaoyao.cfy.model.ordercenter.InvoiceInfo;
 
 public interface InvoiceInfoMapper {
@@ -14,4 +16,11 @@ public interface InvoiceInfoMapper {
     int updateByPrimaryKeySelective(InvoiceInfo record);
 
     int updateByPrimaryKey(InvoiceInfo record);
+    
+    /**
+     * 批量保存订单发票信息
+     * @param invoiceInfoList
+     * @return
+     */
+    int insertInvoiceInfoBatch(List<InvoiceInfo> invoiceInfoList);
 }

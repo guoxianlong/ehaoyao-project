@@ -102,6 +102,8 @@
       #{feeType,jdbcType=VARCHAR}, #{lastTime,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, 
       #{shippingType,jdbcType=VARCHAR})
   </insert>
+  
+  
   <insert id="insertSelective" parameterType="com.ehaoyao.cfy.model.operationcenter.OrderInfo" >
     insert into order_info
     <trim prefix="(" suffix=")" suffixOverrides="," >

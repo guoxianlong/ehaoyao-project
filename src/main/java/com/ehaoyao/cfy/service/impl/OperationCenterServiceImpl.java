@@ -21,8 +21,7 @@ public class OperationCenterServiceImpl implements OperationCenterService {
 	@Override
 	public List<OrderMainInfo> selectAuditPassList(OrderInfoVo orderInfoVo) throws Exception {
 		List<OrderMainInfo> list = orderAuditLogMapper.selectOrderMainInfo(orderInfoVo);
-		System.out.println(list.get(0));
-		return null;
+		return list;
 	}
 
 }

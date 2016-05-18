@@ -12,8 +12,14 @@ public class OrderInfoVo {
 
     private String auditTimeEnd;
     
+    /**
+     * 开始游标
+     */
     private Integer count;
     
+    /**
+     * 条数
+     */
     private Integer pageSize;
 
 	public String getOrderNumber() {

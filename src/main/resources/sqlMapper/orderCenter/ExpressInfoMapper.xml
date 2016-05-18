@@ -62,6 +62,32 @@
       #{startTime,jdbcType=VARCHAR}, #{shuoldPay,jdbcType=VARCHAR}, #{payType,jdbcType=VARCHAR}
       )
   </insert>
+  
+  <!-- 批量插入 -->
+  <insert id="insertExpressInfoBatch" parameterType="java.util.List" >
+    insert into express_info (express_id, express_com_id, 
+      express_com_code, express_com_name, order_number, 
+      express_price, delivery_date_type, delivery_type, 
+      express_status, delivery_date, delivery_notice, 
+      remark, distribution_center_name, picking_code, 
+      distribution_station_name, products_count, 
+      outbound_time, order_flag, jd_trade_no, 
+      start_time, shuold_pay, pay_type
+      )
+    values 
+    <foreach collection="list" item="item" index="index" separator="," > 
+    ( #{item.expressId,jdbcType=VARCHAR}, #{item.expressComId,jdbcType=VARCHAR}, 
+      #{item.expressComCode,jdbcType=VARCHAR}, #{item.expressComName,jdbcType=VARCHAR}, #{item.orderNumber,jdbcType=VARCHAR}, 
+      #{item.expressPrice,jdbcType=DOUBLE}, #{item.deliveryDateType,jdbcType=VARCHAR}, #{item.deliveryType,jdbcType=VARCHAR}, 
+      #{item.expressStatus,jdbcType=VARCHAR}, #{item.deliveryDate,jdbcType=VARCHAR}, #{item.deliveryNotice,jdbcType=VARCHAR}, 
+      #{item.remark,jdbcType=VARCHAR}, #{item.distributionCenterName,jdbcType=VARCHAR}, #{item.pickingCode,jdbcType=VARCHAR}, 
+      #{item.distributionStationName,jdbcType=VARCHAR}, #{item.productsCount,jdbcType=INTEGER}, 
+      #{item.outboundTime,jdbcType=VARCHAR}, #{item.orderFlag,jdbcType=VARCHAR}, #{item.jdTradeNo,jdbcType=VARCHAR}, 
+      #{item.startTime,jdbcType=VARCHAR}, #{item.shuoldPay,jdbcType=VARCHAR}, #{item.payType,jdbcType=VARCHAR}
+      )
+      </foreach>
+  </insert>
+  
   <insert id="insertSelective" parameterType="com.ehaoyao.cfy.model.ordercenter.ExpressInfo" >
     insert into express_info
     <trim prefix="(" suffix=")" suffixOverrides="," >

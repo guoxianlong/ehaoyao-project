@@ -1,6 +1,22 @@
 package com.ehaoyao.cfy.model.operationcenter;
 
 public class InvoiceInfo {
+	
+	/**
+	 * 普通发票
+	 */
+	public static final String INVOICE_INFO_INVOICE_TYPE_PLAIN = "PLAIN";
+	
+	/**
+	 * 电子发票
+	 */
+	public static final String INVOICE_INFO_INVOICE_TYPE_ELECTRONIC = "ELECTRONIC";
+	
+	/**
+	 * 增值税发票
+	 */
+	public static final String INVOICE_INFO_INVOICE_TYPE_VAT = "VAT";
+	
     private Long invoiceId;
 
     private String orderNumber;
@@ -11,6 +27,9 @@ public class InvoiceInfo {
 
     private String invoiceStatus;
 
+    /**
+     * 发票类型  PLAIN：普通发票 ELECTRONIC：电子发票 VAT：增值税发票
+     */
     private String invoiceType;
 
     private String invoiceTitle;
@@ -99,5 +118,27 @@ public class InvoiceInfo {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime == null ? null : createTime.trim();
+    }
+    
+    /**
+     * 获取发票类型描述
+     * 发票类型  PLAIN：普通发票 ELECTRONIC：电子发票 VAT：增值税发票
+     * @param invoiceType
+     * @return
+     */
+    public static String getInvoiceTypeDesc(String invoiceType){
+    	String invoiceTypeDesc = null;
+    	if(invoiceType!=null && invoiceType.length()>0){
+    		if(INVOICE_INFO_INVOICE_TYPE_PLAIN.equals(invoiceType)){
+    			invoiceTypeDesc = "普通发票";
+    		}
+    		if(INVOICE_INFO_INVOICE_TYPE_ELECTRONIC.equals(invoiceType)){
+    			invoiceTypeDesc = "电子发票";
+    		}
+    		if(INVOICE_INFO_INVOICE_TYPE_VAT.equals(invoiceType)){
+    			invoiceTypeDesc = "增值税发票";
+    		}
+    	}
+    	return invoiceTypeDesc;
     }
 }

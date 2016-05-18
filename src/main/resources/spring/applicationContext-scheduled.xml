@@ -14,7 +14,7 @@
     <!--  定时器开关  结束--> 
     <!-- 从运营中心获取药师审核通过订单到订单中心 -->
     <task:scheduled-tasks>
-		<task:scheduled ref="obtainAuditPassOrderTask" method="dealLogic" initial-delay="10000" fixed-delay="600000"/>
+		<task:scheduled ref="dealAuditPassOrderTask" method="dealLogic" initial-delay="10000" fixed-delay="600000"/>
     </task:scheduled-tasks>
     
 </beans>

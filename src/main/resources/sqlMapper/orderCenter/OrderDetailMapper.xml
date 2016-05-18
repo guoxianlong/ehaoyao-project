@@ -46,6 +46,26 @@
       #{djbhId,jdbcType=VARCHAR}, #{eflag,jdbcType=VARCHAR}, #{spid,jdbcType=VARCHAR}
       )
   </insert>
+  
+  <!-- 批量insert -->
+  <insert id="insertOrderDetailBatch" parameterType="java.util.List" >
+    insert into order_detail (order_number, merchant_id, 
+      total_price, count, product_id, 
+      unit, product_name, price, 
+      order_flag, products_promo_id, discount_amount, 
+      djbh_id, eflag, spid
+      )
+    values 
+    <foreach collection="list" item="item" index="index" separator="," > 
+    (#{item.orderNumber,jdbcType=VARCHAR}, #{item.merchantId,jdbcType=VARCHAR}, 
+      #{item.totalPrice,jdbcType=DOUBLE}, #{item.count,jdbcType=DOUBLE}, #{item.productId,jdbcType=VARCHAR}, 
+      #{item.unit,jdbcType=VARCHAR}, #{item.productName,jdbcType=VARCHAR}, #{item.price,jdbcType=DOUBLE}, 
+      #{item.orderFlag,jdbcType=VARCHAR}, #{item.productsPromoId,jdbcType=VARCHAR}, #{item.discountAmount,jdbcType=VARCHAR}, 
+      #{item.djbhId,jdbcType=VARCHAR}, #{item.eflag,jdbcType=VARCHAR}, #{item.spid,jdbcType=VARCHAR}
+      )
+     </foreach>
+  </insert>
+  
   <insert id="insertSelective" parameterType="com.ehaoyao.cfy.model.ordercenter.OrderDetail" >
     insert into order_detail
     <trim prefix="(" suffix=")" suffixOverrides="," >

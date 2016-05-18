@@ -203,12 +203,31 @@
   
   
   <select id="selectOrderMainInfo"  resultMap="OrderMainInfoResultMap" parameterType="com.ehaoyao.cfy.vo.operationcenter.OrderInfoVo">
-      select * 
-     <!-- <include refid="Base_Column_List" /> -->
-    from order_audit_log where audit_status = #{auditStatus,jdbcType=VARCHAR}
+      select
+     <include refid="Base_Column_List" />
+    from order_audit_log 
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+	    <if test="orderNumber !=null and orderNumber !='' ">
+			<!-- and order_number like CONCAT('%','${orderNumber}','%' ) -->
+			and order_number = #{orderNumber,jdbcType=VARCHAR}
+		</if>
+		<if test="orderFlag !=null and orderFlag !='' ">
+			and order_flag = #{orderFlag,jdbcType=VARCHAR}
+		</if>
+		<if test="auditStatus !=null and auditStatus !='' ">
+			and audit_status = #{auditStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="auditTimeStart !=null and auditTimeStart !='' ">
 			and create_time &gt;= #{auditTimeStart,jdbcType=VARCHAR}
+		</if>
+		<if test="auditTimeEnd !=null and auditTimeEnd !='' ">
 			and create_time &lt;= #{auditTimeEnd,jdbcType=VARCHAR}
-		 order by create_time desc
+		</if>
+		 order by create_time desc 
+		 <if test="count !=null and pageSize !=null ">
+			limit #{count,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+		</if>
+    </trim>
   </select>
   
   

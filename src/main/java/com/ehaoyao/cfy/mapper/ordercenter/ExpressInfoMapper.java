@@ -1,5 +1,7 @@
 package com.ehaoyao.cfy.mapper.ordercenter;
 
+import java.util.List;
+
 import com.ehaoyao.cfy.model.ordercenter.ExpressInfo;
 
 public interface ExpressInfoMapper {
@@ -14,4 +16,11 @@ public interface ExpressInfoMapper {
     int updateByPrimaryKeySelective(ExpressInfo record);
 
     int updateByPrimaryKey(ExpressInfo record);
+
+    /**
+     * 批量插入物流信息
+     * @param expressInfoList
+     * @return
+     */
+	int insertExpressInfoBatch(List<ExpressInfo> expressInfoList);
 }

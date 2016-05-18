@@ -33,6 +33,20 @@
       #{invoiceContent,jdbcType=VARCHAR}, #{orderPrice,jdbcType=DOUBLE}, #{invoiceType,jdbcType=VARCHAR}, 
       #{remark,jdbcType=VARCHAR}, #{orderFlag,jdbcType=VARCHAR})
   </insert>
+  
+  <!-- 批量insert -->
+  <insert id="insertInvoiceInfoBatch" parameterType="java.util.List" >
+    insert into invoice_info (order_number, invoice_title, 
+      invoice_content, order_price, invoice_type, 
+      remark, order_flag)
+    values 
+    <foreach collection="list" item="item" index="index" separator="," > 
+    ( #{item.orderNumber,jdbcType=VARCHAR}, #{item.invoiceTitle,jdbcType=VARCHAR}, 
+      #{item.invoiceContent,jdbcType=VARCHAR}, #{item.orderPrice,jdbcType=DOUBLE}, #{item.invoiceType,jdbcType=VARCHAR}, 
+      #{item.remark,jdbcType=VARCHAR}, #{item.orderFlag,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  
   <insert id="insertSelective" parameterType="com.ehaoyao.cfy.model.ordercenter.InvoiceInfo" >
     insert into invoice_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
