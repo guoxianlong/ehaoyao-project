@@ -1,6 +1,8 @@
 package com.ehaoyao.cfy.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,9 @@ public class OperationCenterServiceImpl implements OperationCenterService {
 	@Override
 	public List<OrderMainInfo> selectAuditPassList(OrderInfoVo orderInfoVo) throws Exception {
 		List<OrderMainInfo> list = orderAuditLogMapper.selectOrderMainInfo(orderInfoVo);
+		OrderInfoVo vo = new OrderInfoVo();
+		vo.setAuditStatus(Order);
+		orderAuditLogMapper.selectByLastAudit(vo);
 		return list;
 	}
 

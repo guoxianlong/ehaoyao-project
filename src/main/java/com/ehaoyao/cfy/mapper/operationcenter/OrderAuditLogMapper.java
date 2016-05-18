@@ -45,10 +45,10 @@ public interface OrderAuditLogMapper {
     
     /**
      * 查询最新审核数据
-     * @param paramMap
+     * @param vo
      * @return
      */
-    List<OrderAuditLog> selectByLastAudit(Map<String, Object> paramMap);
+    List<OrderAuditLog> selectByLastAudit(OrderInfoVo vo);
     
     /**
      * 根据条件分页查询订单信息

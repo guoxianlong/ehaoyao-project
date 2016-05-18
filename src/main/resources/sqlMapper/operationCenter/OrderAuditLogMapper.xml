@@ -277,7 +277,7 @@
   </select>
   
     <!-- 根据条件查询 -->
-  <select id="selectByLastAudit" resultMap="BaseResultMap" parameterType="java.util.Map" >
+  <select id="selectByLastAudit" resultMap="BaseResultMap" parameterType="com.ehaoyao.cfy.vo.operationcenter.OrderInfoVo" >
     select 
     <include refid="Base_Column_List" />
     from order_audit_log
