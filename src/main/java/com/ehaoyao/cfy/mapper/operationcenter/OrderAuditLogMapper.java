@@ -48,7 +48,7 @@ public interface OrderAuditLogMapper {
      * @param vo
      * @return
      */
-    List<OrderAuditLog> selectByLastAudit(OrderInfoVo vo);
+    OrderAuditLog selectByLastAudit(OrderInfoVo vo);
     
     /**
      * 根据条件分页查询订单信息

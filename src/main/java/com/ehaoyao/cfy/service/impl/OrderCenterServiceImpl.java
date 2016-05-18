@@ -16,6 +16,7 @@ import com.ehaoyao.cfy.model.ordercenter.InvoiceInfo;
 import com.ehaoyao.cfy.model.ordercenter.OrderDetail;
 import com.ehaoyao.cfy.model.ordercenter.OrderInfo;
 import com.ehaoyao.cfy.service.OrderCenterService;
+import com.ehaoyao.cfy.vo.operationcenter.OrderInfoVo;
 import com.ehaoyao.cfy.vo.operationcenter.OrderMainInfo;
 
 @Transactional(value="transactionManagerOrderCenter")
@@ -47,6 +48,7 @@ public class OrderCenterServiceImpl implements OrderCenterService {
 		OrderInfo orderInfo;
 		InvoiceInfo invoiceInfo;
 		ExpressInfo expressInfo;
+		OrderInfoVo vo;
 		List<OrderInfo> orderInfoList = new ArrayList<OrderInfo>();
 		List<OrderDetail> orderDetailList = new ArrayList<OrderDetail>();
 		List<InvoiceInfo> invoiceInfoList = new ArrayList<InvoiceInfo>();
@@ -60,6 +62,17 @@ public class OrderCenterServiceImpl implements OrderCenterService {
 			orderInfoOperation = orderMainInfo.getOrderInfo();
 			orderDetailOperationList = orderMainInfo.getOrderDetailList();
 			invoiceInfoOperation = orderMainInfo.getInvoiceInfo();
+			
+			/**
+			 * 判断订单中心中是否存在订单
+			 */
+			vo = new OrderInfoVo();
+			vo.setOrderFlag(orderInfoOperation.getOrderFlag());
+			vo.setOrderNumber(orderInfoOperation.getOrderNumber());
+			orderInfo = orderInfoMapper.selectByCondition(vo);
+			if(orderInfo!=null){
+				continue;
+			}
 			
 			/**
 			 * 将运营中心实体数据转换为订单中心实体
@@ -188,7 +201,7 @@ public class OrderCenterServiceImpl implements OrderCenterService {
 		orderInfo.setCountry(orderInfoOperation.getArea());
 		orderInfo.setDiscountAmount(orderInfoOperation.getDiscountAmount()!=null?orderInfoOperation.getDiscountAmount().doubleValue():null);
 		orderInfo.setExpressPrice(orderInfoOperation.getExpressPrice()!=null?orderInfoOperation.getExpressPrice().doubleValue():null);
-		orderInfo.setKfAccount("");
+		orderInfo.setKfAccount(orderInfoOperation.getKfAccount());
 		orderInfo.setMobile(orderInfoOperation.getMobile());
 		orderInfo.setNickName(orderInfoOperation.getNickName());
 		orderInfo.setOrderFlag(orderInfoOperation.getOrderFlag());

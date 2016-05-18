@@ -1,5 +1,7 @@
 package com.ehaoyao.cfy.task;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -13,6 +15,7 @@ import com.ehaoyao.cfy.model.operationcenter.OrderInfo;
 import com.ehaoyao.cfy.service.OperationCenterService;
 import com.ehaoyao.cfy.service.OrderCenterService;
 import com.ehaoyao.cfy.task.thread.DealAuditPassOrderThread;
+import com.ehaoyao.cfy.utils.DateUtil;
 import com.ehaoyao.cfy.vo.operationcenter.OrderInfoVo;
 import com.ehaoyao.cfy.vo.operationcenter.OrderMainInfo;
 
@@ -81,11 +84,15 @@ public class DealAuditPassOrderTask {
 	 * 封装查询条件
 	 * @return
 	 */
-	public OrderInfoVo queryParam(){
+	public OrderInfoVo queryParam() throws Exception{
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		int orderIntervalTime = Integer.parseInt(application.getString("normal_deal_minute_interval"));
+		Date startTimeQuery=DateUtil.getPreMinute(orderIntervalTime);//当前时间向前推迟xxx分钟
+		Date endTimeQuery=new Date();
 		OrderInfoVo orderInfoVo = new OrderInfoVo();
 		orderInfoVo.setAuditStatus(OrderInfo.ORDER_AUDIT_STATUS_SUCC);
-		orderInfoVo.setAuditTimeStart("2016-04-25 08:50:57");
-		orderInfoVo.setAuditTimeEnd("2016-05-05 09:00:57");
+		orderInfoVo.setAuditTimeStart(sdf.format(startTimeQuery));
+		orderInfoVo.setAuditTimeEnd(sdf.format(endTimeQuery));
 		return orderInfoVo;
 	}
 }

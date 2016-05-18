@@ -3,6 +3,7 @@ package com.ehaoyao.cfy.mapper.ordercenter;
 import java.util.List;
 
 import com.ehaoyao.cfy.model.ordercenter.OrderInfo;
+import com.ehaoyao.cfy.vo.operationcenter.OrderInfoVo;
 
 public interface OrderInfoMapper {
     int deleteByPrimaryKey(Long id);
@@ -23,4 +24,11 @@ public interface OrderInfoMapper {
      * @return
      */
     int insertOrderInfoBatch(List<OrderInfo> orderInfoList);
+
+    /**
+     * 根据条件查询订单
+     * @param vo
+     * @return
+     */
+	OrderInfo selectByCondition(OrderInfoVo vo);
 }
