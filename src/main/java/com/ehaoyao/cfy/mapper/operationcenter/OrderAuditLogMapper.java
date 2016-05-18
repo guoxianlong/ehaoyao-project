@@ -56,6 +56,13 @@ public interface OrderAuditLogMapper {
      * @return 返回数据集合
      */
 	List<OrderMainInfo> selectAllFieldsByConditionMapPage(OrderInfoVo orderInfoVo);
+	
+	/**
+	 * 返回一笔订单最新审核所有数据
+	 * @param orderInfoVo
+	 * @return
+	 */
+	List<OrderMainInfo> selectOrderMainInfo(OrderInfoVo orderInfoVo);
 
     /**
      * 根据主键选择性更新实体

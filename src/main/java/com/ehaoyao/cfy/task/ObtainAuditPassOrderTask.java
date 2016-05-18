@@ -34,8 +34,8 @@ public class ObtainAuditPassOrderTask {
 	public OrderInfoVo queryParam(){
 		OrderInfoVo orderInfoVo = new OrderInfoVo();
 		orderInfoVo.setAuditStatus(OrderInfo.ORDER_AUDIT_STATUS_SUCC);
-		orderInfoVo.setAuditTimeStart("2016-05-17 12:00:00");
-		orderInfoVo.setAuditTimeEnd("2016-05-17 23:00:00");
+		orderInfoVo.setAuditTimeStart("2016-05-05 08:50:57");
+		orderInfoVo.setAuditTimeEnd("2016-05-05 09:00:57");
 		return orderInfoVo;
 	}
 }
