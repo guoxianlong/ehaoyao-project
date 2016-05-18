@@ -1,5 +1,6 @@
 package com.ehaoyao.cfy.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,7 +128,7 @@ public class OrderCenterServiceImpl implements OrderCenterService {
 		expressInfo.setProductsCount(orderInfoOperation.getProductCount());
 		expressInfo.setPayType(com.ehaoyao.cfy.model.operationcenter.OrderInfo.getPayTypeDesc(orderInfoOperation.getPayType()));
 		if("货到付款".equals(com.ehaoyao.cfy.model.operationcenter.OrderInfo.getPayTypeDesc(orderInfoOperation.getPayType()))){
-			expressInfo.setShuoldPay(String.valueOf(orderInfoOperation.getPrice()));
+			expressInfo.setShuoldPay(orderInfoOperation.getPrice()!=null?orderInfoOperation.getPrice().doubleValue()+"":"");
 		}else{
 			expressInfo.setShuoldPay("0");//网上支付0
 		}
@@ -212,7 +213,7 @@ public class OrderCenterServiceImpl implements OrderCenterService {
 		orderInfo.setPaymentTime(orderInfoOperation.getPaymentTime());
 		orderInfo.setPayType(com.ehaoyao.cfy.model.operationcenter.OrderInfo.getPayTypeDesc(orderInfoOperation.getPayType()));
 		orderInfo.setPrice(orderInfoOperation.getPrice()!=null?orderInfoOperation.getPrice().doubleValue():null);
-		orderInfo.setFeeType(orderInfoOperation.getPlatPayPrice()+"");//平台支付金额
+		orderInfo.setFeeType(orderInfoOperation.getPlatPayPrice()!=null?orderInfoOperation.getPlatPayPrice()+"":"");//平台支付金额
 		orderInfo.setProvince(orderInfoOperation.getProvince());
 		orderInfo.setReceiver(orderInfoOperation.getReceiver());
 		orderInfo.setRemark(orderInfoOperation.getRemark());
