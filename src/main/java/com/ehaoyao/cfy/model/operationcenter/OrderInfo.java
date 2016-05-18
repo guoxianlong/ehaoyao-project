@@ -239,6 +239,8 @@ public class OrderInfo {
 
     private String shippingType;
     
+    private String kfAccount;
+    
     /**
      * 商品的总个数
      */
@@ -618,6 +620,14 @@ public class OrderInfo {
 
 	public void setProductCount(Integer productCount) {
 		this.productCount = productCount;
+	}
+	
+	public String getKfAccount() {
+		return kfAccount;
+	}
+
+	public void setKfAccount(String kfAccount) {
+		this.kfAccount = kfAccount;
 	}
 
 	/**
