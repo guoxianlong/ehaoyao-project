@@ -1,6 +1,5 @@
 package com.ehaoyao.cfy.service.impl;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,10 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ehaoyao.cfy.mapper.ordercenter.ExpressInfoMapper;
 import com.ehaoyao.cfy.mapper.ordercenter.InvoiceInfoMapper;
 import com.ehaoyao.cfy.mapper.ordercenter.OrderDetailMapper;
+import com.ehaoyao.cfy.mapper.ordercenter.OrderDetailThirdPartyMapper;
 import com.ehaoyao.cfy.mapper.ordercenter.OrderInfoMapper;
 import com.ehaoyao.cfy.model.ordercenter.ExpressInfo;
 import com.ehaoyao.cfy.model.ordercenter.InvoiceInfo;
 import com.ehaoyao.cfy.model.ordercenter.OrderDetail;
+import com.ehaoyao.cfy.model.ordercenter.OrderDetailThirdParty;
 import com.ehaoyao.cfy.model.ordercenter.OrderInfo;
 import com.ehaoyao.cfy.service.OrderCenterService;
 import com.ehaoyao.cfy.vo.operationcenter.OrderInfoVo;
@@ -29,6 +30,9 @@ public class OrderCenterServiceImpl implements OrderCenterService {
 	
 	@Autowired
 	OrderDetailMapper orderDetailMapper;
+	
+	@Autowired
+	OrderDetailThirdPartyMapper orderDetailThirdPartyMapper;
 
 	@Autowired
 	InvoiceInfoMapper invoiceInfoMapper;
@@ -46,12 +50,14 @@ public class OrderCenterServiceImpl implements OrderCenterService {
 		com.ehaoyao.cfy.model.operationcenter.OrderInfo orderInfoOperation;
 		com.ehaoyao.cfy.model.operationcenter.InvoiceInfo invoiceInfoOperation;
 		List<com.ehaoyao.cfy.model.operationcenter.OrderDetail> orderDetailOperationList;
+		List<com.ehaoyao.cfy.model.operationcenter.OrderDetailThirdParty> orderDetailThirdPartyOperationList;
 		OrderInfo orderInfo;
 		InvoiceInfo invoiceInfo;
 		ExpressInfo expressInfo;
 		OrderInfoVo vo;
 		List<OrderInfo> orderInfoList = new ArrayList<OrderInfo>();
 		List<OrderDetail> orderDetailList = new ArrayList<OrderDetail>();
+		List<OrderDetailThirdParty> orderDetailThirdPartyList = new ArrayList<OrderDetailThirdParty>();
 		List<InvoiceInfo> invoiceInfoList = new ArrayList<InvoiceInfo>();
 		List<ExpressInfo> expressInfoList = new ArrayList<ExpressInfo>();
 		/**
@@ -59,9 +65,11 @@ public class OrderCenterServiceImpl implements OrderCenterService {
 		 */
 		for(int i=0;i<subList.size();i++){
 			List<OrderDetail> orderDetailSubList = new ArrayList<OrderDetail>();
+			List<OrderDetailThirdParty> orderDetailThirdPartySubList = new ArrayList<OrderDetailThirdParty>();
 			orderMainInfo = subList.get(i);
 			orderInfoOperation = orderMainInfo.getOrderInfo();
 			orderDetailOperationList = orderMainInfo.getOrderDetailList();
+			orderDetailThirdPartyOperationList = orderMainInfo.getOrderDetailThirdPartyList();
 			invoiceInfoOperation = orderMainInfo.getInvoiceInfo();
 			
 			/**
@@ -80,6 +88,7 @@ public class OrderCenterServiceImpl implements OrderCenterService {
 			 */
 			orderInfo = transOrderInfo(orderInfoOperation);
 			orderDetailSubList = transOrderDetail(orderDetailOperationList,orderInfoOperation);
+			orderDetailThirdPartySubList = transOrderDetailThirdParty(orderDetailThirdPartyOperationList);
 			expressInfo = transExpressInfo(orderInfoOperation);
 			if ("1".equals(orderInfoOperation.getInvoiceStatus())) {
 				invoiceInfo = transInvoiceInfo(invoiceInfoOperation,orderInfoOperation);
@@ -92,6 +101,7 @@ public class OrderCenterServiceImpl implements OrderCenterService {
 			orderInfoList.add(orderInfo);
 			orderDetailList.addAll(orderDetailSubList);
 			expressInfoList.add(expressInfo);
+			orderDetailThirdPartyList.addAll(orderDetailThirdPartySubList);
 		}
 		
 		/**
@@ -109,11 +119,44 @@ public class OrderCenterServiceImpl implements OrderCenterService {
 		if(!expressInfoList.isEmpty()){
 			expressInfoMapper.insertExpressInfoBatch(expressInfoList);
 		}
+		if(!orderDetailThirdPartyList.isEmpty()){
+			orderDetailThirdPartyMapper.insertOrderDetailThirdPartyBatch(orderDetailThirdPartyList);
+		}
 		return insCount;
 	}
 
 	/**
-	 * 运营中心表数据转换为订单中心实体
+	 * 运营中心订单商品套餐表数据转换为订单中心实体
+	 * @param orderDetailThirdPartyOperationList
+	 * @return
+	 * @throws Exception
+	 */
+	private List<OrderDetailThirdParty> transOrderDetailThirdParty(
+			List<com.ehaoyao.cfy.model.operationcenter.OrderDetailThirdParty> orderDetailThirdPartyOperationList) throws Exception  {
+		List<OrderDetailThirdParty> orderDetailThirdPartyList = new ArrayList<OrderDetailThirdParty>();
+		OrderDetailThirdParty orderDetailThirdParty;
+		if(orderDetailThirdPartyOperationList==null || orderDetailThirdPartyOperationList.isEmpty()){
+			return null;
+		}
+		for(int i=0;i<orderDetailThirdPartyOperationList.size();i++){
+			orderDetailThirdParty = new OrderDetailThirdParty();
+			com.ehaoyao.cfy.model.operationcenter.OrderDetailThirdParty orderDetailThirdPartyOperation = orderDetailThirdPartyOperationList.get(i);
+			orderDetailThirdParty.setCount(orderDetailThirdPartyOperation.getCount());
+			orderDetailThirdParty.setEhaoyaoGroupPrice(orderDetailThirdPartyOperation.getEhaoyaoGroupPrice());
+			orderDetailThirdParty.setGroupId(orderDetailThirdPartyOperation.getGroupId()!=null?Integer.parseInt(orderDetailThirdPartyOperation.getGroupId()):null);
+			orderDetailThirdParty.setGroupName(orderDetailThirdPartyOperation.getGroupName());
+			orderDetailThirdParty.setOrderFlag(orderDetailThirdPartyOperation.getOrderFlag());
+			orderDetailThirdParty.setOrderNumber(orderDetailThirdPartyOperation.getOrderNumber());
+			orderDetailThirdParty.setThirdpartyGroupPrice(orderDetailThirdPartyOperation.getThirdpartyGroupPrice());
+			orderDetailThirdParty.setThirdpartyTotalPrice(orderDetailThirdPartyOperation.getThirdpartyTotalPrice());
+			orderDetailThirdPartyList.add(orderDetailThirdParty);
+		}
+		
+		return orderDetailThirdPartyList;
+	}
+
+	/**
+	 * 运营中心物流表数据转换为订单中心实体
 	 * @param orderInfoOperation
 	 * @throws Exception
 	 * @return

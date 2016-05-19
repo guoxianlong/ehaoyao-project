@@ -9,13 +9,13 @@
 		</commentGenerator>
 		<!-- 数据库链接URL、用户名、密码 -->
 		 <!-- <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/operationscenter" userId="ehaoyao" password="O-MOG]j2o>_*Ulf)NTLc"> --> 
-		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://10.10.10.34:3306/operationscenter" userId="opera" password="KZaw89}hy">
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://10.10.10.87:3306/ordercenter" userId="u4hppbr2" password="H14QTpB9b9">
 		</jdbcConnection>
 		<javaTypeResolver>
 			<property name="forceBigDecimals" value="false" />
 		</javaTypeResolver>
 		<!-- 生成模型的包名和位置 -->
-		<javaModelGenerator targetPackage="com.ehaoyao.cfy.model.operationcenter" targetProject="cfy_to_ordercenter">
+		<javaModelGenerator targetPackage="com.ehaoyao.cfy.model.ordercenter" targetProject="cfy_to_ordercenter">
 			<property name="enableSubPackages" value="true" />
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
@@ -24,10 +24,10 @@
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
 		<!-- 生成DAO的包名和位置 -->
-		<javaClientGenerator type="XMLMAPPER" targetPackage="com.ehaoyao.cfy.mapper.operationcenter" targetProject="cfy_to_ordercenter">
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.ehaoyao.cfy.mapper.ordercenter" targetProject="cfy_to_ordercenter">
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 		<!-- 要生成那些表(更改tableName和domainObjectName就可以) -->
-		<table tableName="param_config" domainObjectName="ParamConfig" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
+		<table tableName="order_detail_thirdparty" domainObjectName="OrderDetailThirdParty" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
 	</context>
 </generatorConfiguration>

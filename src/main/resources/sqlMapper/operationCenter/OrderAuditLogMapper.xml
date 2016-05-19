@@ -145,6 +145,41 @@
     </trim>
   </select>
   
+  
+  <!-- 
+  	查询order_detail_thirdparty表部分
+   -->
+  <resultMap id="OrderDetailThirdPartyResultMap" type="com.ehaoyao.cfy.model.operationcenter.OrderDetailThirdParty" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+    <result column="order_flag" property="orderFlag" jdbcType="VARCHAR" />
+    <result column="group_id" property="groupId" jdbcType="VARCHAR" />
+    <result column="group_name" property="groupName" jdbcType="VARCHAR" />
+    <result column="count" property="count" jdbcType="INTEGER" />
+    <result column="thirdparty_total_price" property="thirdpartyTotalPrice" jdbcType="DECIMAL" />
+    <result column="thirdparty_group_price" property="thirdpartyGroupPrice" jdbcType="DECIMAL" />
+    <result column="ehaoyao_group_price" property="ehaoyaoGroupPrice" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="OrderDetailThirdParty_Column_List" >
+    id, order_number, order_flag, group_id, group_name, count, thirdparty_total_price, 
+    thirdparty_group_price, ehaoyao_group_price
+  </sql>
+  
+  <select id="selectOrderDetailThirdParty" resultMap="OrderDetailThirdPartyResultMap" parameterType="java.util.Map">
+      select 
+		<include refid="OrderDetailThirdParty_Column_List" />
+	from order_detail_thirdparty
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+         <if test="orderNumber !=null and orderNumber !='' ">
+			and order_number = #{orderNumber,jdbcType=VARCHAR}
+		</if>
+		<if test="orderFlag !=null and orderFlag !='' ">
+			and order_flag = #{orderFlag,jdbcType=VARCHAR}
+		</if>
+    </trim>
+  </select>
+  
+  
   <!-- 
   	查询invoice_info表部分
    -->
@@ -199,6 +234,7 @@
     <association property="orderInfo" column="{orderFlag=order_flag,orderNumber=order_number}" select="selectOrderInfo"></association>
     <association property="invoiceInfo" column="{orderFlag=order_flag,orderNumber=order_number}" select="selectInvoiceInfo"></association>
     <collection property="orderDetailList" ofType="com.ehaoyao.cfy.model.operationcenter.OrderDetail" column="{orderFlag=order_flag,orderNumber=order_number}" select="selectOrderDetail"></collection>
+    <collection property="orderDetailThirdPartyList" ofType="com.ehaoyao.cfy.model.operationcenter.OrderDetailThirdParty" column="{orderFlag=order_flag,orderNumber=order_number}" select="selectOrderDetailThirdParty"></collection>
   </resultMap>
   
   

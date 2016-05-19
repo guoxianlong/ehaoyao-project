@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ehaoyao.cfy.model.operationcenter.InvoiceInfo;
 import com.ehaoyao.cfy.model.operationcenter.OrderDetail;
+import com.ehaoyao.cfy.model.operationcenter.OrderDetailThirdParty;
 import com.ehaoyao.cfy.model.operationcenter.OrderInfo;
 
 public class OrderMainInfo {
@@ -31,6 +32,8 @@ public class OrderMainInfo {
 	private InvoiceInfo invoiceInfo;
 	
 	private List<OrderDetail> orderDetailList;
+	
+	private List<OrderDetailThirdParty> orderDetailThirdPartyList;
 	
 
 	public OrderInfo getOrderInfo() {
@@ -128,6 +131,14 @@ public class OrderMainInfo {
 
 	public void setOrderDetailList(List<OrderDetail> orderDetailList) {
 		this.orderDetailList = orderDetailList;
+	}
+
+	public List<OrderDetailThirdParty> getOrderDetailThirdPartyList() {
+		return orderDetailThirdPartyList;
+	}
+
+	public void setOrderDetailThirdPartyList(List<OrderDetailThirdParty> orderDetailThirdPartyList) {
+		this.orderDetailThirdPartyList = orderDetailThirdPartyList;
 	}
 	
 	
