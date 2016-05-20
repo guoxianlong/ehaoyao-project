@@ -88,7 +88,9 @@ public class OrderCenterServiceImpl implements OrderCenterService {
 			 */
 			orderInfo = transOrderInfo(orderInfoOperation);
 			orderDetailSubList = transOrderDetail(orderDetailOperationList,orderInfoOperation);
-			orderDetailThirdPartySubList = transOrderDetailThirdParty(orderDetailThirdPartyOperationList);
+			if(!orderDetailThirdPartyOperationList.isEmpty()){
+				orderDetailThirdPartySubList = transOrderDetailThirdParty(orderDetailThirdPartyOperationList);
+			}
 			expressInfo = transExpressInfo(orderInfoOperation);
 			if ("1".equals(orderInfoOperation.getInvoiceStatus())) {
 				invoiceInfo = transInvoiceInfo(invoiceInfoOperation,orderInfoOperation);
@@ -101,7 +103,9 @@ public class OrderCenterServiceImpl implements OrderCenterService {
 			orderInfoList.add(orderInfo);
 			orderDetailList.addAll(orderDetailSubList);
 			expressInfoList.add(expressInfo);
-			orderDetailThirdPartyList.addAll(orderDetailThirdPartySubList);
+			if(!orderDetailThirdPartySubList.isEmpty()){
+				orderDetailThirdPartyList.addAll(orderDetailThirdPartySubList);
+			}
 		}
 		
 		/**
@@ -171,7 +175,7 @@ public class OrderCenterServiceImpl implements OrderCenterService {
 		expressInfo.setProductsCount(orderInfoOperation.getProductCount());
 		expressInfo.setPayType(com.ehaoyao.cfy.model.operationcenter.OrderInfo.getPayTypeDesc(orderInfoOperation.getPayType()));
 		if("货到付款".equals(com.ehaoyao.cfy.model.operationcenter.OrderInfo.getPayTypeDesc(orderInfoOperation.getPayType()))){
-			expressInfo.setShuoldPay(orderInfoOperation.getPrice()!=null?orderInfoOperation.getPrice().doubleValue()+"":"");
+			expressInfo.setShuoldPay(orderInfoOperation.getPrice()!=null?orderInfoOperation.getPrice().doubleValue()+"":null);
 		}else{
 			expressInfo.setShuoldPay("0");//网上支付0
 		}
@@ -215,13 +219,13 @@ public class OrderCenterServiceImpl implements OrderCenterService {
 		for(int i=0;i<orderDetailOperationList.size();i++){
 			orderDetail = new OrderDetail();
 			com.ehaoyao.cfy.model.operationcenter.OrderDetail orderDetailOperation = orderDetailOperationList.get(i);
-			productCount+=orderDetailOperation.getCount();
+			productCount+=(orderDetailOperation.getCount()!=null?orderDetailOperation.getCount():0);
 			orderDetail.setCount(orderDetailOperation.getCount()!=null?orderDetailOperation.getCount().doubleValue():null);
-			orderDetail.setDiscountAmount(orderDetailOperation.getDiscountAmount()+"");
+			orderDetail.setDiscountAmount(orderDetailOperation.getDiscountAmount()!=null?orderDetailOperation.getDiscountAmount()+"":null);
 			orderDetail.setMerchantId(orderDetailOperation.getMerchantId()==null?"":orderDetailOperation.getMerchantId());
 			orderDetail.setOrderFlag(orderDetailOperation.getOrderFlag());
 			orderDetail.setOrderNumber(orderDetailOperation.getOrderNumber());
-			orderDetail.setPrice(orderDetailOperation.getPrice().doubleValue());
+			orderDetail.setPrice(orderDetailOperation.getPrice()!=null?orderDetailOperation.getPrice().doubleValue():null);
 			orderDetail.setProductId(orderDetailOperation.getProductId());
 			orderDetail.setProductName(orderDetailOperation.getProductName());
 			orderDetail.setTotalPrice(orderDetailOperation.getTotalPrice()!=null?orderDetailOperation.getTotalPrice().doubleValue():null);
@@ -252,11 +256,11 @@ public class OrderCenterServiceImpl implements OrderCenterService {
 		orderInfo.setOrderNumber(orderInfoOperation.getOrderNumber());
 		orderInfo.setOrderPrice(orderInfoOperation.getOrderPrice()!=null?orderInfoOperation.getOrderPrice().doubleValue():null);
 		orderInfo.setOrderStatus(OrderInfo.ORDER_INFO_ORDER_STATUS_INIT);
-		orderInfo.setOverReturnFree(orderInfoOperation.getOverReturnFree()!=null?orderInfoOperation.getOverReturnFree().toString():"");
+		orderInfo.setOverReturnFree(orderInfoOperation.getOverReturnFree()!=null?orderInfoOperation.getOverReturnFree().toString():null);
 		orderInfo.setPaymentTime(orderInfoOperation.getPaymentTime());
 		orderInfo.setPayType(com.ehaoyao.cfy.model.operationcenter.OrderInfo.getPayTypeDesc(orderInfoOperation.getPayType()));
 		orderInfo.setPrice(orderInfoOperation.getPrice()!=null?orderInfoOperation.getPrice().doubleValue():null);
-		orderInfo.setFeeType(orderInfoOperation.getPlatPayPrice()!=null?orderInfoOperation.getPlatPayPrice()+"":"");//平台支付金额
+		orderInfo.setFeeType(orderInfoOperation.getPlatPayPrice()!=null?orderInfoOperation.getPlatPayPrice()+"":null);//平台支付金额
 		orderInfo.setProvince(orderInfoOperation.getProvince());
 		orderInfo.setReceiver(orderInfoOperation.getReceiver());
 		orderInfo.setRemark(orderInfoOperation.getRemark());

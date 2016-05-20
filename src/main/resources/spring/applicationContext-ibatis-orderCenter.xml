@@ -80,7 +80,7 @@
 	
     <bean id="mapperScannerOrderCenter" class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
         <property name="basePackage" value="com.ehaoyao.cfy.**.mapper.ordercenter" />  
-        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryOrderCenter"/>  
+        <!-- <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryOrderCenter"/>   -->
         <property name="sqlSessionTemplateBeanName" value="sqlSessionTemplateOrderCenter" />
     </bean>
     

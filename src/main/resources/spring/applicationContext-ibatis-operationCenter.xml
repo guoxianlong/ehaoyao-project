@@ -77,7 +77,7 @@
 	
     <bean id="mapperScannerOperationCenter" class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
         <property name="basePackage" value="com.ehaoyao.cfy.**.mapper.operationcenter" />  
-        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryOperationCenter"/>  
+        <!-- <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryOperationCenter"/> -->  
         <property name="sqlSessionTemplateBeanName" value="sqlSessionTemplateOperationCenter" />
     </bean>
     

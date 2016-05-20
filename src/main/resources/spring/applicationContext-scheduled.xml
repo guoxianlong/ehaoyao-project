@@ -12,9 +12,18 @@
     <!--  定时器开关  开始-->
     <task:annotation-driven/>
     <!--  定时器开关  结束--> 
-    <!-- 从运营中心获取药师审核通过订单到订单中心 -->
     <task:scheduled-tasks>
-		<task:scheduled ref="dealAuditPassOrderTask" method="dealLogic" initial-delay="10000" fixed-delay="600000"/>
+	    <!-- 
+	    	从运营中心获取药师审核通过订单到订单中心
+	    	初始10秒启动，以后每10分钟启动一次600000
+	   	 -->
+		<task:scheduled ref="dealAuditPassOrderTask" method="dealLogic" initial-delay="10000" fixed-delay="60000"/>
+		
+		<!-- 
+	    	漏单-从运营中心获取药师审核通过订单到订单中心
+	    	初始1分钟启动，以后每4小时启动一次 14400000
+    	-->
+		<task:scheduled ref="dealAuditPassOrderMissTask" method="dealLogic" initial-delay="11000" fixed-delay="60000" />
     </task:scheduled-tasks>
     
 </beans>
