@@ -111,7 +111,9 @@ public class ThirdOrderSecondAuditServiceImpl implements IThirdOrderSecondAuditS
 				orderAuditLog.setAuditUser(user.getName());
 				orderAuditLog.setKfAccount(user.getUserName());
 				orderAuditLog.setAuditStatus(auditStatus);
-				orderAuditLog.setRejectType(rejectType);
+				if(!"-1".equals(rejectType) && rejectType.length()>0){
+					orderAuditLog.setRejectType(rejectType);
+				}
 				orderAuditLog.setAuditDescription(auditDescription);
 				orderAuditLog.setCreateTime(currDate);
 				
@@ -236,7 +238,7 @@ public class ThirdOrderSecondAuditServiceImpl implements IThirdOrderSecondAuditS
 		
 		retStr = "批量审批订单操作成功！成功审批"+(orderInfoList!=null&&!orderInfoList.isEmpty()?orderInfoList.size():0)+"条订单!";
 		if(auditErrNum.length()>0){
-			retStr +="调用三方接口失败导致审核失败订单："+auditErrNum+"!";
+			retStr +="调用三方接口失败导致审核失败订单号："+auditErrNum+"、";
 		}
 		if(hasAuditOrders!=null && hasAuditOrders.trim().length()>0){
 			retStr += "已被其他药师审批订单："+hasAuditOrders+"请返回查看订单详情。";

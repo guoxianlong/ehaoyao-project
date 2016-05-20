@@ -132,7 +132,9 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 					orderAuditLog.setAuditUser(user.getName());
 					orderAuditLog.setKfAccount(user.getUserName());
 					orderAuditLog.setAuditStatus(auditStatus);
-					orderAuditLog.setRejectType(rejectType);
+					if(!"-1".equals(rejectType) && rejectType.length()>0){
+						orderAuditLog.setRejectType(rejectType);
+					}
 					orderAuditLog.setAuditDescription(auditDescription);
 					orderAuditLog.setCreateTime(currDate);
 					if(OrderInfo.ORDER_AUDIT_STATUS_PRESUCC.equals(auditStatus)){
@@ -198,7 +200,7 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 		if(OrderInfo.ORDER_ORDER_FLAG_360CFY.equals(orderFlag)){
 			PrescriptionAuditResponse res = writeBack360CFY(orderAuditLog);
 			if(res!=null){
-				retStr = res.getMsg();
+				retStr = res.getBody();
 			}
 		}
 		/**
@@ -471,14 +473,14 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 		}
 		String msg =null;
 		//1  配置   调用审核接口的参数
-		String partnerId = "haoyaoshi_01";
+		String partnerId = thirdPlatCFYConf.getProperty("partnerId");
 		// 1.1请求响应报文使用 
-		String key = "8aaa9339547fb66351e4a66972cfe359"; 
+		String key = thirdPlatCFYConf.getProperty("key"); 
 		// apiId，            平安平台还未开发出测试接口
-		String apiId = "51ba608c079c53c3a1f98b9ab2837633#PROD"; 
-		String apiName = "B2cNoticePrescribedOrder"; 
-		Long userVenderId = new Long(2083950007);
-		String apiGroup = "shennongLogistics";
+		String apiId = thirdPlatCFYConf.getProperty("apiId"); 
+		String apiName = thirdPlatCFYConf.getProperty("apiName"); 
+		Long userVenderId = new Long(thirdPlatCFYConf.getProperty("userVenderId"));
+		String apiGroup = thirdPlatCFYConf.getProperty("apiGroup");
 		// 1.3 开始请求报⽂文编码 
 		RequestEncoder encoder = new RequestEncoder(partnerId, key, apiId);
 		// 1.4  填充API参数 
@@ -489,8 +491,8 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 		encoder.addParameter("11");//remark不能为空，所以随便填充，具体参照之前版本--三方平台订单审核(平安处方药)或咨询平安相关人员
 		// 1.5  结束请求报⽂文编码,作为HTTP POST BODY 
 		RequestEntity re = encoder.encode();
-		String url = "http://openapi.jk.cn/api/v1/"+apiGroup+"/"+apiName + "?";
-		url += re.getQueryParams();
+		String url = thirdPlatCFYConf.getProperty("url");
+		url += apiGroup+"/"+apiName + "?" + re.getQueryParams();
 		url += "&" + re.getFormParams();
 		// 2  客户端发送HTTP POST请求，获得数据后，解析成符合要求的json字符串
 		// 2.1  客户端发送HTTP POST请求， 获得HTTP相应结果(JSON格式)
@@ -509,12 +511,7 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 				data = data.replaceAll("\\\\","");
 				JSONObject json = JSONObject.parseObject(data);
 				logger.info("运营中心-调用平安审核接口，返回数据" + (json!=null?json.toString():""));
-				boolean rs = json.getBoolean("success");
-				if(rs){
-					return msg;
-				}else{
-					msg = json.getString("resultMsg");						
-				}
+				return json.toJSONString();
 			}else{
 				msg = "获取data的值为" + data;
 			}

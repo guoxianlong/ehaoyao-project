@@ -129,7 +129,7 @@
 								varStatus="orderNumber">
 								<tr class="orderInfoTr">
 									<td style="vertical-align: middle;" >
-										<input type="checkbox" name="selItem" value="${items.orderNumber},${items.orderFlag},${items.remark}" ${items.auditStatus!="WAIT"?"disabled":""} >
+										<input type="checkbox" name="selItem" value="${items.orderNumber},${items.orderFlag},${items.remark}" ${(items.auditStatus!="WAIT"&&items.auditStatus!="RETURN")?"disabled":""} >
 										${(pageno-1)*pageSize+orderNumber.count}
 									</td>
 									<td style="vertical-align: middle;">${items.orderNumber}</td>
