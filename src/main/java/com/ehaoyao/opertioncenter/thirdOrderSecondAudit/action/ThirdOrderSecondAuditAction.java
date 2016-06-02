@@ -211,16 +211,23 @@ public class ThirdOrderSecondAuditAction extends BaseAction{
 	@RequestMapping(params = ("method=auditOrder"))
 	public void auditOrder(HttpServletRequest request,PrintWriter printWriter,ThirdOrderAuditVO vo){
 		String rtnStr = "";
+		Object[] retObj = new Object[2];
 		try {
 			synchronized (this) {
 				if(vo==null){
 					vo = new ThirdOrderAuditVO();
 				}
-				rtnStr = iThirdOrderAuditSecondService.updateAuditStatus(vo);
+				retObj = iThirdOrderAuditSecondService.updateAuditStatus(vo);
+				if(!(boolean) retObj[0]){
+					rtnStr = (String) retObj[1];
+				}
 			}
 		} catch (Exception e) {
-			rtnStr = "审核订单异常，请联系管理员！订单号："+vo.getOrderNumber();
-			logger.error("审核订单异常，请联系管理员！订单号："+vo.getOrderNumber(),e);
+			rtnStr = e.getMessage();
+			if(rtnStr==null){
+				rtnStr = "审核订单异常，请联系管理员！订单号："+vo.getOrderNumber();
+			}
+			logger.error(rtnStr,e);
 		}finally{
 			try {
 				printWriter.write(rtnStr);

@@ -227,7 +227,7 @@ public class ThirdOrderAuditAction extends BaseAction{
 			if(rtnStr==null){
 				rtnStr = "审核订单异常，请联系管理员！订单号："+vo.getOrderNumber();
 			}
-			logger.error("审核订单异常，请联系管理员！订单号："+vo.getOrderNumber(),e);
+			logger.error(rtnStr,e);
 		}finally{
 			try {
 				printWriter.write(rtnStr);
