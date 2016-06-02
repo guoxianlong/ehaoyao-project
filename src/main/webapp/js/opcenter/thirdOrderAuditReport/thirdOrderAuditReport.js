@@ -103,8 +103,8 @@ function tdClick(){
 	for(var i=0;i<TdArr.length;i++){
 		TdArr[i].onclick = function(event){
 			if(event.currentTarget.cells.length>2){
-				var orderNumber = event.currentTarget.cells[1].innerHTML;
-				var orderFlag = event.currentTarget.cells[2].innerHTML;
+				var orderNumber = event.currentTarget.cells[3].innerHTML;
+				var orderFlag = event.currentTarget.cells[1].innerHTML;
 //				console.log("orderNumber："+orderNumber+",orderFlag="+orderFlag);
 				getMainOrderDetails(orderNumber,orderFlag);
 			}

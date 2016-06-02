@@ -157,7 +157,7 @@ function tdClick(){
 					}
 				}
 				event.currentTarget.parentElement.cells[0].childNodes[1].checked = checkBoxValue;
-				var orderNumber = event.currentTarget.parentElement.cells[1].innerHTML; 
+				var orderNumber = event.currentTarget.parentElement.cells[4].innerHTML; 
 				var orderFlag = event.currentTarget.parentElement.cells[2].innerHTML; 
 				getMainOrderDetails(orderNumber,orderFlag);
 				

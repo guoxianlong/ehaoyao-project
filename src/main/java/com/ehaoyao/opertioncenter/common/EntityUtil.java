@@ -67,6 +67,9 @@ public class EntityUtil {
 			map.put("ZSTY", "掌上糖医");
 			//2016-04-11
 			map.put("yhdcfy", "一号店处方药");
+			map.put("YZDLCFY", "云智动力处方药");
+			map.put("KYW", "快药处方药");
+			map.put("SLLCFY", "360健康处方药");
 		}
 		return map;
 	}

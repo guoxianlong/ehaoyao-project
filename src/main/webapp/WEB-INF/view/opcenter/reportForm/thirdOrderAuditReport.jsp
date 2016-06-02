@@ -111,17 +111,19 @@
 		 			<thead>
 		 				<tr>
 		 					<th>序号</th>
-		 					<th class="sortTh" id="order_number">订单号</th>
 		 					<th class="sortTh" id="order_flag">渠道</th>
+		 					<th class="sortTh" id="order_number">订单号</th>
 		 					<th class="sortTh" id="order_time">订单日期</th>
+				 			<th class="sortTh" id="order_price">订单金额(元)</th>
+				 			<th class="sortTh" id="order_price">运费(元)</th>
+				 			<th class="sortTh" id="order_price">优惠金额(元)</th>
+				 			<th class="sortTh" id="price">付款金额(元)</th>
+				 			<th class="sortTh" id="pay_status">付款状态</th>
+				 			<th class="sortTh" id="audit_status">审核状态</th>
+				 			<th class="sortTh" id="prescription_type">处方药</th>
 				 			<th class="sortTh" id="receiver">姓名</th>
 				 			<th class="sortTh" id="telephone">电话</th>
 				 			<th>地址</th>
-				 			<th class="sortTh" id="order_price">订单金额(元)</th>
-				 			<th class="sortTh" id="prescription_type">处方药</th>
-				 			<th class="sortTh" id="pay_status">付款状态</th>
-				 			<th class="sortTh" id="audit_status">审核状态</th>
-				 			<th class="sortTh" id="price">付款金额(元)</th>
 				 			<th class="sortTh" id="invoice_status">是否开票</th>
 				 			<th class="sortTh" id="invoice_type">发票类型</th>
 				 			<th>发票抬头</th>
@@ -145,9 +147,8 @@
 									<td style="vertical-align: middle;">
 										${(pageno-1)*pageSize+orderNumber.count}
 									</td>
-									<td style="vertical-align: middle;">${items.orderNumber}</td>
 									<td style="display: none;">${items.orderFlag}</td>
-									<td style="vertical-align: middle;">
+									<td style="vertical-align: middle;text-align: left;">
 										<c:if test="${items.orderFlag=='TMCFY'}">天猫处方药</c:if>
 										<c:if test="${items.orderFlag=='PACFY'}">平安处方药</c:if>
 										<c:if test="${items.orderFlag=='yhdcfy'}">1号店处方药</c:if>
@@ -155,14 +156,20 @@
 										<c:if test="${items.orderFlag=='ZSTY'}">掌上糖医</c:if>
 										<c:if test="${items.orderFlag=='SLLCFY'}">360健康处方药</c:if>  
 									</td>
+									<td style="vertical-align: middle;text-align: left;">${items.orderNumber}</td>
 									<td style="vertical-align: middle;">${items.orderTime}</td>
-									<td style="vertical-align: middle;">${items.receiver}</td>
-									<td style="vertical-align: middle;" class="phoneCls">${(items.telephone==""||items.telephone==null)?items.mobile:items.telephone}</td>
-									<td style="vertical-align: middle;">${items.province}${items.city}${items.area}${items.addressDetail}</td>
-									<td style="text-align: right; vertical-align: middle;">
+									<td style="vertical-align: middle;">
 										<fmt:formatNumber value="${items.orderPrice!=null?items.orderPrice:0.00}" pattern="##.##" minFractionDigits="2"></fmt:formatNumber>
 									</td>
-									<td style="vertical-align: middle;">${items.pregnantFlag == '0'?'否':'是'}</td>
+									<td style="vertical-align: middle;">
+										<fmt:formatNumber value="${items.expressPrice!=null?items.expressPrice:0.00}" pattern="##.##" minFractionDigits="2"></fmt:formatNumber>
+									</td>
+									<td style="vertical-align: middle;">
+										<fmt:formatNumber value="${items.discountAmount!=null?items.discountAmount:0.00}" pattern="##.##" minFractionDigits="2"></fmt:formatNumber>
+									</td>
+									<td style="vertical-align: middle;">
+										<fmt:formatNumber value="${items.price!=null?items.price:0.00}" pattern="##.##" minFractionDigits="2"></fmt:formatNumber>
+									</td>
 									<td style="vertical-align: middle;">
 										<c:if test="${items.payStatus == 'NOPAY'}">未支付</c:if>
 										<c:if test="${items.payStatus == 'PAID'}">已支付</c:if>
@@ -175,21 +182,22 @@
 										<c:if test="${items.auditStatus == 'SUCC'}">药师审核通过</c:if> 
 										<c:if test="${items.auditStatus == 'RETURN'}">药师审核驳回</c:if>
 									</td>
-									<td style="vertical-align: middle;">
-										<fmt:formatNumber value="${items.price!=null?items.price:0.00}" pattern="##.##" minFractionDigits="2"></fmt:formatNumber>
-									</td>
+									<td style="vertical-align: middle;">${items.prescriptionType == '0'?'否':'是'}</td>
+									<td style="vertical-align: middle;">${items.receiver}</td>
+									<td style="vertical-align: middle;text-align: left;" class="phoneCls">${(items.telephone==""||items.telephone==null)?items.mobile:items.telephone}</td>
+									<td style="vertical-align: middle;text-align: left;">${items.province}${items.city}${items.area}${items.addressDetail}</td>
 									<td style="vertical-align: middle;">${items.invoiceStatus=="1"?"是":"否"}</td>
 									<td style="vertical-align: middle;">
 										<c:if test="${items.invoiceType == 'PLAIN'}">普通发票</c:if>
 										<c:if test="${items.invoiceType == 'ELECTRONIC'}">电子发票</c:if>
 										<c:if test="${items.invoiceType == 'VAT'}">增值税发票</c:if>
 									</td>
-									<td style="vertical-align: middle;">${items.invoiceTitle}</td>
-									<td style="vertical-align: middle;">${items.invoiceContent}</td>
-									<td style="vertical-align: middle;">${items.remark}</td>
+									<td style="vertical-align: middle;text-align: left;">${items.invoiceTitle}</td>
+									<td style="vertical-align: middle;text-align: left;">${items.invoiceContent}</td>
+									<td style="vertical-align: middle;text-align: left;">${items.remark}</td>
 									<td style="vertical-align: middle;">${items.kfAuditUser}</td>
 									<td style="vertical-align: middle;">${items.kfAuditTime}</td>
-									<td style="vertical-align: middle;">
+									<td style="vertical-align: middle;text-align: left;">
 										<c:if test="${items.kfRejectType == 'F1E'}">配送不到</c:if>
 										<c:if test="${items.kfRejectType == 'F1F'}">价格贵</c:if> 
 										<c:if test="${items.kfRejectType == 'F1G'}">顾客买错</c:if> 
@@ -200,10 +208,10 @@
 										<c:if test="${items.kfRejectType == 'F1L'}">电话不通</c:if>
 										<c:if test="${items.kfRejectType == 'F1M'}">付款方式</c:if>
 									</td>
-									<td style="vertical-align: middle;">${items.kfAuditDescription}</td>
+									<td style="vertical-align: middle;text-align: left;">${items.kfAuditDescription}</td>
 									<td style="vertical-align: middle;">${items.doctorAuditUser}</td>
 									<td style="vertical-align: middle;">${items.doctorAuditTime}</td>
-									<td style="vertical-align: middle;">
+									<td style="vertical-align: middle;text-align: left;">
 										<c:if test="${items.doctorRejectType == 'F1E'}">配送不到</c:if>
 										<c:if test="${items.doctorRejectType == 'F1F'}">价格贵</c:if> 
 										<c:if test="${items.doctorRejectType == 'F1G'}">顾客买错</c:if> 
@@ -214,12 +222,12 @@
 										<c:if test="${items.doctorRejectType == 'F1L'}">电话不通</c:if>
 										<c:if test="${items.doctorRejectType == 'F1M'}">付款方式</c:if>  
 									</td>
-									<td style="vertical-align: middle;">${items.doctorAuditDescription}</td>
+									<td style="vertical-align: middle;text-align: left;">${items.doctorAuditDescription}</td>
 								</tr>
 							</c:forEach>
 						</c:if>
 						<c:if test="${orderList == null or fn:length(orderList)<=0}">
-						    <tr><th colspan="25" style="background-color:#ccc;font-size: 14px;color: #fa0;">暂无数据...</th></tr>
+						    <tr><th colspan="26" style="background-color:#ccc;font-size: 14px;color: #fa0;">暂无数据...</th></tr>
 						</c:if>
 					</tbody>
 		 		</table>
