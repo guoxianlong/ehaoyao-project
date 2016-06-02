@@ -94,15 +94,6 @@ public class ThirdOrderSecondAuditServiceImpl implements IThirdOrderSecondAuditS
 				User user = getCurrentUser();
 				
 
-				//调用平安接口，回写药师审核信息
-				/*if(orderFlag.length()>0 && OrderInfo.ORDER_ORDER_FLAG_PA.equals(orderFlag)){
-					Map<String,Object> map = new HashMap<String,Object>();
-					map.put("orderNumber", orderNumber);
-					map.put("auditStatus", auditStatus);
-					map.put("auditDescription", auditDescription);
-					String resultMsg = iThirdOrderAuditService.auditPAOrder(map);
-					logger.info("【运营中心-医师二级审核-调用并回写平安订单审核接口，订单号："+orderNumber+"，返回信息：】"+resultMsg);
-				}*/
 				
 				//订单审核轨迹记录
 				orderAuditLog = new OrderAuditLog();
@@ -121,8 +112,8 @@ public class ThirdOrderSecondAuditServiceImpl implements IThirdOrderSecondAuditS
 				/**
 				 * 通知并回写三方平台审核状态及审核说明
 				 */
-				String retStrMsg = iThirdOrderAuditService.writeBackThirdPlatAuditInfo(orderAuditLog);
-				logger.info("【运营中心-回写三方平台审核信息！返回信息："+retStrMsg+"】");
+				Object[] retStrMsg = iThirdOrderAuditService.writeBackThirdPlatAuditInfo(orderAuditLog);
+				logger.info("【运营中心-回写三方平台审核信息！返回信息："+retStrMsg[0]+"】");
 				
 				orderAuditLogList.add(orderAuditLog);
 				orderInfoList.add(orderInfo);
@@ -214,8 +205,8 @@ public class ThirdOrderSecondAuditServiceImpl implements IThirdOrderSecondAuditS
 			 * 通知并回写三方平台审核状态及审核说明
 			 */
 			try {
-				String retStrMsg = iThirdOrderAuditService.writeBackThirdPlatAuditInfo(orderAuditLog);
-				logger.info("【运营中心-回写三方平台审核信息！返回信息："+retStrMsg+"】");
+				Object[] retStrMsg = iThirdOrderAuditService.writeBackThirdPlatAuditInfo(orderAuditLog);
+				logger.info("【运营中心-回写三方平台审核信息！返回信息："+retStrMsg[0]+"】");
 			} catch (Exception e) {
 				auditErrNum+=orderAuditLog.getOrderNumber();
 				logger.error("【运营中心-回写三方平台审核信息！异常！异常信息："+e.getMessage()+"】");

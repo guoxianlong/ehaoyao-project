@@ -36,7 +36,7 @@ public interface IThirdOrderAuditService {
 	 * @return
 	 * @throws Exception
 	 */
-	public String updateAuditStatus(ThirdOrderAuditVO vo) throws Exception;
+	public Object[] updateAuditStatus(ThirdOrderAuditVO vo) throws Exception;
 
 	/**
 	 * 批量审核通过订单
@@ -67,5 +67,5 @@ public interface IThirdOrderAuditService {
 	 * @return
 	 * @throws Exception
 	 */
-	public String writeBackThirdPlatAuditInfo(OrderAuditLog orderAuditLog) throws Exception;
+	public Object[] writeBackThirdPlatAuditInfo(OrderAuditLog orderAuditLog) throws Exception;
 }

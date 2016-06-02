@@ -211,15 +211,22 @@ public class ThirdOrderAuditAction extends BaseAction{
 	@RequestMapping(params = ("method=auditOrder"))
 	public void auditOrder(HttpServletRequest request,PrintWriter printWriter,ThirdOrderAuditVO vo){
 		String rtnStr = "";
+		Object[] retObj = new Object[2];
 		try {
 			synchronized (this) {
 				if(vo==null){
 					vo = new ThirdOrderAuditVO();
 				}
-				rtnStr = iThirdOrderAuditService.updateAuditStatus(vo);
+				retObj = iThirdOrderAuditService.updateAuditStatus(vo);
+				if(!((boolean) retObj[0])){
+					rtnStr = (String) retObj[1];
+				}
 			}
 		} catch (Exception e) {
-			rtnStr = "审核订单异常，请联系管理员！订单号："+vo.getOrderNumber();
+			rtnStr = e.getMessage();
+			if(rtnStr==null){
+				rtnStr = "审核订单异常，请联系管理员！订单号："+vo.getOrderNumber();
+			}
 			logger.error("审核订单异常，请联系管理员！订单号："+vo.getOrderNumber(),e);
 		}finally{
 			try {
@@ -251,7 +258,9 @@ public class ThirdOrderAuditAction extends BaseAction{
 				}
 			}
 		} catch (Exception e) {
-			result = "程序处理异常，请联系管理员！";
+			if(result.length()==0){
+				result = "程序处理异常，请联系管理员！";
+			}
 			logger.error("批量审核订单异常，请联系管理员！",e);
 			e.printStackTrace();
 		}finally{

@@ -31,8 +31,11 @@ import com.ehaoyao.opertioncenter.thirdOrderAudit.vo.OrderMainInfo;
 import com.ehaoyao.opertioncenter.thirdOrderAudit.vo.ThirdOrderAuditVO;
 import com.galaxy.pop.api.client.DefaultPopApiClient;
 import com.galaxy.pop.api.client.PopApiClient;
+import com.galaxy.pop.api.client.model.Trade;
 import com.galaxy.pop.api.client.request.PrescriptionAuditRequest;
+import com.galaxy.pop.api.client.request.TradeFullinfoGetRequest;
 import com.galaxy.pop.api.client.response.PrescriptionAuditResponse;
+import com.galaxy.pop.api.client.response.TradeFullInfoGetResponse;
 import com.haoyao.goods.dao.UserDao;
 import com.haoyao.goods.model.User;
 import com.pajk.openapi.codec.client.RequestEncoder;
@@ -86,7 +89,13 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String updateAuditStatus(ThirdOrderAuditVO vo) throws Exception {
+	public Object[] updateAuditStatus(ThirdOrderAuditVO vo) throws Exception {
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		/**
+		 * retObj[0] boolean值   true 表示有问题  false表示没问题 
+		 * retObj[1] 返回信息
+		 */
+		Object[] retObj = new Object[2];
 		/**
 		 * 备注：审核通过，则审核日志表及发票表，记录客服更改的信息，驳回则为订单默认信息
 		 */
@@ -97,7 +106,7 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 		String invoiceStatus = vo.getInvoiceStatus()!=null&&vo.getInvoiceStatus().trim().length()>0?vo.getInvoiceStatus().trim():"";
 		String rejectType = vo.getRejectType()!=null?vo.getRejectType().trim():"";
 		String remark = vo.getRemark()!=null&&vo.getRemark().trim().length()>0?vo.getRemark().trim():"";
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
 		String currDate = sdf.format(new Date());
 		OrderInfo orderInfo = null;
 		OrderAuditLog orderAuditLog = null;
@@ -105,69 +114,75 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 		List<OrderInfo> orderInfoList = new ArrayList<OrderInfo>();
 		List<OrderAuditLog> orderAuditLogList = new ArrayList<OrderAuditLog>();
 		List<InvoiceInfo> invoiceInfoList = new ArrayList<InvoiceInfo>();
-			if(vo!=null){
-					User user = getCurrentUser();
+			
+		User user = getCurrentUser();
 
-					//更新订单表
-					orderInfo =  (OrderInfo) iThirdOrderDao.getOrderInfosByOrderNumFlags((vo.getOrderNumber()!=null?vo.getOrderNumber().trim():"")+(vo.getOrderFlag()!=null?vo.getOrderFlag().trim():""));
-					
-					//如果原订单审核状态为PRESUCC,则记录并返回已审核的提示
-					if(OrderInfo.ORDER_AUDIT_STATUS_PRESUCC.equals(orderInfo.getAuditStatus().trim())||OrderInfo.ORDER_AUDIT_STATUS_PRERETURN.equals(orderInfo.getAuditStatus().trim())){
-						return "订单："+orderNumber+"，审批失败，已被其他客服审批，请返回查看详情！";
-					}
-					
-					orderInfo.setAuditStatus(auditStatus);
-					orderInfo.setLastTime(currDate);
-					//客服可更改订单备注及发票信息
-					if(OrderInfo.ORDER_AUDIT_STATUS_PRESUCC.equals(auditStatus)){
-						orderInfo.setInvoiceStatus(vo.getInvoiceStatus());
-						orderInfo.setRemark(remark);
-					}
-					
-					
-					//订单审核轨迹记录
-					orderAuditLog = new OrderAuditLog();
-					orderAuditLog.setOrderNumber(orderNumber);
-					orderAuditLog.setOrderFlag(vo.getOrderFlag());
-					orderAuditLog.setAuditUser(user.getName());
-					orderAuditLog.setKfAccount(user.getUserName());
-					orderAuditLog.setAuditStatus(auditStatus);
-					if(!"-1".equals(rejectType) && rejectType.length()>0){
-						orderAuditLog.setRejectType(rejectType);
-					}
-					orderAuditLog.setAuditDescription(auditDescription);
-					orderAuditLog.setCreateTime(currDate);
-					if(OrderInfo.ORDER_AUDIT_STATUS_PRESUCC.equals(auditStatus)){
-						orderAuditLog.setRemark(remark);
-					}else{
-						orderAuditLog.setRemark(orderInfo.getRemark());
-					}
-					
-					/**
-					 * 通知并回写三方平台审核状态及审核说明
-					 */
-					String retStr = writeBackThirdPlatAuditInfo(orderAuditLog);
-					logger.info("【运营中心-回写三方平台审核信息！返回信息："+retStr+"】");
-					
-					
-					//更新发票表信息
-					if(invoiceStatus.length()>0 && OrderInfo.ORDER_AUDIT_STATUS_PRESUCC.equals(vo.getAuditStatus())){
-						invoiceInfo = new InvoiceInfo();
-						invoiceInfo.setOrderNumber(orderNumber);
-						invoiceInfo.setOrderFlag(vo.getOrderFlag());
-						invoiceInfo.setKfAccount(user.getUserName());
-						invoiceInfo.setCreateTime(currDate);
-						invoiceInfo.setInvoiceStatus(invoiceStatus);
-						if("1".equals(invoiceStatus)){
-							invoiceInfo.setInvoiceType(vo.getInvoiceType());
-							invoiceInfo.setInvoiceTitle(vo.getInvoiceTitle());
-							invoiceInfo.setInvoiceContent(vo.getInvoiceContent());
-						}
-						invoiceInfoList.add(invoiceInfo);
-					}
-					
-					orderInfoList.add(orderInfo);
-					orderAuditLogList.add(orderAuditLog);
+			//更新订单表
+			orderInfo =  (OrderInfo) iThirdOrderDao.getOrderInfosByOrderNumFlags((vo.getOrderNumber()!=null?vo.getOrderNumber().trim():"")+(vo.getOrderFlag()!=null?vo.getOrderFlag().trim():""));
+			
+			//如果原订单审核状态为PRESUCC,则记录并返回已审核的提示
+			if(OrderInfo.ORDER_AUDIT_STATUS_PRESUCC.equals(orderInfo.getAuditStatus().trim())||OrderInfo.ORDER_AUDIT_STATUS_PRERETURN.equals(orderInfo.getAuditStatus().trim())){
+				retObj[0] = true;
+				retObj[1] = "订单："+orderNumber+"，审批失败，已被其他客服审批，请返回查看详情！";
+				return retObj;
+			}
+			
+			orderInfo.setAuditStatus(auditStatus);
+			orderInfo.setLastTime(currDate);
+			//客服可更改订单备注及发票信息
+			if(OrderInfo.ORDER_AUDIT_STATUS_PRESUCC.equals(auditStatus)){
+				orderInfo.setInvoiceStatus(vo.getInvoiceStatus());
+				orderInfo.setRemark(remark);
+			}
+			
+			
+			//订单审核轨迹记录
+			orderAuditLog = new OrderAuditLog();
+			orderAuditLog.setOrderNumber(orderNumber);
+			orderAuditLog.setOrderFlag(vo.getOrderFlag());
+			orderAuditLog.setAuditUser(user.getName());
+			orderAuditLog.setKfAccount(user.getUserName());
+			orderAuditLog.setAuditStatus(auditStatus);
+			if(!"-1".equals(rejectType) && rejectType.length()>0){
+				orderAuditLog.setRejectType(rejectType);
+			}
+			orderAuditLog.setAuditDescription(auditDescription);
+			orderAuditLog.setCreateTime(currDate);
+			if(OrderInfo.ORDER_AUDIT_STATUS_PRESUCC.equals(auditStatus)){
+				orderAuditLog.setRemark(remark);
+			}else{
+				orderAuditLog.setRemark(orderInfo.getRemark());
+			}
+			
+			/**
+			 * 通知并回写三方平台审核状态及审核说明
+			 */
+			retObj = writeBackThirdPlatAuditInfo(orderAuditLog);
+			
+			
+			//更新发票表信息
+			if(invoiceStatus.length()>0 && OrderInfo.ORDER_AUDIT_STATUS_PRESUCC.equals(vo.getAuditStatus())){
+				invoiceInfo = new InvoiceInfo();
+				invoiceInfo.setOrderNumber(orderNumber);
+				invoiceInfo.setOrderFlag(vo.getOrderFlag());
+				invoiceInfo.setKfAccount(user.getUserName());
+				invoiceInfo.setCreateTime(currDate);
+				invoiceInfo.setInvoiceStatus(invoiceStatus);
+				if("1".equals(invoiceStatus)){
+					invoiceInfo.setInvoiceType(vo.getInvoiceType());
+					invoiceInfo.setInvoiceTitle(vo.getInvoiceTitle());
+					invoiceInfo.setInvoiceContent(vo.getInvoiceContent());
+				}
+				invoiceInfoList.add(invoiceInfo);
+			}
+			
+			orderInfoList.add(orderInfo);
+			orderAuditLogList.add(orderAuditLog);
+			
+			if(!((boolean) retObj[0])){
+				retObj[1] = "订单："+orderNumber+"，审批成功！";
+			}else{
+				throw new RuntimeException((String) retObj[1]);
 			}
 			
 			if(!orderInfoList.isEmpty()){
@@ -183,24 +198,37 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 				iThirdOrderDao.addInvoiceInfoBatch(invoiceInfoList);
 			}
 			
-		return "订单："+orderNumber+"，审批成功！";
+			
+		return retObj;
 	}
 	
 	/**
 	 * 通知并回写三方平台审核状态及审核说明
 	 * @param orderAuditLogList
 	 */
-	public String writeBackThirdPlatAuditInfo(OrderAuditLog orderAuditLog) throws Exception{
-		String retStr = "";
-		String orderFlag;
-		orderFlag = orderAuditLog.getOrderFlag();
+	public Object[] writeBackThirdPlatAuditInfo(OrderAuditLog orderAuditLog) throws Exception{
+		/**
+		 * retObj[0] boolean值   true表示有问题需要提示   false表示没问题可以进行调用360接口回写审核状态
+		 * retObj[1] 需要返回的提示信息
+		 */
+		Object retStr[] = new Object[2];
+		String orderFlag  = orderAuditLog.getOrderFlag()!=null?orderAuditLog.getOrderFlag().trim():"";
+		String auditStatus = orderAuditLog.getAuditStatus()!=null?orderAuditLog.getAuditStatus().trim():"";
+		String orderNumber = orderAuditLog.getOrderNumber()!=null?orderAuditLog.getOrderNumber().trim():"";
 		/**
 		 * 回写360健康审核信息，同天猫处方药一样，需客服/药师，二级审核。
 		 */
 		if(OrderInfo.ORDER_ORDER_FLAG_360CFY.equals(orderFlag)){
-			PrescriptionAuditResponse res = writeBack360CFY(orderAuditLog);
-			if(res!=null){
-				retStr = res.getBody();
+			Object[] ret = get360LastStatus(orderNumber);
+			if(!((boolean) ret[0])){
+				retStr[1] = writeBack360CFY(orderAuditLog);
+			}else{
+				if(OrderInfo.ORDER_AUDIT_STATUS_PRERETURN.equals(auditStatus)){
+					retStr[0] = false;
+				}else{
+					retStr[0] = true;
+				}
+				retStr[1] = ret[1];
 			}
 		}
 		/**
@@ -208,7 +236,8 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 		 * 平安处方药接口限制：审核信息不能为空
 		 */
 		if(OrderInfo.ORDER_ORDER_FLAG_PA.equals(orderAuditLog.getOrderFlag())){
-			retStr = writeBackPACFY(orderAuditLog);
+			retStr[0] = false;
+			writeBackPACFY(orderAuditLog);
 		}
 		return retStr;
 	}
@@ -235,38 +264,86 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 		String resultMsg = this.auditPAOrder(map);
 		return resultMsg;
 	}
+	
+	/**
+	 * 获取360平台最新的订单状态、审核状态
+	 * @param orderAuditLog
+	 * @return
+	 * @throws Exception
+	 */
+	public Object[] get360LastStatus(String orderNumber) throws Exception {
+		/**
+		 * retObj[0] boolean值   true表示有问题需要提示不需调用360审核接口   false表示没问题可以进行调用360接口回写审核状态
+		 * retObj[1] 需要返回的提示信息
+		 */
+		Object[] retObj = new Object[2];
+		retObj[0] = false;
+		/**
+		 * 商家id
+		 */
+		String venderId = thirdPlatCFYConf.getProperty("360jkc.venderId");
+		String fields = thirdPlatCFYConf.getProperty("fields");
+		TradeFullinfoGetRequest request = new TradeFullinfoGetRequest();
+		request.setTid(orderNumber);
+		request.setVenderId(venderId);
+		request.setFields(fields);
+		PopApiClient client = get360ApiClient();
+		TradeFullInfoGetResponse response = client.execute(request);
+		Trade trade = response.getTrade();
+		String status = trade.getStatus()!=null?trade.getStatus().trim():"";
+		String pdState = trade.getPdState()!=null?trade.getPdState().trim():"";
+		String haveCfy = trade.getHaveCFY()!=null?trade.getHaveCFY().trim():"";
+		logger.info("获取订单"+orderNumber+",360平台返回信息"+trade.toString());
+		if(status.length()>0 && "TRADE_CLOSED".equals(status) && "1".equals(haveCfy)){
+			if(OrderInfo.ORDER_AUDIT_STATUS_PRESUCC.equals(status) || OrderInfo.ORDER_AUDIT_STATUS_SUCC.equals(status)){
+				retObj[0] = true;
+				retObj[1] = "订单:"+orderNumber+",在卖家平台是已关闭的状态,请进行驳回操作！";
+			}
+			if(OrderInfo.ORDER_AUDIT_STATUS_PRERETURN.equals(status)){
+				retObj[0] = true;
+			}
+		}
+
+		if(pdState.length()>0 && "1".equals(haveCfy)){
+			if("AUDIT_NOT_THROUGH".equals(pdState)){
+				retObj[0] = true;
+				retObj[1] = "订单:"+orderNumber+",在卖家平台是已驳回的状态！";
+			}
+			if("APPROVED".equals(pdState)){
+				retObj[0] = true;
+				retObj[1] = "订单:"+orderNumber+",在卖家平台是已审核通过的状态！";
+			}
+		}
+		/*if((boolean) retObj[0] && retObj[1]!=null){
+			throw new RuntimeException((String) retObj[1]);
+		}*/
+		return retObj;
+	}
 
 	/**
 	 * 回写360处方药审核状态
 	 * @param orderAuditLog
 	 * @throws Exception 
 	 */
-	private PrescriptionAuditResponse writeBack360CFY(OrderAuditLog orderAuditLog) throws Exception {
-		String auditStatus = orderAuditLog.getAuditStatus()!=null?orderAuditLog.getAuditStatus().trim():"";
-		if(auditStatus.length()==0){
-			return null;
-		}
+	private String writeBack360CFY(OrderAuditLog orderAuditLog) throws Exception {
+		/**
+		 * 返回信息
+		 */
+		String retStr = "";
+		
 		/**
 		 * 如果审核状态为客服审核通过或者药师审核驳回的话，则不调用360健康接口，即不回写审核状态；
 		 * 只在客服审核驳回和药师审核通过才进行回写审核状态(药师审核驳回，客服可更改后再次提交药师审核)
 		 */
-		if(OrderInfo.ORDER_AUDIT_STATUS_PRESUCC.equals(auditStatus)||OrderInfo.ORDER_AUDIT_STATUS_RETURN.equals(auditStatus)){
+		if(OrderInfo.ORDER_AUDIT_STATUS_PRESUCC.equals(orderAuditLog.getAuditStatus().trim())||OrderInfo.ORDER_AUDIT_STATUS_RETURN.equals(orderAuditLog.getAuditStatus().trim())){
 			return null;
 		}
 		
+		String auditStatus = orderAuditLog.getAuditStatus().trim();
 		/**
-		 * 请求地址url
+		 * 商家id
 		 */
-		String url = thirdPlatCFYConf.getProperty("360cfy_url");
 		String venderId = thirdPlatCFYConf.getProperty("360jkc.venderId");
-		/**
-		 * 商家key
-		 */
-		String appId = thirdPlatCFYConf.getProperty("360jkc.appId");
-		/**
-		 * 商家密钥
-		 */
-		String appkey = thirdPlatCFYConf.getProperty("360jkc.appkey");
 		/**
 		 * 处方药审核状态：0 审核不通过  1 审核通过（必填）
 		 */
@@ -276,7 +353,7 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 		vo.setOrderNumber(orderAuditLog.getOrderNumber());
 		
 		
-		PopApiClient client = new DefaultPopApiClient(url,  appId,appkey);
+		PopApiClient client = get360ApiClient();
 		PrescriptionAuditRequest request =  new PrescriptionAuditRequest();
 		if(OrderInfo.ORDER_AUDIT_STATUS_PRERETURN.equals(auditStatus)){
 			state = 0;
@@ -291,8 +368,42 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 		PrescriptionAuditResponse response = client.execute(request);
 		System.out.println("Body is : " + response.getBody());
 		System.out.println("Error is : " + response.getErrorCode());
-		return response;
+		
+		retStr = response.getBody();
+		JSONObject json = JSONObject.parseObject(retStr);
+		JSONObject rootJson = JSONObject.parseObject(json.getString("root"));
+		String errorCode = rootJson.getString("errorCode");
+//		String SubCode = rootJson.getString("subCode");
+		if(errorCode!=null && errorCode.trim().length()>0 && !"null".equals(errorCode.trim())){
+//		if(StringUtils.isNotBlank(errorCode) && "SUCCESS".equals(SubCode))
+			throw new RuntimeException(retStr);
+		}
+		
+		return retStr;
 	}
+	
+	/**
+	 * 封装360请求client
+	 * @return
+	 * @throws Exception
+	 */
+	public PopApiClient get360ApiClient() throws Exception{
+		/**
+		 * 请求地址url
+		 */
+		String url = thirdPlatCFYConf.getProperty("360cfy_url");
+		/**
+		 * 商家key
+		 */
+		String appId = thirdPlatCFYConf.getProperty("360jkc.appId");
+		/**
+		 * 商家密钥
+		 */
+		String appkey = thirdPlatCFYConf.getProperty("360jkc.appkey");
+		PopApiClient client = new DefaultPopApiClient(url,  appId,appkey);
+		return client;
+	}
+	
 
 	/**
 	 * 匹配并获取获取审核驳回描述
@@ -522,4 +633,6 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 		}
 		return msg;
 	}
+	
+	
 }
