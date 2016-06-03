@@ -1,111 +1,111 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<beans:beans xmlns="http://www.springframework.org/schema/security" 
-	xmlns:beans="http://www.springframework.org/schema/beans"
-	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
-	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd 
-	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd 
-	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
-	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
-	 ">
-	 
-	<beans:bean id="dataSourceOrder" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-		<beans:property name="driverClassName">
-			<beans:value>${db.driver.order}</beans:value>
-		</beans:property>
-		<beans:property name="url">
-			<beans:value>${db.url.order}</beans:value>
-		</beans:property>
-		<beans:property name="username">
-			<beans:value>${db.username.order}</beans:value>
-		</beans:property>
-		<beans:property name="password">
-			<beans:value>${db.password.order}</beans:value>
-		</beans:property>
-		<beans:property name="initialSize">
-			<beans:value>3</beans:value>
-		</beans:property>
-		<beans:property name="maxActive">
-			<beans:value>20</beans:value>
-		</beans:property>
-		<beans:property name="maxWait">
-			<beans:value>-1</beans:value>
-		</beans:property>
-		<beans:property name="maxIdle">
-			<beans:value>20</beans:value>
-		</beans:property>
-		<beans:property name="removeAbandoned" value="true" />
-		<beans:property name="removeAbandonedTimeout" value="60" />
-		<beans:property name="timeBetweenEvictionRunsMillis" value="300000" />
-		<beans:property name="logAbandoned" value="true" />
-	</beans:bean>
-	<beans:bean id="sessionFactoryOrder"
-		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
-		<beans:property name="dataSource" ref="dataSourceOrder" />
-		<beans:property name="hibernateProperties">
-			<beans:props>
-				<beans:prop key="hibernate.dialect">
-					org.hibernate.dialect.MySQL5Dialect
-				</beans:prop>
-			</beans:props>
-		</beans:property>
-		<beans:property name="packagesToScan">
-			<beans:list>
-				<beans:value>com.ehaoyao.opertioncenter.send.orderModel</beans:value>
-				<beans:value>com.ehaoyao.opertioncenter.ordercenter.orderModel</beans:value>
-			</beans:list>
-		</beans:property>
-	</beans:bean>
-	
-	<!-- spring hibernate工具类模板 -->
-	<beans:bean id="hibernateTemplateOrder"
-		class="org.springframework.orm.hibernate3.HibernateTemplate">
-		<beans:property name="sessionFactory" ref="sessionFactoryOrder"></beans:property>
-	</beans:bean>
-	<!-- spring jdbc 工具类模板 -->
-	<beans:bean id="jdbcTemplateOrder" class="org.springframework.jdbc.core.JdbcTemplate">
-		<beans:property name="dataSource">
-			<beans:ref bean="dataSourceOrder" />
-		</beans:property>
-	</beans:bean>
-
-	<beans:bean id="transactionManagerOrder"
-		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
-		<beans:property name="sessionFactory" ref="sessionFactoryOrder" />
-	</beans:bean>
-	
-	<beans:bean id="orderTransactionInterceptor"
-		class="org.springframework.transaction.interceptor.TransactionInterceptor">
-		<beans:property name="transactionManager" ref="transactionManagerOrder" />
-		<beans:property name="transactionAttributes">
-			<beans:props>
-				<beans:prop key="get*">PROPAGATION_REQUIRED,readOnly</beans:prop>
-				<beans:prop key="find*">PROPAGATION_REQUIRED,readOnly</beans:prop>
-				<beans:prop key="query*">PROPAGATION_REQUIRED,readOnly</beans:prop>
-				<beans:prop key="load*">PROPAGATION_REQUIRED,readOnly</beans:prop>
-				<beans:prop key="export*">PROPAGATION_REQUIRED,readOnly</beans:prop>
-				<beans:prop key="save*">PROPAGATION_REQUIRED,-Exception</beans:prop>
-				<beans:prop key="insert*">PROPAGATION_REQUIRED,-Exception</beans:prop>
-				<beans:prop key="add*">PROPAGATION_REQUIRED,-Exception</beans:prop>
-				<beans:prop key="update*">PROPAGATION_REQUIRED,-Exception</beans:prop>
-				<beans:prop key="del*">PROPAGATION_REQUIRED,-Exception</beans:prop>
-			</beans:props>
-		</beans:property>
-	</beans:bean>
-	<beans:bean
-		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
-		<beans:property name="beanNames">
-			<beans:list>
-	            <beans:value>orderInfoServiceImpl</beans:value>
-			</beans:list>
-		</beans:property>
-		<beans:property name="interceptorNames">
-			<beans:list>
-				<beans:value>orderTransactionInterceptor</beans:value>
-			</beans:list>
-		</beans:property>
-	</beans:bean>
-</beans:beans>
-
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security" 
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd 
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+	 ">
+	 
+	<beans:bean id="dataSourceOrder" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<beans:property name="driverClassName">
+			<beans:value>${db.driver.order}</beans:value>
+		</beans:property>
+		<beans:property name="url">
+			<beans:value>${db.url.order}</beans:value>
+		</beans:property>
+		<beans:property name="username">
+			<beans:value>${db.username.order}</beans:value>
+		</beans:property>
+		<beans:property name="password">
+			<beans:value>${db.password.order}</beans:value>
+		</beans:property>
+		<beans:property name="initialSize">
+			<beans:value>3</beans:value>
+		</beans:property>
+		<beans:property name="maxActive">
+			<beans:value>20</beans:value>
+		</beans:property>
+		<beans:property name="maxWait">
+			<beans:value>-1</beans:value>
+		</beans:property>
+		<beans:property name="maxIdle">
+			<beans:value>20</beans:value>
+		</beans:property>
+		<beans:property name="removeAbandoned" value="true" />
+		<beans:property name="removeAbandonedTimeout" value="60" />
+		<beans:property name="timeBetweenEvictionRunsMillis" value="300000" />
+		<beans:property name="logAbandoned" value="true" />
+	</beans:bean>
+	<beans:bean id="sessionFactoryOrder"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<beans:property name="dataSource" ref="dataSourceOrder" />
+		<beans:property name="hibernateProperties">
+			<beans:props>
+				<beans:prop key="hibernate.dialect">
+					org.hibernate.dialect.MySQL5Dialect
+				</beans:prop>
+			</beans:props>
+		</beans:property>
+		<beans:property name="packagesToScan">
+			<beans:list>
+				<beans:value>com.ehaoyao.opertioncenter.send.orderModel</beans:value>
+				<beans:value>com.ehaoyao.opertioncenter.ordercenter.orderModel</beans:value>
+			</beans:list>
+		</beans:property>
+	</beans:bean>
+	
+	<!-- spring hibernate工具类模板 -->
+	<beans:bean id="hibernateTemplateOrder"
+		class="org.springframework.orm.hibernate3.HibernateTemplate">
+		<beans:property name="sessionFactory" ref="sessionFactoryOrder"></beans:property>
+	</beans:bean>
+	<!-- spring jdbc 工具类模板 -->
+	<beans:bean id="jdbcTemplateOrder" class="org.springframework.jdbc.core.JdbcTemplate">
+		<beans:property name="dataSource">
+			<beans:ref bean="dataSourceOrder" />
+		</beans:property>
+	</beans:bean>
+
+	<beans:bean id="transactionManagerOrder"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<beans:property name="sessionFactory" ref="sessionFactoryOrder" />
+	</beans:bean>
+	
+	<beans:bean id="orderTransactionInterceptor"
+		class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<beans:property name="transactionManager" ref="transactionManagerOrder" />
+		<beans:property name="transactionAttributes">
+			<beans:props>
+				<beans:prop key="get*">PROPAGATION_REQUIRED,readOnly</beans:prop>
+				<beans:prop key="find*">PROPAGATION_REQUIRED,readOnly</beans:prop>
+				<beans:prop key="query*">PROPAGATION_REQUIRED,readOnly</beans:prop>
+				<beans:prop key="load*">PROPAGATION_REQUIRED,readOnly</beans:prop>
+				<beans:prop key="export*">PROPAGATION_REQUIRED,readOnly</beans:prop>
+				<beans:prop key="save*">PROPAGATION_REQUIRED,-Exception</beans:prop>
+				<beans:prop key="insert*">PROPAGATION_REQUIRED,-Exception</beans:prop>
+				<beans:prop key="add*">PROPAGATION_REQUIRED,-Exception</beans:prop>
+				<beans:prop key="update*">PROPAGATION_REQUIRED,-Exception</beans:prop>
+				<beans:prop key="del*">PROPAGATION_REQUIRED,-Exception</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+	<beans:bean
+		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<beans:property name="beanNames">
+			<beans:list>
+	            <beans:value>orderInfoServiceImpl</beans:value>
+			</beans:list>
+		</beans:property>
+		<beans:property name="interceptorNames">
+			<beans:list>
+				<beans:value>orderTransactionInterceptor</beans:value>
+			</beans:list>
+		</beans:property>
+	</beans:bean>
+</beans:beans>
+

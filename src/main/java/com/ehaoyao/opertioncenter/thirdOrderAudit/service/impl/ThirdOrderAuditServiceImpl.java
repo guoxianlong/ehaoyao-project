@@ -230,8 +230,13 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 			} catch (Exception e) {
 				throw new RuntimeException("调用360健康，查询单笔交易接口异常！订单号:"+orderNumber);
 			}
-			if(response==null){
-				throw new RuntimeException("调用360健康，查询单笔交易接口异常！订单号:"+orderNumber);
+			if(response!=null){
+				String errorCode = response.getErrorCode();
+				if(errorCode!=null && errorCode.trim().length()>0 && !"null".equals(errorCode.trim())){
+					throw new RuntimeException("调用360健康，查询单笔交易接口异常，订单号:"+orderNumber+"！三方接口返回信息："+response.getMsg());
+				}
+			}else{
+				throw new RuntimeException("调用360健康，查询单笔交易接口异常，订单号:"+orderNumber+"！三方接口返回空！");
 			}
 			
 			Trade trade = response.getTrade();
@@ -375,7 +380,7 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 		if(errorCode!=null && errorCode.trim().length()>0 && !"null".equals(errorCode.trim())){
 //		if(StringUtils.isNotBlank(errorCode) && "SUCCESS".equals(SubCode))
 			logger.info("回写三方平台审核状态接口返回错误！返回错误信息："+retStr);
-			throw new RuntimeException("回写三方平台审核状态接口返回错误！订单号:"+orderAuditLog.getOrderNumber());
+			throw new RuntimeException("回写三方平台审核状态接口返回错误！订单号:"+orderAuditLog.getOrderNumber()+",三方接口返回信息:"+response.getMsg());
 		}
 		
 		return retStr;

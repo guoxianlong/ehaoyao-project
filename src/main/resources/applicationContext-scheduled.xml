@@ -1,117 +1,94 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
-	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
-	xmlns:task="http://www.springframework.org/schema/task"
-	xsi:schemaLocation="
-     http://www.springframework.org/schema/context 
-     http://www.springframework.org/schema/context/spring-context-3.0.xsd
-     http://www.springframework.org/schema/beans 
-     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-	   http://www.springframework.org/schema/jee 
-	   http://www.springframework.org/schema/jee/spring-jee-3.0.xsd 
-     http://www.springframework.org/schema/jdbc 
-     http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
-     http://www.springframework.org/schema/tx 
-     http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
-     http://www.springframework.org/schema/aop 
-     http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
-	   http://www.springframework.org/schema/mvc 
-	   http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
-     http://www.springframework.org/schema/util 
-     http://www.springframework.org/schema/util/spring-util-3.0.xsd
-     http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
-     
-     <context:property-placeholder location="classpath:extend.properties" ignore-unresolvable="true" />
-     
-  	<task:scheduled-tasks>
- 		<task:scheduled ref="memberServiceImpl" method="saveMemberList" fixed-rate="21600000" />
- 	</task:scheduled-tasks>
-
-	<!-- 电销商品导入定时任务  每小时一次-->
- 	<task:scheduled-tasks>
-		<task:scheduled ref="telGoodsAction" method="excuImportPro" cron="0 0 * * * ?" />
-	</task:scheduled-tasks>
-
-	<!-- ******************order 订单查询定时************************** -->
-	<!-- 配置需要定时的bean类 -->
-	<bean id="orderTask" class="com.ehaoyao.opertioncenter.send.timer.OrderTask"></bean>
-	<!-- 配置任务的具体类和方法 -->
-	<bean id="orderTaskBean"
-		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<!-- 要调用的bean -->
-		<property name="targetObject" ref="orderTask"/>
-		<!-- 要调用的Method -->
-		<property name="targetMethod" value="run"/>
-		<!-- 是否并发-->
-		<property name="concurrent" value="true"/>
-	</bean>
-	<!-- 配置触发器 -->
-	<bean id="orderTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-		<property name="jobDetail" ref="orderTaskBean"/>
-		<!-- 调度器启动与第一次执行任务之间的间隔 (单位:毫秒)-->
-		<property name="startDelay" value="3000"/>
-		<!-- 任务时间间隔 -->
-		<property name="repeatInterval">
-			<value>${send_mesg_task_time}</value>
-		</property>
-	</bean>
-	
-	<!-- ****************** 短信发送定时任务 ************************** -->
-	<!-- 配置需要定时的bean类 -->
-	<bean id="sendMessageTask" class="com.ehaoyao.opertioncenter.send.timer.SendMessageTask"></bean>
-	<!-- 配置任务的具体类和方法 -->
-	<bean id="sendSMTaskBean"
-		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<!-- 要调用的bean -->
-		<property name="targetObject" ref="sendMessageTask"/>
-		<!-- 要调用的Method -->
-		<property name="targetMethod" value="run"/>
-		<!-- 是否并发，短信发送不并发-->
-		<property name="concurrent" value="false"/>
-	</bean>
-	<!-- 配置触发器 -->
-	<bean id="sendSMTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-		<property name="jobDetail" ref="sendSMTaskBean"/>
-		<!-- 调度器启动与第一次执行任务之间的间隔 (单位:毫秒)-->
-		<property name="startDelay" value="63000"/>
-		<!-- 任务时间间隔 -->
-		<property name="repeatInterval">
-			<value>${send_mesg_task_time}</value>
-		</property>
-	</bean>
-
-	<!-- 总调度,用于启动定时器 -->
-	<bean id="schedulerFactory" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-		<!-- 在SchedulerFactoryBean初始化完成后,延迟启动Scheduler,
-			以便让Spring能够更快初始化容器中剩余的Bean（单位：秒）-->
-		<property name="startupDelay" value="3" />
-		<property name="applicationContextSchedulerContextKey" value="applicationContextKey" />
-		<property name="quartzProperties">
-			<props>
-				<prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop>
-				<!-- 线程池的线程数量 -->
-				<prop key="org.quartz.threadPool.threadCount">5</prop>
-				<!-- 线程池里线程的优先级 -->
-				<prop key="org.quartz.threadPool.threadPriority">5</prop>
-				<prop key="org.quartz.scheduler.instanceName">DefaultQuartzScheduler</prop>
-				<prop key="org.quartz.scheduler.instanceId">AUTO</prop>
-			</props>
-		</property>
-		<property name="triggers">
-			<list>
- 				<ref bean="orderTrigger" />
-				<ref bean="sendSMTrigger" />
-			</list>
-		</property>
-	</bean>
-	
-	<bean id="shortMessageHisTask" class="com.ehaoyao.opertioncenter.send.timer.ShortMessageHisTask"></bean>
-	<!-- 历史短信备份任务 -->
- 	<task:scheduled-tasks>
- 		<task:scheduled ref="shortMessageHisTask" method="backupShortMessage" cron="0 0 0 * * ?" ></task:scheduled>
- 	</task:scheduled-tasks>
-
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="
+     http://www.springframework.org/schema/context 
+     http://www.springframework.org/schema/context/spring-context-3.0.xsd
+     http://www.springframework.org/schema/beans 
+     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	   http://www.springframework.org/schema/jee 
+	   http://www.springframework.org/schema/jee/spring-jee-3.0.xsd 
+     http://www.springframework.org/schema/jdbc 
+     http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
+     http://www.springframework.org/schema/tx 
+     http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+     http://www.springframework.org/schema/aop 
+     http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	   http://www.springframework.org/schema/mvc 
+	   http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+     http://www.springframework.org/schema/util 
+     http://www.springframework.org/schema/util/spring-util-3.0.xsd
+     http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+     
+     <context:property-placeholder location="classpath:extend.properties" ignore-unresolvable="true" />
+     
+<!--   	<task:scheduled-tasks>
+ 		<task:scheduled ref="memberServiceImpl" method="saveMemberList" fixed-rate="21600000" />
+ 	</task:scheduled-tasks> -->
+
+	<!-- 电销商品导入定时任务  每小时一次-->
+ <!-- 	<task:scheduled-tasks>
+		<task:scheduled ref="telGoodsAction" method="excuImportPro" cron="0 0 * * * ?" />
+	</task:scheduled-tasks> -->
+
+	<!-- ******************order 订单查询定时************************** -->
+	<!-- 配置需要定时的bean类 -->
+	<bean id="orderTask" class="com.ehaoyao.opertioncenter.send.timer.OrderTask"></bean>
+	<!-- 配置任务的具体类和方法 -->
+	<bean id="orderTaskBean"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 要调用的bean -->
+		<property name="targetObject" ref="orderTask"/>
+		<!-- 要调用的Method -->
+		<property name="targetMethod" value="run"/>
+		<!-- 是否并发-->
+		<property name="concurrent" value="true"/>
+	</bean>
+	<!-- 配置触发器 -->
+	<bean id="orderTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<property name="jobDetail" ref="orderTaskBean"/>
+		<!-- 调度器启动与第一次执行任务之间的间隔 (单位:毫秒)-->
+		<property name="startDelay" value="3000"/>
+		<!-- 任务时间间隔 -->
+		<property name="repeatInterval">
+			<value>${send_mesg_task_time}</value>
+		</property>
+	</bean>
+	
+	<!-- ****************** 短信发送定时任务 ************************** -->
+	<!-- 配置需要定时的bean类 -->
+	<bean id="sendMessageTask" class="com.ehaoyao.opertioncenter.send.timer.SendMessageTask"></bean>
+	<!-- 配置任务的具体类和方法 -->
+	<bean id="sendSMTaskBean"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 要调用的bean -->
+		<property name="targetObject" ref="sendMessageTask"/>
+		<!-- 要调用的Method -->
+		<property name="targetMethod" value="run"/>
+		<!-- 是否并发，短信发送不并发-->
+		<property name="concurrent" value="false"/>
+	</bean>
+	<!-- 配置触发器 -->
+	<bean id="sendSMTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<property name="jobDetail" ref="sendSMTaskBean"/>
+		<!-- 调度器启动与第一次执行任务之间的间隔 (单位:毫秒)-->
+		<property name="startDelay" value="63000"/>
+		<!-- 任务时间间隔 -->
+		<property name="repeatInterval">
+			<value>${send_mesg_task_time}</value>
+		</property>
+	</bean>
+
+	
+	
+	<bean id="shortMessageHisTask" class="com.ehaoyao.opertioncenter.send.timer.ShortMessageHisTask"></bean>
+	<!-- 历史短信备份任务 -->
+<!--  	<task:scheduled-tasks>
+ 		<task:scheduled ref="shortMessageHisTask" method="backupShortMessage" cron="0 0 0 * * ?" ></task:scheduled>
+ 	</task:scheduled-tasks> -->
+
 </beans>
