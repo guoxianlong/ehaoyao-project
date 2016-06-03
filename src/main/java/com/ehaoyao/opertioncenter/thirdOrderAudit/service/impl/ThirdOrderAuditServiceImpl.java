@@ -244,13 +244,7 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 			String status = trade.getStatus()!=null?trade.getStatus().trim():"";
 			String pdState = trade.getPdState()!=null?trade.getPdState().trim():"";
 			String haveCfy = trade.getHaveCFY()!=null?trade.getHaveCFY().trim():"";
-			if(status.length()>0 && "TRADE_CLOSED".equals(status) && "1".equals(haveCfy)){
-				retStr[0] = true;
-				if(OrderInfo.ORDER_AUDIT_STATUS_PRESUCC.equals(status) || OrderInfo.ORDER_AUDIT_STATUS_SUCC.equals(status)){
-					retStr[1] = "订单:"+orderNumber+",在卖家平台是已关闭的状态,请进行驳回操作！";
-				}
-			}
-
+			
 			if(pdState.length()>0 && "1".equals(haveCfy)){
 				if("AUDIT_NOT_THROUGH".equals(pdState)){
 					retStr[0] = true;
@@ -261,13 +255,23 @@ public class ThirdOrderAuditServiceImpl implements IThirdOrderAuditService {
 					retStr[1] = "订单:"+orderNumber+",在卖家平台是已审核通过的状态！";
 				}
 			}
+			
+			if(status.length()>0 && "TRADE_CLOSED".equals(status) && "1".equals(haveCfy)){
+				retStr[0] = true;
+				if(OrderInfo.ORDER_AUDIT_STATUS_PRESUCC.equals(auditStatus) || OrderInfo.ORDER_AUDIT_STATUS_SUCC.equals(auditStatus)){
+					retStr[1] = "订单:"+orderNumber+",在卖家平台是已关闭的状态,请进行驳回操作！";
+				}
+			}
+
 			if((boolean) retStr[0]){
 				if(OrderInfo.ORDER_AUDIT_STATUS_PRERETURN.equals(auditStatus)){
 					retStr[0] = false;
 				}
 				return retStr;
 			}else{
-				retStr[1] = writeBack360CFY(orderAuditLog);
+				if(OrderInfo.ORDER_AUDIT_STATUS_PRERETURN.equals(auditStatus) || OrderInfo.ORDER_AUDIT_STATUS_SUCC.equals(auditStatus)){
+					retStr[1] = writeBack360CFY(orderAuditLog);
+				}
 			}
 			
 		}
